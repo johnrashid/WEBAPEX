@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Questions - The Adventure of Tom Sawyer</title>
+  <link rel="stylesheet" href="reading.css">
+  <link rel="stylesheet" href="questions.css">
+</head>
+<body>
+
+  <button type="button" class="back-btn" aria-label="Go back" onclick="goBack()">
+    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M20 11H7.83l5.58-5.59L12 4 4 12l8 8 1.41-1.41L7.83 13H20v-2z" fill="#fff"/>
+    </svg>
+  </button>
+
+  <h1 class="questions-header" id="questionsHeader">Questions</h1>
+
+  <main class="questions-container" id="questionsContainer" tabindex="0">
+    <!-- Questions will be injected here -->
+  </main>
+
+  <script>
+    // Build the questions for Level 1 Story 1
+    const params = new URLSearchParams(location.search);
+    const level = params.get('level') || '1';
+    const story = params.get('story') || '1';
+
+    function goBack(){
+      // return to story page
+      window.location.href = `story.html?level=${level}&story=${story}`;
+    }
+
+    // questions organized by level -> story
+    const questionsByLevel = {
+      '1': {
+      '1': {
+        title: 'The Adventure of Tom Sawyer',
+        questions: [
+          { q: '1. What time did Tom and Sid go to bed?', choices: ['A. Seven o’clock','B. Eight o’clock','C. Half-past nine','D. Midnight'] },
+          { q: '2. Who fell asleep first?', choices: ['A. Tom','B. Sid','C. Aunt Polly','D. Huck Finn'] },
+          { q: '3. What did Tom do while lying in bed?', choices: ['A. Read a book','B. Talked to Sid','C. Waited restlessly','D. Played with a toy'] },
+          { q: '4. What time did the clock strike when Tom thought it was nearly morning?', choices: ['A. Nine','B. Ten','C. Eleven','D. Twelve'] },
+          { q: '5. Why didn’t Tom toss and fidget?', choices: ['A. He was too tired','B. He didn’t want to wake Sid','C. He was afraid of Aunt Polly','D. He heard footsteps'] },
+          { q: '6. What noise came from Aunt Polly’s chamber?', choices: ['A. A cough','B. A scream','C. A snore','D. A song'] },
+          { q: '7. What insect made a bothersome chirping sound?', choices: ['A. A beetle','B. A cricket','C. A moth','D. A spider'] },
+          { q: '8. What sound made Tom shudder?', choices: ['A. A dog bark','B. The wind blowing','C. The ticking of a death-watch','D. Footsteps on the stairs'] },
+          { q: '9. What did Tom think the death-watch meant?', choices: ['A. A storm was coming','B. Someone’s days were numbered','C. Someone was outside','D. Morning was near'] },
+          { q: '10. What animal howled in the distance?', choices: ['A. A wolf','B. A cat','C. A dog','D. A cow'] },
+          { q: '11. What noise woke Tom fully?', choices: ['A. A loud snore','B. A bottle crashing','C. A scream','D. Thunder'] },
+          { q: '12. How did Tom signal as he sneaked out?', choices: ['A. He whistled','B. He barked','C. He meowed','D. He tapped the window'] },
+          { q: '13. Who was waiting for Tom?', choices: ['A. Sid','B. Aunt Polly','C. Huckleberry Finn','D. A neighbor'] },
+          { q: '14. What was Huck carrying with him?', choices: ['A. A lantern','B. A rope','C. A bucket','D. A dead cat'] },
+          { q: '15. Where were the boys heading?', choices: ['A. The river','B. The woods','C. The schoolyard','D. The graveyard'] }
+        ],
+        key: [2,1,2,1,1,2,1,2,1,2,1,2,2,3,3]
+      },
+      '2': {
+        title: 'The Boy Who Cried Wolf',
+        questions: [
+          { q: '1. What is the title of the story?', choices: ['A) The Boy and the Sheep','B) The Boy Who Cried Wolf','C) The Lonely Boy','D) The Angry Villagers'] },
+          { q: '2. What was the boy watching over?', choices: ['A) Cows','B) Sheep','C) Chickens','D) Horses'] },
+          { q: '3. Why did the boy become bored?', choices: ['A) He was tired','B) He was hungry','C) He had nothing to do','D) He was sick'] },
+          { q: '4. What did the boy shout the first time?', choices: ['A) "Help!"','B) "Wolf!"','C) "Fire!"','D) "Run!"'] },
+          { q: '5. What did the villagers do when they heard the boy shout?', choices: ['A) Ignored him','B) Ran away','C) Came running','D) Laughed'] },
+          { q: '6. Was there a wolf the first time?', choices: ['A) Yes','B) No','C) Maybe','D) Not sure'] },
+          { q: '7. How did the villagers feel when they found no wolf?', choices: ['A) Happy','B) Angry','C) Sad','D) Scared'] },
+          { q: '8. What did the villagers warn the boy about?', choices: ['A) To be brave','B) To tell the truth','C) To shout louder','D) To run faster'] },
+          { q: '9. Did the boy shout “Wolf!” a second time?', choices: ['A) Yes','B) No','C) Maybe','D) Not sure'] },
+          { q: '10. Did the villagers come running again the second time?', choices: ['A) Yes','B) No','C) Some did','D) Only one came'] },
+          { q: '11. Was there a wolf the second time?', choices: ['A) Yes','B) No','C) Maybe','D) Not sure'] },
+          { q: '12. What happened when a real wolf came?', choices: ['A) The villagers saved the sheep','B) The sheep ran away','C) The boy fought the wolf','D) The wolf ate the boy'] },
+          { q: '13. Why didn’t the villagers come to help?', choices: ['A) They were busy','B) They didn’t hear him','C) They didn’t believe him','D) They were asleep'] },
+          { q: '14. What did the boy say when the villagers finally found him?', choices: ['A) "I’m sorry!"','B) "There was a wolf!"','C) "Help me!"','D) "I’m hungry!"'] },
+          { q: '15. What is the lesson the old man tells the boy?', choices: ['A) "Be brave."','B) "Tell the truth."','C) "Shout louder."','D) "Run faster."'] }
+        ],
+        key: [1,1,2,1,2,1,1,1,0,0,1,0,2,0,1]
+        },
+        '3': {
+         title: 'The Bully',
+         questions: [
+            { q: '1. What is the title of the story?', choices: ['A) The New Boy','B) The Bully','C) Carson’s Problem','D) The Fight'] },
+            { q: '2. Who is the main character in the story?', choices: ['A) Carson','B) Jack','C) The teacher','D) The principal'] },
+            { q: '3. When was Carson going back to school?', choices: ['A) Monday','B) Tuesday','C) After summer','D) After a holiday'] },
+            { q: '4. What did Carson hear about before returning to school?', choices: ['A) A new teacher','B) A new student','C) A bully','D) A party'] },
+            { q: '5. Where did the new boy sit at lunch?', choices: ['A) Alone','B) With Carson','C) With friends','D) Outside'] },
+            { q: '6. What did Carson ask the new boy at lunch?', choices: ['A) His age','B) His name','C) His favorite food','D) His address'] },
+            { q: '7. How did the new boy respond when Carson asked his name?', choices: ['A) Politely','B) Rudely','C) Laughing','D) Ignored him'] },
+            { q: '8. What did the new boy want from Carson after school?', choices: ['A) His lunch','B) His homework','C) His pencil','D) His toy'] },
+            { q: '9. Why didn’t Carson want to give the boy his homework?', choices: ['A) It was hard','B) It was his only copy','C) He didn’t like him','D) He forgot it'] },
+            { q: '10. What happened to Carson when the new boy tripped him?', choices: ['A) He cried','B) He fought back','C) He fell','D) He ran away'] },
+            { q: '11. Who asked Carson what happened when he got home?', choices: ['A) His mom','B) His dad','C) His brother','D) His friend'] },
+            { q: '12. What did Carson’s mom do the next day?', choices: ['A) Called the police','B) Talked to the teacher','C) Fought the boy','D) Ignored it'] },
+            { q: '13. Why did Jack say he acted mean?', choices: ['A) He was lonely','B) He was angry','C) He was bored','D) He was jealous'] },
+            { q: '14. Who apologized to Carson and his mom?', choices: ['A) The teacher','B) The principal','C) Jack','D) The new boy’s mom'] },
+            { q: '15. What did Carson’s mom say at the end of the story?', choices: ['A) "Be careful."','B) "Tell the teacher."','C) "We’ll fix this together."','D) "Ignore him."'] }
+        ],
+        key: [1,0,0,1,0,1,1,1,1,2,0,1,0,2,2]
+      },
+      '4': {
+        title: 'The Notes',
+        questions: [
+          { q: '1. What is the title of the story?', choices: ['A) The Adventure','B) The Notes','C) Ellie’s Trip','D) Mother’s Journey'] },
+          { q: '2. Why does Ellie’s mother have to travel?', choices: ['A) For vacation','B) For work','C) To visit family','D) To study'] },
+          { q: '3. Does Ellie want her mother to go?', choices: ['A) Yes','B) No','C) Maybe','D) Not sure'] },
+          { q: '4. What idea does Ellie have?', choices: ['A) Cook dinner','B) Write letters','C) Clean the house','D) Play outside'] },
+          { q: '5. Where does Ellie go to write the notes?', choices: ['A) Kitchen','B) Bedroom','C) Library','D) Park'] },
+          { q: '6. How many notes does Ellie write?', choices: ['A) 3','B) 5','C) 7','D) 10'] },
+          { q: '7. Where does Ellie put the notes?', choices: ['A) In a drawer','B) In her mother’s suitcase','C) On the table','D) In the mailbox'] },
+          { q: '8. What does Ellie’s mother find in her suitcase?', choices: ['A) Clothes','B) Envelopes','C) Food','D) Toys'] },
+          { q: '9. How are the envelopes labeled?', choices: ['A) Monday, Tuesday, etc.','B) Day 1, Day 2, etc.','C) Morning, Afternoon, etc.','D) Week 1, Week 2, etc.'] },
+          { q: '10. What does the day-one note say?', choices: ['A) "I love you!"','B) "Miss you!"','C) "Eat breakfast!"','D) "Call me!"'] },
+          { q: '11. How does Ellie’s mother feel when she reads the notes?', choices: ['A) Sad','B) Angry','C) Happy','D) Confused'] },
+          { q: '12. What is the best part of the trip for Ellie’s mother?', choices: ['A) The hotel','B) The food','C) Reading the notes','D) Meeting friends'] },
+          { q: '13. What does Ellie’s mother say when she comes home?', choices: ['A) "Thank you!"','B) "I missed you!"','C) "You’re the best!"','D) "I’m tired."'] },
+          { q: '14. Who wrote the notes?', choices: ['A) Her father','B) Ellie','C) Her friend','D) Her teacher'] },
+          { q: '15. Why does Ellie write the notes?', choices: ['A) To surprise her mom','B) To make her mom laugh','C) To help her mom feel less lonely','D) To get a reward'] }
+        ],
+        key: [1,1,1,1,1,2,1,1,1,0,2,2,2,1,2]
+      },
+      
+      '5': {
+        title: 'The Three Brother',
+        questions: [
+          { q: '1. How many brothers were there in the story?', choices: ['A) 2','B) 3','C) 4','D) 5'] },
+          { q: '2. What were the names of the three brothers?', choices: ['A) Tom, Alex, Sam','B) Strong, Wise, Kind','C) Jack, Joe, John','D) Leo, Max, Ben'] },
+          { q: '3. Which brother spent his time running, jumping, and swimming?', choices: ['A) Strong','B) Wise','C) Kind','D) All of them'] },
+          { q: '4. Which brother liked reading, writing, and making things?', choices: ['A) Strong','B) Wise','C) Kind','D) None'] },
+          { q: '5. Who was the happiest of all the brothers?', choices: ['A) Strong','B) Wise','C) Kind','D) The Queen'] },
+          { q: '6. Who decided to teach the brothers a lesson?', choices: ['A) The King','B) The Queen of Good Spirits','C) A wizard','D) A fairy'] },
+          { q: '7. What did the Queen of the Good Spirits change into?', choices: ['A) A cat','B) A tree','C) A little girl','D) A bird'] },
+          { q: '8. Where did the little girl sit in the tree?', choices: ['A) High up','B) High up in a tree','C) On the ground','D) In a nest'] },
+          { q: '9. Who was always ready to help anyone in trouble?', choices: ['A) Strong','B) Wise','C) Kind','D) All of them'] },
+          { q: '10. Which brother made a long piece of thin string to solve the problem?', choices: ['A) Wise','B) Strong','C) Kind','D) The Queen'] },
+          { q: '11. Who climbed the rope to bring the little girl down?', choices: ['A) Strong','B) Wise','C) Kind','D) The Queen'] },
+          { q: '12. How did the three brothers feel after saving the little girl?', choices: ['A) Sad','B) Angry','C) Proud','D) Scared'] },
+          { q: '13. What did the Queen of the Good Spirits say about being only strong, wise, or good?', choices: ['A) "It’s enough."','B) "It’s not enough."','C) "It’s perfect."','D) "It’s useless."'] },
+          { q: '14. What lesson did the brothers learn from the Queen?', choices: ['A) Strength is best.','B) Wisdom is key.','C) Balance is important.','D) Kindness is overrated.'] },
+          { q: '15. What were the new mixed names of the three brothers at the end of the story?', choices: ['A) StrongWiseKind','B) Strogniseke','C) KindStrongWise','D) Wisekindstrong'] }
+        ],
+        key: [1,1,0,1,2,1,2,1,2,0,0,2,1,2,3]
+      }
+      }
+      };
+
+    // select by level then story; fall back to level 1 story 1 if missing
+    const levelData = questionsByLevel[level] || questionsByLevel['1'];
+    const storyData = (levelData && levelData[story]) || (levelData && levelData['1']);
+    const questions = storyData.questions;
+    const header = document.getElementById('questionsHeader');
+    if (header) header.textContent = storyData.title;
+    // update document title too
+    document.title = `Questions - ${storyData.title}`;
+
+    const container = document.getElementById('questionsContainer');
+
+    function render(){
+      container.innerHTML = '';
+        questions.forEach((item, idx) => {
+        const qDiv = document.createElement('div');
+        qDiv.className = 'question';
+        const h = document.createElement('h2'); h.textContent = item.q;
+        qDiv.appendChild(h);
+        const ul = document.createElement('ul'); ul.className = 'choices';
+        item.choices.forEach((c, ci) => {
+          const li = document.createElement('li');
+          li.className = 'choice';
+          li.setAttribute('role','button');
+          li.setAttribute('tabindex','0');
+          li.dataset.q = idx;
+          li.dataset.choice = ci;
+          // extract letter (first non-space char) and text after label (supports 'A.','A)','A -', etc.)
+          const letter = c.trim().charAt(0);
+          // remove only the leading choice label (e.g. 'A.', 'A)', 'A) ', 'A -')
+          const text = c.replace(/^[A-Za-z]+\s*[\)\.\-]?\s*/, '').trim();
+          li.innerHTML = `<span class="letter">${letter}</span><span class="text">${text}</span>`;
+          li.addEventListener('click', onChoice);
+          li.addEventListener('keydown', (e)=>{ if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onChoice.call(li, e); }});
+          ul.appendChild(li);
+        });
+        qDiv.appendChild(ul);
+        container.appendChild(qDiv);
+      });
+
+      // Append submit footer at the end so it is inside the scrollable area
+      const footer = document.createElement('div');
+      footer.className = 'questions-footer';
+      footer.innerHTML = '<button id="submitBtn" class="btn-submit">Submit</button>';
+      container.appendChild(footer);
+    }
+
+    function onChoice(e){
+      const el = (this === undefined || this === window) ? e.currentTarget : this;
+      const q = el.dataset.q;
+      // remove selected in same question
+      const choices = container.querySelectorAll(`.choice[data-q="${q}"]`);
+      choices.forEach(ch => ch.classList.remove('selected'));
+      el.classList.add('selected');
+    }
+
+    render();
+
+    // submit handler (attach after render so the button exists)
+    function attachSubmit(){
+      const submit = document.getElementById('submitBtn');
+      if(!submit) return;
+      submit.addEventListener('click', ()=>{
+        // use key from story data
+        const key = storyData.key || [];
+        const selected = container.querySelectorAll('.choice.selected');
+        // build answers array (undefined if unanswered)
+        const answers = Array(key.length).fill(null);
+        selected.forEach(s => { answers[Number(s.dataset.q)] = Number(s.dataset.choice); });
+        // score
+        let score = 0;
+        for (let i=0;i<key.length;i++){
+          if (answers[i] !== null && answers[i] === key[i]) score++;
+        }
+
+        // Show result inside the scrollable container
+        container.innerHTML = `
+          <div class="result">
+            <h2>You got ${score}/${key.length}</h2>
+            <p>Well done! Click below to continue.</p>
+            <div class="result-actions">
+              <button id="nextStoryBtn" class="btn-submit">${Number(story) === 5 ? 'Choose Level' : 'Next Story'}</button>
+            </div>
+          </div>
+        `;
+
+        // navigate when clicked: if this is story 5 go to level selection, else go to next story
+        const next = document.getElementById('nextStoryBtn');
+        if (next) {
+          if (Number(story) === 5) {
+            next.addEventListener('click', ()=>{ window.location.href = 'level.html'; });
+          } else {
+            next.addEventListener('click', ()=>{
+              const nextStory = Number(story) + 1;
+              window.location.href = `story.html?level=${level}&story=${nextStory}`;
+            });
+          }
+        }
+      });
+    }
+    attachSubmit();
+  </script>
+</body>
+</html>

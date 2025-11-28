@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Apex</title>
+    <link rel="stylesheet" href="index.css">
+
+</head>
+<body>
+
+      <div class="wrapper">
+    <!-- floating words (decorative) -->
+    <div class="floating-words">
+      <span class="word" style="left:6%;  top:8%;   animation-duration:10s; animation-delay:-2s;">LEARN</span>
+      <span class="word" style="left:24%; top:18%;  animation-duration:12s; animation-delay:-4s;">CREATE</span>
+      <span class="word" style="left:62%; top:6%;   animation-duration:9s;  animation-delay:-1s;">EXPLORE</span>
+      <span class="word" style="left:78%; top:26%;  animation-duration:11s; animation-delay:-3s;">BUILD</span>
+      <span class="word" style="left:46%; top:44%;  animation-duration:13s; animation-delay:-5s;">UNDERSTAND</span>
+      <span class="word" style="left:14%; top:56%;  animation-duration:14s; animation-delay:-6s;">PRACTICE</span>
+      <span class="word" style="left:64%; top:60%;  animation-duration:10s; animation-delay:-2s;">PLAY</span>
+      <span class="word" style="left:36%; top:72%;  animation-duration:12s; animation-delay:-4s;">GROW</span>
+    </div>
+    
+<div class="container">
+
+    <!-- logout button (upper-right) -->
+    <button class="logout-btn" id="logout-btn" type="button" title="Logout">
+      <!-- simple logout SVG -->
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M16 13v-2H7V8l-5 4 5 4v-3zM20 3H10v2h10v14H10v2h10c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>
+      </svg>
+    </button>
+
+    <h1 class="title">WEB APEX</h1>
+
+    <div class="menu">
+        <button onclick="window.location.href='pretest.html'">PRE TEST</button>
+        <button onclick="window.location.href='reading.html'">READING COMPREHENSION</button>
+        <button>TEXTS GLOSSARY</button>
+        <button>GRAMMAR TEST</button>
+        <button>VOCABULARY TEST</button>    
+        <button>POST TEST</button> 
+    </div>
+</div>
+
+<script src="audio.js" defer></script>
+
+    <audio id="bg-audio" src="bgmusic.mp3" loop></audio>
+
+<!-- Audio control (lower-right) -->
+<div class="audio-control" aria-hidden="false">
+    <button class="audio-btn" id="audio-toggle" aria-label="Toggle sound" title="Sound">
+      <!-- speaker icon (svg) -->
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+        <path d="M3 10v4h4l5 5V5L7 10H3z" fill="currentColor"></path>
+        <path class="wave" d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v8.06c1.48-.74 2.5-2.26 2.5-4.03z" fill="currentColor"></path>
+      </svg>
+    </button>
+
+    <div class="audio-panel" id="audio-panel" aria-hidden="true">
+      <input type="range" id="audio-volume" class="audio-volume" min="0" max="1" step="0.01" value="0.6" aria-label="Volume">
+      <button id="audio-mute" class="audio-mute" aria-label="Mute">Mute</button>
+    </div>
+  </div>
+
+  <script src="audio.js"></script>
+  
+  <!-- Logout confirmation modal -->
+  <div class="confirm-overlay" id="logout-modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="confirm-box" role="document">
+      <h3>Do you want to quit the game?</h3>
+      <div class="confirm-actions">
+        <button class="cancel" id="logout-cancel">Cancel</button>
+        <button class="logout" id="logout-confirm">Quit</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      const logoutBtn = document.getElementById('logout-btn');
+      const modal = document.getElementById('logout-modal');
+      const cancel = document.getElementById('logout-cancel');
+      const confirm = document.getElementById('logout-confirm');
+
+      function showModal(){
+        modal.classList.add('open');
+        modal.setAttribute('aria-hidden','false');
+        // trap focus briefly
+        cancel.focus();
+      }
+      function hideModal(){
+        modal.classList.remove('open');
+        modal.setAttribute('aria-hidden','true');
+        logoutBtn.focus();
+      }
+
+      if (logoutBtn){
+        logoutBtn.addEventListener('click', function(e){
+          e.preventDefault();
+          showModal();
+        });
+      }
+      if (cancel){ cancel.addEventListener('click', hideModal); }
+      if (modal){
+        modal.addEventListener('click', function(e){
+          if (e.target === modal) hideModal();
+        });
+      }
+
+      if (confirm){
+        confirm.addEventListener('click', function(){
+          // stop local audio if present
+          const local = document.getElementById('bg-audio');
+          if (local){ try{ local.pause(); local.currentTime = 0; }catch(e){} }
+          // attempt to close persistent player window
+          try{
+            const playerWin = window.open('', 'webapex-player');
+            if (playerWin && !playerWin.closed) playerWin.close();
+          }catch(e){}
+          // perform logout redirect
+          window.location.href = 'main.html';
+        });
+      }
+
+      // keyboard support: Escape to cancel
+      document.addEventListener('keydown', function(e){
+        if (e.key === 'Escape' && modal.classList.contains('open')) hideModal();
+      });
+    })();
+  </script>
+</body>
+</html>

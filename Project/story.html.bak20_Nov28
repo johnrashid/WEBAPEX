@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Story</title>
+  <link rel="stylesheet" href="reading.css">
+</head>
+<body>
+
+  <!-- Back button (fixed upper-left) -->
+  <button type="button" class="back-btn" aria-label="Go back" onclick="location.href='level.html'">
+    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M20 11H7.83l5.58-5.59L12 4 4 12l8 8 1.41-1.41L7.83 13H20v-2z" fill="#fff"/>
+    </svg>
+  </button>
+
+  <div class="wrapper">
+    <div class="canvas">
+      <section id="story" class="intro" style="max-width:780px; text-align:left; display:block;">
+        <div id="story-number" class="story-number" style="text-align:center"></div>
+        <h1 id="story-title" class="title" style="text-align:center"></h1>
+        <div id="story-content" style="margin-top:18px; font-size:18px; line-height:1.6;"></div>
+        <!-- Story index and Questions button row -->
+        <div class="index-row" style="margin-top:18px; display:flex; align-items:center; justify-content:space-between; gap:12px;">
+          <div id="story-index" style="display:flex; gap:8px; overflow-x:auto; padding:8px 0;"></div>
+          <button id="questionsBtn" class="questions-btn" aria-haspopup="dialog">Questions</button>
+        </div>
+      </section>
+    </div>
+  </div>
+
+    <!-- Confirmation modal -->
+    <div id="questionsModal" class="modal-overlay" role="dialog" aria-modal="true" aria-hidden="true">
+      <div class="modal-box" role="document">
+        <div class="modal-message">Are you sure you are ready to answer the questions?</div>
+        <div class="modal-actions">
+          <button id="modalNo" class="btn-no">No</button>
+          <button id="modalYes" class="btn-yes">Yes</button>
+        </div>
+      </div>
+    </div>
+  <script>
+    // Read query params and show level/story
+    (function(){
+      const params = new URLSearchParams(location.search);
+      const level = params.get('level') || '1';
+      const story = params.get('story') || '1';
+      const title = document.getElementById('story-title');
+      const content = document.getElementById('story-content');
+
+      // show level and story in the heading (e.g. "Level 1 - Story 1")
+      title.textContent = `Level ${level} - Story ${story}`;
+      // Back button should return to the level's story list
+      const backBtn = document.getElementById('back-btn');
+      if (backBtn) {
+        backBtn.addEventListener('click', () => {
+          // navigate back to level page and open the same level
+          window.location.href = `level.html?level=${level}`;
+        });
+      }
+      // placeholder content — replace with actual stories as needed
+      if (String(level) === '1' && String(story) === '1') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">The Adventure of Tom Sawyer</h2>
+          <p><em>By Mark Twain</em></p>
+          <p>At half-past nine that night. Tom and Sid were went to bed as usual. They said their prayers, and Sid was soon asleep. Tom lay awake and waited in restless impatience. When it seemed to him that it must be nearly daylight, he heard the clock strike ten! This was despair. He would have tossed and fidgeted, as his nerves demanded, but he was afraid he might wake Sid. So he lay still and stared up into the dark. Everything was dismally still. By-and-by, out of the stillness little, scarcely perceptible noises began to emphasize themselves. The ticking of the clock began to bring itself into notice. Old beams began to crack mysteriously. The stairs creaked faintly. Evidently spirits were abroad. A measured, muffled snore issued from Aunt Poly's chamber. And now the tiresome chirping of a cricket that no human ingenuity could locate began. Next the ghastly ticking of a death-watch in the wall at the bed's head made Tom shudder- it meant that somebody's days were numbered. Then the howl of a far-off dog rose on the night air and was answered by a fainter howl from a remoter distance. Tom was in an agony. At last he was satisfied that time has ceased and eternity begun; he began to doze in spite of himself, the clock chimed eleven, but he did not hear it, and then there came, mingling with his half formed dreams, a most melancholy caterwauling. The raising of a neighbouring window disturbed him. A cry of 'Scat! You devil!' and the crash of an empty bottle against the back of his aunt's wood-shed brought him wide awake and a single minute later he was dressed and out of the window and creeping along the roof of the 'ell' on all fours. He 'meow'd' with caution once or twice as he went; then jump to the roof of the wood-shed and thence to the ground. Huckleberry Finn was there, with his dead cat. The boys moved off and disappeared in the gloom. At the end of half an hour they were wading through the tall grass of the graveyard.</p>
+        `;
+      } else if (String(level) === '1' && String(story) === '2') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">The Boy Who Cried Wolf</h2>
+          <p>Once, there was a boy who became bored when he watched over the village sheep grazing on the hillside. To entertain himself, he sang out, "Wolf! Wolf! The wolf is chasing the sheep!"</p>
+          <p>When the villagers heard the cry, they came running up the hill to drive the wolf away. But, when they arrived, they saw no wolf. The boy was amused when seeing their angry faces.</p>
+          <p>"Don't scream wolf, boy," warned the villagers, "when there is no wolf!" They angrily went back down the hill.</p>
+          <p>Later, the shepherd boy cried out once again, "Wolf! Wolf! The wolf is chasing the sheep!" To his amusement, he looked on as the villagers came running up the hill to scare the wolf away.</p>
+          <p>As they saw there was no wolf, they said strictly, "Save your frightened cry for when there really is a wolf! Don't cry 'wolf' when there is no wolf!" But the boy grinned at their words while they walked grumbling down the hill once more.</p>
+        `;
+      } else if (String(level) === '1' && String(story) === '3') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">The Bully</h2>
+          <p><em>Story By: Judie Eberhardt</em></p>
+          <p>Carson was going back to school after Spring Break. He had heard that a new boy would be starting at his school. Carson was anxious to meet him and make a new friend. That day at lunch, the new boy came and sat across from Carson. Carson said hi and asked him his name. The boy answered, "None of your business." Carson was surprised that the boy would be so mean. Carson ate his lunch in silence.</p>
+          <p>School let out, and on the walk home the new boy came up behind Carson and said, "Let me have your homework so I can copy it." "I know you finished it at school." "I'm not giving you my homework," said Carson. "That would be cheating." As Carson started to walk away, the boy tripped Carson. Carson fell, ripped his pants, and got a big scrape on his knee. The boy started laughing and ran away. Carson got up and headed home. "What happened?" asked mom when Carson came into the kitchen. The new boy at school tripped me because I wouldn't let him copy my homework," said Carson. "Who is this new boy?" mom asked. "His name is Jack, and I only know that because I heard the teacher call him that." "He was mean to me at lunch when I asked him his name," said Carson.</p>
+          <p>The next day Carson's mom went to the school and told the principal what had happened. Jack was called to the office and admitted he tripped Carson. "Why?" asked Mrs. Rogers the principal. Carson was only trying to be nice to you in the cafeteria yesterday when he asked you your name." "This is the third school I've been in since school started," said Jack. "I guess I was trying to be a tough guy so no one would mess with me." "Well, did it ever cross your mind that if you would just be yourself and be kind, the kids would be your friend?" asked Mrs. Rogers. Jack said he was very sorry. Mrs. Rogers said that Jack needed to talk to Carson and tell him he was sorry. Jack did apologize to Carson and his mom. Carson's mom invited Jack to the house for dinner. Carson told his mom that Jack is really nice but just had a hard time fitting in. "I'm glad you have a new friend," said Carson's mom.</p>
+        `;
+      } else if (String(level) === '1' && String(story) === '4') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">The Notes</h2>
+          <p>Ellie's mother had to travel for work.</p>
+          <p>"I don't want to go." her mother said. "I will miss you too much!"</p>
+          <p>Ellie didn't want her mother to go either. Then she had an idea.</p>
+          <p>She went up to her room, sat at her desk, and wrote out six notes, one for each day her mother would be gone. While her mother was packing, she slipped the notes into the suitcase.</p>
+          <p>When her mother got to her hotel and opened her suitcase, she found the pile of notes. The envelopes were labeled: open day one, open day two, etc. Ellie's mother opened the envelope labeled day one. It said:</p>
+          <p>You're the best Mom in the world. Thank you for working so hard. If I were there, I would give you the biggest hug in the world.</p>
+          <p>Opening her notes each day was the best part of the trip for Ellie's mom. When she got home, she told Ellie, "I have the best kid in the world. Thank you for writing those notes!"</p>
+        `;
+      } else if (String(level) === '1' && String(story) === '5') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">The Three Brothers</h2>
+          <p>Once upon a time there were three brothers living all alone in a faraway land. Their names were: Strong-Arm, Wise-Head and Good- Heart. Strong-Arm spent all his time very happily running, jumping, throwing spears and swimming in the river. Wise-Head too was very happy. He spent all his time reading, writing, learning, and making things with his hands. Good-Heart was the happiest of all. He spent all his time helping his brothers and cooking their food.</p>
+          <p>But as they grew older, the three brothers began to wonder whether they were really completely happy. So one day the Queen of the Good Spirits decided to teach them something. She changed herself into a little girl, and sat on the top branch of a great silk-cotton tree that no-one could ever climb, calling "Help" "Help!"</p>
+          <p>Good-Heart was always ready to help anyone in trouble and he looked up and saw the little girl. But how could he get her down? He didn't know. So he asked his brothers for help. Wise-Head thought about the problem. He worked out the height of the tree, made a long piece of thin string, and tied a stone to one end of it. Then he told Strong-Arm to throw the stone over the highest branch. When the stone fell to the ground again, the string was right over the branch. Then Wise-Head tied a long thick rope to the string, and pulled the other end of the string until the rope too went right over the branch and down again. But Wise-Head couldn't climb the rope himself. He had to get Strong-Arm's help again. So Strong-Arm climbed up the rope, and brought the little girl safely to the ground. The three brothers all felt wonderfully happy because that they had saved the little girl. They laughed, and danced and sang. And just at that moment, the little girl became the Queen of the Good Spirits once again, and this is what she said: 'Now you have learnt that being only strong or only wise or only good is not the best thing. The best thing is to be strong and wise and good.</p>
+          <p>So the three brothers lived happily all their life, doing things together, anr goodness with wisdom and strength. And their names became mixed up. they became known by everyone as Wise-Arm, Good-Head, and Strong.</p>
+        `;
+      } else if (String(level) === '2' && String(story) === '1') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">Checkouts</h2>
+          <p><em>By: Cynthia Rylant</em></p>
+          <p>Her parents had moved her to Cincinnati, to a large house with beveled glad windows ano several porches and the history her mother liked to emphasize. You'll be lonely at first, they admitted, but you're so nice you'll make friends fast. And as an impulse tore at her to lie on the floor, to hold to their ankles and tell them she felt she was dying, to offer anything, anything at all, so they might allow her to finish growing up in the town of her childhood, they firmed their mouths and spoke from their chests, and they said, It's decided.</p>
+
+          <p>They moved her to Cincinnati, where for a month she spent the greater part of every day in a room full of beveled glass windows, sifting through photographs of the life she'd lived and left behind. But it is difficult work, suffering, and in its own way a kind of art, and finally she didn't have the energy for it anymore, so she emerged from the beautiful house and fell in love with a bag boy at the supermarket. Of course, this didn't happen all at once, just like that, but in the sequence of things that's exactly the way it happened.</p>
+
+          <p>She liked to grocery shop. She loved it in the way some people have to drive long country roads, because doing it she could think and relax and wander. Her parents wrote up the list and handed it to her, and off she went without complaint to perform what they regarded as a great sacrifice of her time and a sign that she was indeed a very nice girl. She had never told them how much she loved grocery shopping, only that she was "willing" to do it. She had an intuition which told her that her parents were not safe for sharing such strong, important facts about herself Let them think they knew her.</p>
+
+          <p>Once inside the supermarket, her hands firmly around the handle of the cart, she would lapse into a kind of reverie and wheel toward the produce. Like a Tibetan monk in solitary meditation, she calmed to a point of deep, deep happiness; this feeling came to her, reliably, if strangely, only in the supermarket.</p>
+
+          <p>Then one day the bag boy dropped her jar of mayonnaise, and that is how she fell in love.</p>
+
+          <p>He was nervous-first day on the job-and along had come this fascinating girl, standing in the checkout line with the unfocused stare one often sees in young children, her face turned enough away that he might take several full looks at her as he packed sturdy bags full of food and the goods of modern life. She interested him because her hair was red and thick, and in it she had placed a huge orange bow, nearly the size of a small hat. That was enough to distract him, and when finally it was her groceries he was packing, she looked at him and smiled, and he could respond only by busting her jar of mayonnaise on the floor, shards of glass and oozing cream decorating the area around his feet.</p>
+
+          <p>She loved him at exactly that moment, and if he'd known this, perhaps he wouldn't have fallen into the brown depression he fell into, which lasted the rest of his shift. He believed he must have looked a fool in her eyes, and he envied the sureness of everyone around him: the cocky cashier at the register, the grim and harried their breaks. He wanted a second chance. Another chance to be confident and say witty things to her as he threw tin cans into her bags, persuading her to allow him to help her to her car so he might learn just a little about her, check out the floor of the car for signs of hobbies or fetishes: and the bumpers for clues as to beliefs and loyalties.</p>
+
+          <p>But he busted her jar of mayonnaise, and nothing else worked out for the rest of the day. Strange, how attractive clumsiness can be. She left the supermarket with stars in her eyes, for she had loved the way his long, nervous fingers moved from the conveyor belt to the bags, how deftly (until the mayonnaise) they had picked up her items and placed them into her bags. She had loved the way the hair kept falling into his eyes as he leaned over to grab a box or a tin. And the tattered brown shoes he wore with no socks. And the left side of his collar turned in rather than out.</p>
+
+          <p>The bag boy seemed a wonderful contrast to the perfectly beautiful house she had been forced to accept as her home, to the history she hated, to the loneliness she had become used to, and she couldn't wait to come back for more of his awkwardness and dishevelment.</p>
+
+          <p>Incredibly, it was another four weeks before they saw each other again. As fate would have it, her visits to the supermarket never coincided with his schedule to bag. Each time she went to the store, her eyes scanned the checkouts at once, her heart in her mouth. And each hour he worked, the bag boy kept one eye on the door, watching for the red-haired girl with the big orange bow</p>
+
+          <p>Yet in their disappointment these weeks, there was a kind of ecstasy. It is reason enough to be alive, the hope you may see again some face which has meant something to you. The anticipation of meeting the bag boy eased the girl's painful transition into her new and jarring life in Cincinnati. It provided for her an anchor amid all that was impersonal and unfamiliar, and she spent less time on thoughts of what she had left behind as she concentrated on what might lie ahead. And for the boy, the long often tedious hours at the supermarket, which provided no challenge other than that of showing up the following workday. these hours became possibilities of mystery and romance for him as he watched the electric doors for the girl in the orange bow.</p>
+
+          <p>And when finally they did meet up again, neither offered a clue to the other that he, or she, had been the object of obsessive thought for weeks. She spotted him as soon as she came into the store, but she kept her eyes strictly in front of her as she pulled out a cart and wheeled it toward the produce. And he, too, knew the instant she came through the door-though the orange bow was gone, replaced by a small but bright yellow flower instead and he never once turned his head in her direction but watched her from the corner of his vision as he tried to swallow back the fear in his throat.</p>
+
+          <p>It is odd how we sometimes deny ourselves the very pleasure we have longed for and which is finally within our reach. For some perverse reason she would not have been able to articulate, the girl did not bring her cart up to the bag boy's checkout when her shopping was done. And the bag boy let her leave the store, pretending no notice of her.</p>
+
+          <p>This is often the way of children, when they truly want a thing, to pretend that they don't. And then they grow angry when no one tries harder to give them this thing they so casually rejected, and they soon find themselves in a rage simply because they cannot say yes when they mean yes. Humans are very complicated. (And perhaps cats, who have been known to react in the same way, though the resulting rage can only be guessed at.)</p>
+
+          <p>The girl hated herself for not checking out at the boy's line, and the boy hated himself for not catching her eye and saying hello, and they most sincerely hated each other without having every exchanged even two minutes of conversation.</p>
+
+          <p>Eventually-in fact, within the week a kind and intelligent boy who lived very near her beautiful house asked the girl to a movie, and she gave up her fancy for the bag boy at the supermarket. And the bag boy himself grew so bored with his job that he made a desperate search for something better and ended up in a bookstore where scores of fascinating girls lingered like honeybees about a hive. Some months later the bag boy and the girl with the orange bow again crossed paths, standing in line with their dates at a movie theater, and, glancing toward the other, each smiled slightly, then looked away, as strangers on public buses often do when one is moving off the bus and the other is moving on.</p>
+        `;
+      } else if (String(level) === '2' && String(story) === '2') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">Little Women</h2>
+          <p><em>By Louisa M. Alcott</em></p>
+          <p>"CHRISTMAS Won't be Christmas without any presents," grumbled Jo, lying on the rug. "It's so dreadful to be poor!" sighed Meg, looking down at her old dress. "I don't think it's fair for some girls to have plenty of pretty things, and other girls nothing at all," added little Amy. "We've got father and mother and each other," said Beth from her corner. The four young faces on which the firelight shone brightened at the cheerful words, but darkened again as Jo said sadly. "We haven't got father, and shall not have him for a long time."</p>
+
+          <p>Thinking of father far away, where the fighting was. Nobody spoke for a minute: then Meg said, "You know the reason mother proposed not having any presents this Christmas was because it is going to be a hard winter for every one; when our men are suffering so in the army. We can make our little sacrifices. But I am afraid I don't;" and Meg shook her head. "I agree not to expect anything from mother or you, but I do want to buy Undine and Sintram for myself; I've wanted it so long," said Jo, who was a bookworm. "I planned to spend mine in new music," said Beth, with a little sigh. "I shall get a nice box of Faber's drawing-pencils; I really need them," said Amy decidedly. "Mother didn't say anything about our money and she won't wish us to give up everything.</p>
+
+          <p>Let's each buy what we want, and have a little fun." cried Jo. "I know I do, teaching those tiresome children nearly all day," began Meg. "You don't have half such a hard time as I do," said Jo. "How would you like to be shut up for hours with a nervous, fussy old lady, who keeps you trotting till you're ready to fly out of the window or cry?" "It's naughty to fret; but I do think washing dishes and keeping things tidy is the worst work in the world and my hands get so stiff." and Beth looked at her rough hands with a sigh that anyone could hear that time. "I don't believe any of you suffer as I do," cried Amy; "for you don't have to go to school with impertinent girls, who plague you if you don't know your lessons, and laugh at your dresses." "Don't you wish we had the money papa lost when we were little, Jo?" said Meg, who could remember better times.</p>
+        `;
+      } else if (String(level) === '2' && String(story) === '3') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">Malala Yousafai</h2>
+          <p>Malala Yousafai was born in Mingora, Pakistan on July 12, 1997. Her father, a teacher who ran a school for girls in their village, was committed to Malala's education. Malala loved school, but when the Taliban seized their village, they forbid the people there to do many things they had formerly enjoyed. Television and music were banned, and girls were no longer permitted to attend school. Anyone who disobeyed these edits was punished harshly.</p>
+
+          <p>Malala spoke out publicly about how girls had the right to an education, she became a target of the Taliban. One day in October 2012, when she was on the bus on her way home from school, a man wearing a mask got on the bus and asked, "Who is Malala?" He then shot her in the head.</p>
+
+          <p>Malala woke up after ten days in the hospital. During that time, her story had spread around the world and people everywhere were praying for her to get well. She underwent several surgeries and months of rehabilitation before she was able to return home to her family, now living in the United Kingdom.</p>
+
+          <p>Malala has chosen to make the most of her situation as a public figure, and today she continues to fight for girls to have the right to an education. Working with her father, she established the Malala Fund, which helps girls achieve their dreams. For this work, Malala was awarded the Nobel Peace Prize in December 2014, making her the youngest-ever Nobel laureate. She graduated from Oxford University, and today spends her time traveling and supporting educators and activists on behalf of girls struggling to go to school.</p>
+        `;
+      } else if (String(level) === '2' && String(story) === '4') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">Rice Bowl Wishes</h2>
+          <p>Once in a village in China, three young boys, each eleven years old, were adopted by an old lady, Nii Yoo, from an orphanage. She sent two of them, Lan Dua and Swa Jow, to school and dressed them in very fine clothes. However, the third little boy, Gow Sir, was blind, and she treated him as a servant. She dressed him in very old ragged clothes and fed him the food left-over by the other boys. Gow Sir wasn't sent to school and ran errands for Nii Yoo.</p>
+
+          <p>One night, when a deadly fire broke out in the room where they stored rice. Lan Dua and Swa Jow ran out of the house to escape the fire. Gow Sir risked his life, went inside to help Lady Nii Yoo escape the fire. He carried her on his back and both were saved.</p>
+
+          <p>Knowing how brave and selfless Gow Sir was, the old lady gave him a rice bowl that could grant wishes, before her last breath. She told him that the rice bowl could grant one wish a year, two wishes every two years, and three wishes every three years. Also, she added, all the wishes would be revoked if the rice bowl was broken. So she told him to wish wisely.</p>
+
+          <p>When Gow Sir wished for his vision to see lady Nii Yoo one last time before burying her, the bowl granted him the same. Lan Dua and Swa Jow soon came back and got to know about the rice bowl. The two boys wished for a house, food, and good grades in school without studying. After three years, it was time again to make wishes. While the two boys wished for houses and gold, Gow Sir wished for a library loaded with books.</p>
+
+          <p>Every three years, Lan Dua and Swa Jow continued to wish for mansions, gold, wives, sons, and high-rank offices in the village, without working for any of it. Whereas, Gow Sir, wished for more books to replace his old ones and went on reading them. He gathered a lot of knowledge over the nine years.</p>
+
+          <p>After nine years, on one such occasion, when the three of them came together to make wishes from the rice bowl, both Lan Dua and Swa Jow wanted to keep the bowl to themselves. They tried to grab the bowl and dropped it meanwhile. Immediately. Gow Sir lost his vision, and the other two lost all their possessions.</p>
+
+          <p>Lan Dua and Swa Jow learned the lesson of their stupidity and became the oldest pupils at the school. They became very dedicated to their studies. However, Gow Sir did not lose the knowledge that he gained from the books, and he was known to be among the wisest teachers in China. Even though the rice bowl lost its magic, Gow Sir glued its broken pieces and kept it on his desk as an ordinary bowl.</p>
+        `;
+      } else if (String(level) === '2' && String(story) === '5') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">Rice Bowl Wishes</h2>
+          <p>Once in a village in China, three young boys, each eleven years old, were adopted by an old lady, Nii Yoo, from an orphanage. She sent two of them, Lan Dua and Swa Jow, to school and dressed them in very fine clothes. However, the third little boy, Gow Sir, was blind, and she treated him as a servant. She dressed him in very old ragged clothes and fed him the food left-over by the other boys. Gow Sir wasn't sent to school and ran errands for Nii Yoo.</p>
+
+          <p>One night, when a deadly fire broke out in the room where they stored rice. Lan Dua and Swa Jow ran out of the house to escape the fire. Gow Sir risked his life, went inside to help Lady Nii Yoo escape the fire. He carried her on his back and both were saved.</p>
+
+          <p>Knowing how brave and selfless Gow Sir was, the old lady gave him a rice bowl that could grant wishes, before her last breath. She told him that the rice bowl could grant one wish a year, two wishes every two years, and three wishes every three years. Also, she added, all the wishes would be revoked if the rice bowl was broken. So she told him to wish wisely.</p>
+
+          <p>When Gow Sir wished for his vision to see lady Nii Yoo one last time before burying her, the bowl granted him the same. Lan Dua and Swa Jow soon came back and got to know about the rice bowl. The two boys wished for a house, food, and good grades in school without studying. After three years, it was time again to make wishes. While the two boys wished for houses and gold, Gow Sir wished for a library loaded with books.</p>
+
+          <p>Every three years, Lan Dua and Swa Jow continued to wish for mansions, gold, wives, sons, and high-rank offices in the village, without working for any of it. Whereas, Gow Sir, wished for more books to replace his old ones and went on reading them. He gathered a lot of knowledge over the nine years.</p>
+
+          <p>After nine years, on one such occasion, when the three of them came together to make wishes from the rice bowl, both Lan Dua and Swa Jow wanted to keep the bowl to themselves. They tried to grab the bowl and dropped it meanwhile. Immediately. Gow Sir lost his vision, and the other two lost all their possessions.</p>
+
+          <p>Lan Dua and Swa Jow learned the lesson of their stupidity and became the oldest pupils at the school. They became very dedicated to their studies. However, Gow Sir did not lose the knowledge that he gained from the books, and he was known to be among the wisest teachers in China. Even though the rice bowl lost its magic, Gow Sir glued its broken pieces and kept it on his desk as an ordinary bowl.</p>
+        `;
+      } else if (String(level) === '2' && String(story) === '6') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">The Brave Tin Soldier</h2>
+          <p><em>By Hans Christian Andersen</em></p>
+          <p>There were once five-and-twenty tin soldiers, who were all brothers, for they had been made out of the same old tin spoon. They shouldered arms and looked straight before them, and wore a splendid uniform, red and blue. The first thing they ever heard was the words, "Tin soldiers!" uttered by a little boy, when the lid of the box was taken off. They were given him for a birthday present, and he stood at the table to set them up. The soldiers were all exactly alike, excepting one, who had only one leg; he had been left to the last, but they made him to stand firmly on one leg, and this caused him to be very remarkable. When the children came in the next morning, they placed the tin soldier in the window. But the window flew open, and out fell the tin soldier, it was a terrible fall. It began to rain, till there was a heavy shower. When it was over, two boys happened to pass by, and one of them said, "Look, there is a tin soldier." So they made a boat out of a newspaper, and placed the tin soldier in it, and sent him sailing down.</p>
+        `;
+      } else if (String(level) === '2' && String(story) === '7') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">The Eighth Tail Story</h2>
+          <p><em>By: Andrew Frinkle</em></p>
+          <p>I was near to completing myself. I had gained seven of my nine tails, and soon I would be far more than the fox I had been born as. Of course, even as a young fox kit, I had been more than just a fox. I was a Gumiho, a forest fox spirit destined to gain 9 tails by learning important lessons.</p>
+
+          <p>Each lesson so far had made me more and more human. I'd learned to look like them, speak like them, and to an extent even think like them. Of course, my disguises were not perfect, and it had taken me years of practice to get to where I was. I'd made a few friends along the way, but these last few lessons had taken me a great deal of time to figure out, and the children I had known in the human villages the forest were now grown up. Most had children and families of their own, so I spent my days walking the forest, coming upon humans when I could, often hunters and fishermen, so I could practice being human.</p>
+
+          <p>Today marked a special event in the villages, a summer festival. Everyone would wear special robes and dresses, and many lanterns would be lit. Prayers would be said, and bells would ring at midnight. It was one of the biggest festivals of the year, and I'd been preparing myself for it. I'd even assembled a summer dress of my own from scraps and pieces of cloth that I'd pilfered from townsfolk.</p>
+
+          <p>My dress was white, with patches of red I'd cut to look like cherry blossoms. I had a matching red belt tied around my waist, and I had flowers in my hair as well. I'd even managed to make my own sandals for the outfit. Girls of the town also used makeup to color their faces, which I found odd, but I felt it would better hide my true nature, so I tried it as well. Of course, I did not have the powders and paints they had for their faces, so I had to make do with berries to stain my lips and flowers to color my cheeks and eyelids. I had to say that when I looked into my own reflection on a sliver of a mirror I had found and kept, I did not recognize myself.</p>
+
+          <p>I made my way into town as the sun began to set. People from surrounding farms and smaller communities were riding horses, carriages, and wagons to come visit the larger town. One kind old man and his elderly wife even offered me a ride, seeing how I was walking alone along the road. We made conversation as we went, and I was very careful about what I said. My communication skills were rusty from disuse, but I think I managed to convince them that I was a young woman who lived in the next valley, and that I was meeting some cousins in town.</p>
+
+          <p>In town, I climbed down from the wagon and offered my thanks with a deep bow, a gesture I'd learned from watching humans. They smiled and wished me luck in finding my cousins, and waved as I melted into the crowds.</p>
+
+          <p>People in a rainbow of robes and dresses lined the streets. The streets were mostly packed dirt, but the sidewalks were cobbled with large flat stones. Along these cobbled walks, vendors had set up to sell treats and sweets. Others had set up silly games of chance, where one might win a hair ribbon or even a goldfish. Children ran about, tearing up and down the streets with a freeness that I envied. I had not felt that type of freedom since I was a young fox kit running in the woods.</p>
+        `;
+      } else if (String(level) === '2' && String(story) === '8') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">The Golden Road</h2>
+          <p><em>By L. M. Montgomery</em></p>
+          <p>"I've thought of something amusing for the winter," I said as we drew into a half-circle around the glorious wood-fire in Uncle Alec's kitchen. We had been having a game of Blind-Man's Buff. It had been splendid at first, but later the fun went out of it. But as we dropped into our places the Story Girl shot a glance at me that this was the moment for introducing the scheme she and I had been developing for some days. It was really the Story Girl's idea. "Let us get up a newspaper of our own-write it all ourselves, and have all we do in it." Everyone looked rather blank and amazed, except the Story Girl. She knew what she had to do, and she did it.</p>
+
+          <p>"What a silly idea!" she exclaimed "I think it's a splendid idea," Felicity said enthusiastically. "I think it would be a great fun," said Peter decidedly. The Story Girl could hide her delight. "Bev wants to be editor," she said, "I think it would be nice," said Cecily. "Will it be printed?" asked Dan. "Oh, no," I said. "We can't have it printed. We'll just have to write it out-we can buy foolscap from the teacher."</p>
+
+          <p>"Well, it's decided, then, that we're to have a newspaper," I resumed. "The next thing is to choose a name for it. "I think it would be nice just to call it Our Magazine, Cecily said. "Our Magazine it will be, then," I said. "If I'm to be editor you'll all have to be sub-editors" "Oh, I couldn't," protested Cecily. "You must." "Well, we ought to have an etiquette department, then," said Felicity. "Of course we'll have one," I said, "and Dan will edit it." "We want you to edit the household department, Felicity," I said. Felix will edit the jokes and the Information Bureau, and Cecily must be fashion editor. The Story Girl will attend to the personals. They're very important. Bev will run the scrap book department, besides the editorials," said the Story Girl. "Aren't you going to have a story page?" asked Peter. "We will, if you'll be fiction and poetry editor," I said. "All right," he said, recklessly. "We can put anything we like in the scrap book department." I explained, "but all the other contributions must be original, except the personals. We must all do our best. Our Magazine is to be 'a feast of reason and flow of soul.' "Well, we'll go ahead then," I said, with a sigh of relief that the project had been so easily launched. "We'll get the first issue out about the first of January."</p>
+        `;
+      } else if (String(level) === '2' && String(story) === '9') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">The Hare and the Tortoise</h2>
+          <p><em>By Aesop</em></p>
+          <p>A Hare was making fun of the Tortoise one day for being so slow.</p>
+
+          <p>"Do you ever get anywhere?" he asked with a mocking laugh.</p>
+
+          <p>"Yes," replied the Tortoise, "and I get there sooner than you think. Run you a race and prove it."</p>
+
+          <p>The Hare was much amused at the idea of running a race with the Tortoise, but for the fun of the thing he agreed. So the Fox, who had consented to act as judge, marked the distance and started the runners off.</p>
+
+          <p>The Hare was soon far out of sight, and to make the Tortoise feel very deeply how ridiculous it was for him to try a race with a Hare, he lay down beside the course to take a nap until the Tortoise should catch up.</p>
+
+          <p>The Tortoise meanwhile kept going slowly but steadily, and, after a time, passed the place where the Hare was sleeping. But the Hare slept on very peacefully, and when at last he did wake up, the Tortoise was near the goal. The Hare now ran his swiftest, but he could not overtake the Tortoise in time.</p>
+        `;
+      } else if (String(level) === '2' && String(story) === '10') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">Underwater Volcanoes</h2>
+          <p><em>By Dom Respighi Lincoln</em></p>
+          <p>Volcanoes, be they continental (land-based) or submarine (underwater), are one of our planet's most fascinating natural wonders. Bursting from beneath the Earth's crust, they are a constant reminder of the tumultuous and superheated environment raging beneath our feet. Yet, for all those images of volcanoes roaring into life on land, exploding with white-hot magma and plumes of ash, these violent acts only account for a small percentage of our volcano population. The biggest and most numerous candidates are instead beneath our seas, lurking in shallow waters and deep ocean depths.</p>
+
+          <p>These underwater vents and fissures account for a staggering 75% of our planet's annual magma output, with most of these volcanic wonders buried under an average of 2,600 miles of water. Around 5,000 known submarine volcanoes are currently in an active state, and these structures (which can range from 10m high to a staggering 3,500m from the seabed) play a vital if temperamental role in the fragile ecosystems of marine life. While many can provide the correct chemical conditions to support life, they can also wreck a previously established ecosystem causing population of fish and plankton to plummet as a result. They can also produce new lands, creating volcanic islands that quite literally rise from the depths. The islands of Hawaii, for instance, are the product of the submarine volcano eruption beneath the waves.</p>
+
+          <p>Volcano Formation: All volcanoes are formed by the shifting of tectonic plates into the lithosphere (the outmost layer of the Earth's composition). These plates depend as continental or oceanic; depending on their location can be affected by a variety of elements, including the rotation of the planet, gravitational pull and even the positioning of the Moon and the Sun.</p>
+
+          <p>Unlike their continental brethren, submarine volcanoes only exist along locations known as boundaries. These boundaries come in three distinct varieties-convergent, divergent and transform- but submarine volcanoes only occur on boundaries that host convergent and divergent activity.</p>
+        `;
+      } else if (String(level) === '3' && String(story) === '1') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">FOG, MUD, MIRE</h2>
+          <p>London. Michaelmas term lately over, and the Lord Chancellor sitting in Lincoln's Inn Ha Il Implacable Novemberweather. As much mud in the streets as if the waters had but newly retired from the face of the earth, and it would not be wonderful to meeta Mega losa urus, forty feet long orso, waddling like an elephantine lizard up Holbom Hill. Smoke lowering down from chimney-pots, making a soft black drizzle, with flakes of soot in it as big as full-grown snowflakes--gone into mourning, one might imagine, for the death of the sun. Dogs, undistinguishable in mire. Horses, scarcely better, splashed to the ir very blinkers. Foot passengers, jostling one another's umbrellas in a general infection of illtemper, and losing the ir foot-hold at street-comers, where tens of thousands of other foot passengers have been slipping and sliding since the day broke (if this day everbroke), adding new deposits to the crust upon crust of mud, sticking at those points tenaciously to the pavement, and accumulating at compound interest.</p>
+
+          <p>Fog everywhere. Fog up the river, where it flows among green aits and meadows; fog down the river, where it rolls de filed among the tiers of shipping and the waterside pollutions of a great (and dirty) city. Fog on the Essex marshes, fog on the Kentish heights. Fog creeping into the cabooses of collier-brigs; fog lying out on the yards and hovering in the rigging of great ships; fog drooping on the gunwales ofbargesand small boats, Fog in the eyesand throats of ancient Greenwich pensioners, wheezing by the fire sides of the ir wards; fog in the stem and bowlofthe aftemoon pipe of the wrathful skipper, down in his close cabin; fog cruelly pinching the toes and fingers of his shivering little 'prentice boy on deck. Chance people on the bridges peeping over the parapets into a nether sky of fog, with fog allround them, as if they were up in a balloon and hanging in the misty clouds.</p>
+
+          <p>Gas looming through the fog in divers places in the streets, muchas the sun may, from the spongey fields, be seen to loom by husband man and ploughboy. Most of the shops lighted two hours before their time--as the gasseems to know, for it hasa haggard and unwilling look.</p>
+
+          <p>The raw afternoon is ra west, and the dense fog is densest, and the muddy streets are muddiest near that leaden-headed old obstruction, appropriate ornament for the threshold of a leaden-headed old corporation, Temple Bar. And hard by Temple Bar, in Lincoln's Inn Ha Il, at the very heart of the fog, sits the Lord High Chancellor in his High Court of Chancery.</p>
+
+          <p>Nevercan there come fog too thick, nevercan there come mud and mire too deep, to assort with the groping and floundering condition which this High Court of Chancery, most pestilent of hoary sinners, holds this day in the sight of heaven and earth.</p>
+        `;
+      } else if (String(level) === '3' && String(story) === '2') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">Johnny Appleseed</h2>
+          <p>Once there was a kind, happy old man who lived in a little hut. His work was taking care of his apple trees. One day, the old man was eating a big, red apple and as he did so, he thought of how he could help other people. Suddenly he smiled and said, "Why did I not think of it before?" From than on, he saved the cores of all the apples he ate.</p>
+
+          <p>One day, he he left his little home, taking with him a bag with apple-cores. Now and again, he stopped by the side of the road, made a hole in the ground and planted an apple-core in it. He did this everywhere he went for the rest of his life. Fine apple trees grew from the cores which he planted, and tired, hungry people would stop to eat apples and rest under the shade, all thanks to kind, old Johnny Apple-seed.</p>
+        `;
+      } else if (String(level) === '3' && String(story) === '3') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">The Ant and the Dove</h2>
+          <p>One hot day, an ant was searching for some water. After walking around for some time, she came to a spring. To reach the spring, she had to climb up a blade of grass. While making her way up, she slipped and fell into the water.</p>
+
+          <p>She could have drowned if a dove up a nearby tree had not seen her. Seeing that the ant was in trouble, the dove quickly plucked off a leaf and dropped it into the water near the struggling ant. The ant moved to-wards the leaf and climbed up there. Soon it carried her safely to dry ground. Just at that time, a hunter nearby was throwing out his net towards the dove, hoping to trap it.</p>
+
+          <p>Guessing what he was about to do, the ant quickly bit him on the heel. Feeling the pain, the hunter dropped his net. The dove was quick to fly away to safety.</p>
+
+          <p>One good turn deserves another.</p>
+        `;
+      } else if (String(level) === '3' && String(story) === '4') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">The Cats And The Monkey</h2>
+          <p>Two cats once found a piece of bread. They both were very hungry. They were not willing to share the food with each other. They started fighting for the bread. One cat said, "I found it first it's mine." Another cat said, "No I found it first, it's mine"</p>
+
+          <p>A monkey was seeing this from a distance. He wanted to eat the bread too. He thought of a plan to eat it himself.</p>
+
+          <p>He approached the cats and asked them why they were quarreling. The cats told him everything. He then offered to solve the matter. He said, I will divide the bread into two equal halves and give it to you."</p>
+
+          <p>Both the cats agreed to his proposal and gave him the bread. He cunningly divided the bread into two uneven pieces one was bigger than the other. He then took a big bite from the bigger part. But this made the other part bigger than the other. He continued doing this until he ate the whole of the bread.</p>
+
+          <p>The two cats were too late to realize his cleverness. The monkey fled away after eating their bread right in front of them. They now realized that had they shared the bread with each other, they would not have been left hungry.</p>
+        `;
+      } else if (String(level) === '3' && String(story) === '5') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">The Forgotten Library</h2>
+          <p>Amara had always been drawn to old, abandoned places, and the stories they seemed to hold within their crumbling walls. One crisp autumn afternoon, while walking through the outskirts of her town, she stumbled upon something remarkable. Hidden behind a tangle of vines and weathered stone was what appeared to be the entrance to an ancient building. The faded letters etched above the archway read. Eterna Bibliotheca.</p>
+
+          <p>Curiosity overcame caution, and Amara pushed open the heavy wooden door, its hinges groaning in protest. Inside, the air smelled of dust and forgotten memories. Shelves towered over her, filled with books whose spines were cracked and faded. Light filtered through a shattered stained glass window, casting colorful patterns on the worn marble floor. It was breathtaking. She wondered why no one had mentioned this place before. Was it truly forgotten, or had it been deliberately left to time?</p>
+
+          <p>As Amara wandered deeper, she noticed peculiar things. Some books glowed faintly. their pages warm to the touch. One book, resting on a pedestal at the center of the library. seemed to hum softly when she approached. The cover bore no title, only a strange symbol she didn't recognize. Against her better judgment, she opened it.</p>
+
+          <p>The pages were blank at first, but then words began to appear, forming sentences as if an invisible hand were writing them. The words spoke directly to her, recounting her own memories, fears, and dreams in eerie detail Startled, she closed the book and stepped back. her pulse racing. Who had created this library, and why did it seem to know her?</p>
+
+          <p>Amara's mind buzzed with questions, but one thing was certain: this library held se crets she was only beginning to uncover. As she left. the door creaked shut behind her, and she couldn't help but feel that the library had awakened after years of silence and it wasn't finished with her yet.</p>
+        `;
+      } else if (String(level) === '3' && String(story) === '6') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">The Fox and the Woodcutter</h2>
+          <p>Some hunters were chasing a fox. The fox saw a woodcutter and asked him for help. "Please hide me, kind woodcutter," the fox said. The woodcutter told the fox to go into his house.</p>
+
+          <p>Soon the hunters came. They asked the woodcutter, "Did you see a fox?" The woodcutter said, "No," but pointed to his house. The hunters didn't know why the woodcutter pointed and they went away.</p>
+
+          <p>After a while the fox came out of the house. The fox did not say "Thank you." The woodcutter got angry at the fox and asked "Why don't you say thank you?"</p>
+
+          <p>"I wanted to thank you," the fox said. "But i saw you signal to the hunters. You words did not. match your actions.</p>
+        `;
+      } else if (String(level) === '3' && String(story) === '7') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">The Lost Library Card</h2>
+          <p><em>By: Judie Eberhardt</em></p>
+          <p>Lisa loved to read! Every time her Mom took her to the bookstore, she would buy two books. By the time she went to bed, Lisa had already read one of them.</p>
+
+          <p>Mom said to Lisa the next day, "I think we need to get you your own library card." "Wow!" cried Lisa. "I've always wanted a library card."</p>
+
+          <p>The next day after school, Mom took Lisa to the library to get her a card. The lady at the desk asked Mom to fill out a paper and then asked Lisa to print her name. She then told Lisa how many books she could borrow on her card. Lisa was so excited! She could hardly wait to search the many shelves of books. Lisa's favorite books were mysteries. She liked to solve the mystery in her head and see if she was right when she got to the end of the story. Her other favorite books were ones that took her to faraway places.</p>
+
+          <p>Lisa had three books to return the next day and was excited to take out three more. However, when Lisa got to the library, she didn't have her card. "Oh no!" Lisa said to the lady at the desk. "I can't find my library card!" "I'm sorry," said the lady. "I can't let you take any books without your card." Lisa left the library feeling very sad and also worried what her Mom would say when she told her she lost her card.</p>
+
+          <p>When Lisa got home, Mom told Lisa that a boy came to the house with her library card, and he said he found it on the sidewalk near the library. "It must have dropped out of one of the books I was carrying," said Lisa. "You were lucky that boy found your card," said Mom. "You need to be very careful." "Having a library card is a big responsibility." Lisa said, "I think I will keep it in my wallet." Mom said, "Let's go back to the library and get those books you wanted." "Sounds great," said Lisa. When they got to the library, Mom decided to get some books too. While they were in the library, Mom told Lisa the boy that found her card was sitting at the round table. Lisa went over to him and said, "Thank you for finding my card." He told Lisa he was glad to help, and they both looked for some mystery books together. Lisa had her books, her card, and a new friend too!</p>
+        `;
+      } else if (String(level) === '3' && String(story) === '8') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">The Mango Tree</h2>
+          <p>In a small town, there was a small house in which lived a young man, his wife, and the young man's sister. This small house had a small garden at the back in which grew a small mango tree. One day the young man's wife came to him and said, "Look here, I'm fed up with our situation. Your sister...."</p>
+
+          <p>"Have you come here to complain about my sister again!"</p>
+
+          <p>"What can I do! I know it's quite useless... My complaints fall on deaf ears, anyway... I'm just... so angry with your sister. I get up early in the moming, draw water from the well, light the fire in the kitchen, cook breakfast, wash and scrub pots..."</p>
+
+          <p>"Don't go on," said the brother. "I've heard it all before."</p>
+
+          <p>"And what does your lazy sister do all day! Nothing nothing... she lolls about in the garden, watering her mango tree, talking to it, clearing away dead leaves, and feeding it manure and mulch...</p>
+
+          <p>"That isn't all she does. She comes in and talks to me. Just an hour ago, she was playing chess with me."</p>
+
+          <p>"Just because she adores you, doesn't mean you should ignore her faults. You must tell her to leave that... silly mango tree alone, and come and help me with the housework. I really think we should marry her off. That might teach her to be more responsible."</p>
+
+          <p>Since the sister was of marriageable age, the brother could not really object. He knew though, that he would miss her very, very much.</p>
+
+          <p>A marriage was arranged.</p>
+        `;
+      } else if (String(level) === '3' && String(story) === '9') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">The Mysterious Art Studio Adventure</h2>
+          <p>Once upon a time, in a quiet little town, there were two adventurous friends named Mia and Jake. One sunny Saturday affemoon, while exploring the woods behind their house, they stumbled upon an old, mysterious building covered in ivy and vines. Curiosity got the better of them, and they decided to investigate.</p>
+
+          <p>As they pushed open the creaky door, they couldn't believe their eyes. It was an art studio filled with easels, canvases, and colorful paints! The room was filled with the smell of creativity. But what made it even more exciting was the discovery that this art studio once belonged to a famous painter, Vincent van Gogh.</p>
+
+          <p>Mia and Jake were over the moon. They had read about van Gogh in school and now they were standing in the very place where he had created some of his most famous masterpieces! But as they looked around, they noticed something strange-one of the paintings on the wall looked incomplete.</p>
+
+          <p>The painting depicted a beautiful starry night sky, but the bottom port of it was missing. Mia and Jake decided to investigate further. They searched the studio high and low, and eventually, they found a hidden compartment in an old wooden chest. Inside, they discovered a notebook filled with sketches and notes. all belonging to van Gogh,</p>
+
+          <p>As they flipped through the notebook, they stumbled upon a secret message. It read, To complete the masterpiece, find the missing plece under the oak free by the river." The two friends knew they had to follow the clue to solve the mystery.</p>
+
+          <p>They rushed to the oak free by the river and started digging in the soft soll. After a few minutes, Jake's hand touched something hard. They pulled it out, and to their amazement, it was the missing piece of the painting!</p>
+
+          <p>Excitedly, they refumed to the art studio and carefully placed the missing piece in its rightful spot on the canvas. As they did, something incredible happened-the stars in the painting began to twinkle, and the night sky came to lifel</p>
+
+          <p>Mia and Jake had not only discovered van Gogh's hidden art studio but also solved the mystery of the incomplete painting. They realized that art could hold secrets and stories waiting to be uncovered. With smiles on their faces, they left the studio, promising to refum and explore more mysteries in the world art.</p>
+        `;
+      } else if (String(level) === '3' && String(story) === '10') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">The Strong Lion and the Small Mouse</h2>
+          <p>Once upon a time, in a big jungle, there was a strong lion and a small mouse. One day, while the lion was sleeping, the mouse accidentally woke him up by running on his nose.</p>
+
+          <p>The lion got annoyed and caught the mouse with his paw. The little mouse shook with fear and asked the lion to please let him go. He promised to help the lion in the future. The lion laughed because he didn't believe a small mouse could help him. But he decided to let the mouse go anyway.</p>
+
+          <p>After a while, the lion got caught in a hunter's net. He screamed for help, but no one heard him. All of a sudden, the mouse appeared and saw the lion in trouble. Remembering the lion's kindness, the mouse started chewing the net until the lion was free. The lion was surprised and thankful.</p>
+
+          <p>He learned that even a small one can help and be kind. From that day on, the lion and the mouse became the best of friends, always looking out for each other in the jungle.</p>
+        `;
+      } else if (String(level) === '3' && String(story) === '11') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">The Talkative Tortoise</h2>
+          <p>Long ago, there lived a tortoise and two swans in a pond. They were very good friends. The tortoise was very talkative. He used to talk to swans for a very long time. All of them were happy.</p>
+
+          <p>Once there was a drought and it lasted for a long time. The water in the pond dried up. There was no water to drink even and it was now impossible to live there. So, the swans decided to fly away to some other place.</p>
+
+          <p>The tortoise requested the swans to take him along too. But, since he couldn't fly, they sat down to think and found a way. The swans suggested an idea according to which the tortoise would have to hold a piece of the stick by its mouth and the swans will hold the ends of that stick.</p>
+
+          <p>They warned the tortoise to not talk during their journey. The tortoise promised, and the three friends set out to fly. On their way, they crossed several villages. Many villagers saw the tortoise and made fun of the tortoise.</p>
+
+          <p>This enraged the tortoise and he couldn't control himself. He opened his mouth to speak. As soon as he did so, he fell down and died. The swans were shocked to see their friend die. The tortoise lost his life because of his foolishness.</p>
+        `;
+      } else if (String(level) === '3' && String(story) === '12') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">The Talkative Tortoise</h2>
+          <p>Long ago, there lived a tortoise and two swans in a pond. They were very good friends. The tortoise was very talkative. He used to talk to swans for a very long time. All of them were happy.</p>
+
+          <p>Once there was a drought and it lasted for a long time. The water in the pond dried up. There was no water to drink even and it was now impossible to live there. So, the swans decided to fly away to some other place.</p>
+
+          <p>The tortoise requested the swans to take him along too. But, since he couldn't fly, they sat down to think and found a way. The swans suggested an idea according to which the tortoise would have to hold a piece of the stick by its mouth and the swans will hold the ends of that stick.</p>
+
+          <p>They warned the tortoise to not talk during their journey. The tortoise promised, and the three friends set out to fly. On their way, they crossed several villages. Many villagers saw the tortoise and made fun of the tortoise.</p>
+
+          <p>This enraged the tortoise and he couldn't control himself. He opened his mouth to speak. As soon as he did so, he fell down and died. The swans were shocked to see their friend die. The tortoise lost his life because of his foolishness.</p>
+        `;
+      } else if (String(level) === '3' && String(story) === '13') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">The Wise Old Man</h2>
+          <p>A wealthy man requested an old scholar to wean his son away from his bad habits took the youth for a stroll through a garden. Stopping suddenly he asked the boy to pull out a tiny plant growing there. The youth held the plant between his thumb and forefinger and pulled it out. The old man then asked him to pull out a slightly bigger plant. The youth pulled hard and the plant came out, roots and all.</p>
+
+          <p>"Now pull out that one," said the old man pointing to a bush. The boy had to use all his strength to pull it out.</p>
+
+          <p>"Now take this one out," said the old man, indicating a guava tree. The youth grasped the trunk and tried to pull it out. But it would not budge.</p>
+
+          <p>"I- It's impossible," said the boy, panting with the effort.</p>
+
+          <p>"So it is with bad habits," said the sage. "When they are young it is easy to pull them out but when they take hold they cannot be uprooted."</p>
+
+          <p>The session with the old man changed the boy's life.</p>
+        `;
+      } else if (String(level) === '3' && String(story) === '14') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">Tiny Homes</h2>
+          <p>Over the past 70 to 80 years, the household lifestyles of middle class Americans have been getting increasingly more extravagant. In 1949, the average size of a single-family home was 909 square feet. By 2021, the average size of an American single family home had reached 2.480 square feet! Not only do some people find the size of these homes excessive; for many they are also unaffordable. For most people, purchasing a home in America today comes with a mountain of debt, a sinkhole of interest, and at least 30 years of working to pay for it all, often in a job that homeowner doesn't even really want to be doing. One form of resistance against this lifestyle which began in the 1970s has become known as the Tiny House Movement.</p>
+
+          <p>A tiny house is a dwelling space that averages between 160 and 200 square feet. Tiny houses are small enough and light enough to be towed by a pickup truck, yet they still contain areas for cooking, living, and sleeping, as well as a bathroom. Today, singles, couples, and even families call tiny houses their home.</p>
+
+          <p>They not only have the advantage of being portable. They are also significantly less expensive than a conventional single family home. Depending on how handy you are with construction and the availability of materials, a tiny house can be built for as little as $8,000, though they typically cost the new homeowner between $30,000 and $60.000. But even $60,000 is a fraction of what people are paying for single family real estate in many areas of the country.</p>
+
+          <p>The decision to go tiny requires some radical self-evaluation, What do people really need to live comfortably? In many areas of the world. people still live for simpler lives than those lived by Americans, who are continually assaulted on television, radio, and social media with advertisements designed to make them think they need more and more personal belongings to be happy.</p>
+        `;
+      } else if (String(level) === '3' && String(story) === '15') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">What Causes Reflections?</h2>
+          <p><em>Cross-Curricular Focus: Physical Science</em></p>
+          <p>Light from the sun or a light bulb moves in straight waves. When the light waves hit an object, they bounce off of it. This action is called reflection. For most objects, the light bounces in many directions at the same time. When this happens, it allows us to see the object. A picture of the object is sent to the brain from the eye. The brain helps us understand what we see.</p>
+
+          <p>Light waves also bounce when they hit a smooth, shiny surface. Hitting a surface like a mirror makes the light waves bounce directly back to your eyes. This movement allows you to see yourself. It creates a reflection. You see the objects around it instead of the mirror itself. Anything shiny may act like a mirror when the light hits it. Have you ever seen your face reflected in the rounded side of a pot or pan? You can even see reflections on the surface of water if it is smooth and still. You have probably seen beautiful pictures of mountain scenes. Often the mountains and sky are reflected on the smooth surface of the lake.</p>
+
+          <p>Water and glass have a special ability. They can refract, or bend, light. That's why a spoon in a clear glass of water will look bent when it really is not. The ability of glass to refract light has given us some useful products. Eyeglasses help us see clearly. Magnifying glasses enlarge our view of an object.</p>
+        `;
+      } else if (String(level) === '4' && String(story) === '1') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">Endings</h2>
+          <p><em>By Murphy C. - Summary</em></p>
+          <p>Cornelius travels through the Darkseed forest and the ruins of his old home, confronting painful memories of loss and trauma. At the Fortress of Memories, the Raven Queen shows him how he has changed from a broken, imprisoned version of himself into someone stronger and free, giving him the closure he has long needed.</p>
+
+          <p>He returns to care for a child named Skyra and later prepares to board a plane, reflecting on the hardships he has survived. Despite his fear and uncertainty, Cornelius realizes he is finally ready to leave his dark past behind and begin a new, hopeful chapter in his life.</p>
+        `;
+      } else if (String(level) === '4' && String(story) === '2') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">Hide and Seek</h2>
+          <p>The story follows a boy who goes for a morning run after arguing with his friend Oscar about misplaced headphones. During the run, he notices a beautiful forest—but the atmosphere quickly shifts when he encounters a terrifying, white, marshmallow-like creature with pale eyes. The creature begins to chase him, turning his run into a deadly game of hide-and-seek. As he flees through the forest, the environment becomes more threatening, and he finds himself lost with no phone signal and no way to call for help. Terrified, he hides, runs, and fights to survive as the creature repeatedly hunts him down. He injures himself badly while escaping, but continues crawling and limping through the woods. Eventually, cornered and on the verge of death, he finds a Swiss army knife and uses it to stab the creature, finally killing it. When he makes it home—bloody, traumatized—his parents reveal that he has been missing for an entire week, leaving him confused about what really happened. The story ends with him vowing never to go running again, haunted by the mysterious, unknowable creature he encountered.</p>
+
+          <p><em>The Fourth Tail Story — By: Andrew Frinkle</em></p>
+          <p>I am a three-tailed fox, a Gumiho. I didn't always have three tails. I was born without any tail whatsoever, but with each lesson I've learned, I've grown a new tail. The first lesson was to be a fox. That allowed me to grow a tail that made me better than other foxes in all respects. The second lesson was to outsmart a human. This made me smarter, cleverer than before. My third lesson was to go among humans and learn that they are not that much different than foxes. I wasn't sure what this had gained me, not yet anyway, but I knew it had changed me somehow. I also knew that I had to learn more! I was minding my business one day, watching the humans, hunting, and going about my day. A wagon was rolling down the road, with a farmer in it, and he had a nice big dog with a sharp nose, the kind that foxes aren't terribly fond of. The dog happened to see me though, and this was a problem, because he leapt down from the wagon and started chasing me, despite his master's frantic calls. That dog was definitely a farm dog, and was not meant for the forest. He smashed through bushes and underbrush like you would not believe. I darted, wove, and dodged as best I could, but that dog was ON my trail. He sniffed and smelled and nothing I could do seemed to throw him off. In that moment, I really wished I was not a fox. It was the first time I ever thought that. I mean, being a fox was great. I could go where I wanted, do what I wanted, and generally live a free life. I loved to hunt, play, and explore the woods. I'd never before thought about what it would mean to be something different, and when I did, something odd occurred: the dog suddenly stopped. One moment he had been chasing me like his life depended upon it and the next he was frozen in place, sniffing the air and trying to catch my scent. Now I never really worried about him catching me, because I could go places he could not, but he had been surprisingly good at chasing me, and he was making me work. That kind of made me feel ashamed, because he was just a farm dog, and I was the fastest, smartest, and best of the foxes in the whole forest!</p>
+        `;
+      } else if (String(level) === '4' && String(story) === '3') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">Lost on the Trail</h2>
+          <p><em>Story By: Judie Eberhardt</em></p>
+          <p>Scott was so excited to be going on the summer day camp trip to the woods. His group was going to fish, float on a raft, and spend two nights sleeping in a fort—all the things boys his age love to do and no little sister to bother him. After arriving at camp, some of the boys wanted to go with Mr. Allen fishing, and some of the boys went on a raft with Mr. Willard. Scott said he was going fishing. "All of you that are going fishing stay with me," said Mr. Allen. Tony, Joey, Mike, and Scott were the ones that chose fishing. Larry, Eddie, and Jason wanted to go on the raft. They left with Mr. Willard.</p>
+
+          <p>The boys gathered up their fishing poles and baskets to hold the fish they were sure they were going to catch. They started down the trail toward the lake. Lake Amber was about a half mile down the trail. The boys arrived at the lake quickly, however when they got there, Scott was not with them. "Where's Scott?" Mr. Allen asked the other boys. "He was right behind me," said Tony. "We did move ahead for a little while," said Joey. Mr. Allen became very worried and started shouting, "Scott, Scott!" No answer. Scott suddenly found himself lost on the trail leading to Lake Amber. "I only looked away for a minute," he thought to himself. "How could I be lost?" Scott decided to turn around and go back the way he came. He remembered the direction to the lake was south. He also remembered he had his compass from his last Boy Scout trip in his pocket. He took out his compass and realized he had been going north. Scott started down the trail in the opposite direction. As he did, he yelled, "Mr. Allen, Joey, Mike." Mike thought he heard someone yelling his name and tried to listen closely. Mr. Allen heard it too. Everyone stayed together and headed to where they heard the voice calling to them. All of a sudden, Scott jumped out from behind a tree and said, "I am so glad to see you guys!" "What happened?" asked the boys and Mr. Allen. "I was looking at the trees." "I must have made a wrong turn," said Scott. "When I realized what happened, you were gone." "Well, we're here now," said Mr. Allen. "Let's make sure we stay together." "Okay," the boys said and headed back to the lake to catch some fish.</p>
+        `;
+      } else if (String(level) === '4' && String(story) === '4') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">My Dreams Came to Life</h2>
+          <p>It was a day like no other, the day my dreams came to life. As I woke up that morning, I had no idea that the ordinary day ahead would turn into a whimsical adventure beyond my wildest imagination.</p>
+
+          <p>It all began when I decided to sleep in a little longer, savoring the comfort of my bed. To my astonishment, as I opened my eyes, I found myself floating above the ground, completely weightless. It was as if the laws of gravity had taken a coffee break, and I was the lucky beneficiary.</p>
+
+          <p>Not one to miss an opportunity, I soared through the air, feeling the wind rush through my hair as I performed loops and twirls like a professional acrobat. I marveled at the world from a new perspective, laughing at the birds who could only dream of such freedom.</p>
+
+          <p>But the surprises didn't end there. As I touched down in a meadow, I spotted a friendly-looking cow grazing nearby. With a casual thought, I transformed her into a talking, poetry-loving cow named Clarabelle. We had a delightful conversation about the meaning of life and the best way to eat daisies.</p>
+
+          <p>Next, I wandered into a nearby forest, where I encountered a mischievous squirrel who was busy organizing a protest against the shortage of acorns. I joined their ranks and became the official "Squirrel Ambassador" for the day, leading a march to the local nut shop to demand better nut distribution.</p>
+
+          <p>By the time the sun began to set, I found myself back in my room, lying in bed once more. It was then that I realized the day's adventures had all been a dream, an extraordinary journey through the landscapes of my imagination.</p>
+        `;
+      } else if (String(level) === '4' && String(story) === '5') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">Noisy Neighbours</h2>
+          <p>A loud drilling noise buzzed through the house. It was coming from next door. "They've been drilling all—bloody—day. They must have five million holes in their walls by now. It's getting ridiculous," Derek complained. "I know but they've just moved in. I'm sure they'll be done soon," Rachel said. "I suppose you're right," he sighed. As the evening came the drilling finally stopped but there was another problem. Boom! Boom! Boom! Music from next door throbbed through the walls. It was so loud even thinking was impossible.</p>
+
+          <p>It was eleven o'clock, the music still pounding, and Harriet tiptoed into the kitchen dressed in a pink nightgown. Her eyes were heavy with sleep and her hair was combed back into a ponytail, which had been messed up by sleeping. "Daddy I can't sleep," Harriet complained. "I know darling. How about we make you some hot chocolate and you can try again in a little bit," Derek said, getting up and opening the fridge for the milk. He put two spoons of powder into a cup and poured the milk on top. He put the cup in the microwave but before it went ping the baby had started wailing in the next room. "Oh no," Rachel huffed, getting up to tend to the baby. Returning holding the baby, Rachel said, "I can't get her back to sleep. If I sit here with the kids would you go round and say something?" "Of course," he replied and stood up. He knocked on the neighbour's door and waited for an answer. He knocked again but it was a while before anybody came to the door. Eventually the door opened and a teenager wearing sunglasses answered.</p>
+        `;
+      } else if (String(level) === '4' && String(story) === '6') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">Stranded on a Desert Island</h2>
+          <p>Once upon a time, in the middle of the vast ocean, there was a tiny, uninhabited desert island. It was so small that it barely had enough room for a palm tree and a few grains of sand. And guess who found themselves stranded there? None other than Bob and Sarah, two ordinary tourists with an extraordinary knack for getting into bizarre situations.</p>
+
+          <p>Bob and Sarah were on a vacation cruise when they decided to take a detour and explore a remote island they spotted on their map. However, their adventurous spirit led them to a rather unfortunate situation. As their cruise ship sailed away, they realized they were stuck on the desert island with no means of communication.</p>
+
+          <p>At first, they tried to stay positive. They thought it would be a fantastic opportunity to live the Robinson Crusoe dream. They attempted to build a shelter using palm fronds and driftwood, but it collapsed on them, creating a pile of palm leaves that they decided to call home.</p>
+
+          <p>In the end, their rescue came when a passing fishing boat spotted their SOS message written in the sand. As they waved goodbye to their island misadventure, they couldn't help but laugh at all the ridiculous situations they had found themselves in.</p>
+        `;
+      } else if (String(level) === '4' && String(story) === '7') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">The Big Secret</h2>
+          <p>Then it finally occurred to me what the big secret was. I'm not their child. I must be adopted. When I was sixteen I confronted them about it. "Mum, am I adopted?" I asked bluntly whilst she was chopping vegetables for dinner. It had got to the point where I just couldn't keep it in any longer. She stared at me, eyes wide and mouth unmoving.</p>
+
+          <p>"What makes you ask that?" she stuttered. "I've just realised it must be the case," I said simply. "I'm not like any of you." She re-entered a few moments later with my 'father' in tow. I stared at both of them, waiting for some kind of answer. "Is everything alright, Kim?" 'dad' asked. Neither of them had a valid explanation for keeping me in the dark all of these years. Somehow they thought it was best to keep me dazed and confused, sad and worried. I don't think I'll ever forgive them for that, but at least I know the truth now. I know the big secret that they've been struggling to keep.</p>
+        `;
+      } else if (String(level) === '4' && String(story) === '8') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">The Chores</h2>
+          <p><em>By: Andrew Frinkle</em></p>
+          <p>Three brothers named Greg, Todd, and Rob all shared the chores. Every weekend, they would draw sticks to see who had to do what. The six sticks had the chores written on them. They each took turns drawing sticks until each of them had two. Then, they could trade if they wanted to, but they still each had to do both jobs. Greg drew first. He got garbage duty, a smelly but fast job. Todd drew out the stick with the lawn mowing duty written on it. He groaned, because that was the longest job. Rob pulled clean the garage, which was a dusty and boring job.</p>
+
+          <p>In the end, they all finished about the same time. Then, they cleaned themselves up and enjoyed the rest of the weekend.</p>
+        `;
+      } else if (String(level) === '4' && String(story) === '9') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">The Diary of a Wandering Artist</h2>
+          <p>Meet Emily, a talented young artist with a passion for adventure. Emily wasn't your typical artist who stayed in a cozy studio. No, she was a wandering artist who sought inspiration in the most unusual places.</p>
+
+          <p>One sunny morning, Emily packed her sketchbook, pencils, and paints into a backpack and set off on her latest artistic expedition. Her goal? To capture the essence of the world in her unique way.</p>
+
+          <p>As she strolled through a bustling city, Emily spotted a group of pigeons congregating in a park. She couldn't resist the charm of these urban birds, so she sat down and began sketching them. To her surprise, the pigeons seemed to appreciate her attention and posed as if they were professional models.</p>
+
+          <p>With the last strokes of her brush, Emily marveled at the diverse subjects she had encountered throughout the day. From pigeons to street performers to market scenes and seascapes, her wandering artist's diary was filled with unexpected treasures.</p>
+        `;
+      } else if (String(level) === '4' && String(story) === '10') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">The Fox Without a Tail</h2>
+          <p>One sunny day, a fox that had been caught in a trap succeeded after much painful tugging in getting away. But he had to leave behind his beautiful bushy tail. For a very long time, he stayed away from the other foxes, for he knew that they would all make fun of him, tell jokes, and laugh behind his back.</p>
+
+          <p>Finally, he thought of a plan that would help him out of his trouble. He called a meeting of all the foxes, saying that he had something of great importance to tell the tribe. When they were all gathered together, the Fox Without a Tail got up and addressed the group of foxes. He made a long speech in which he explained that any harm that has ever come to a fox has always been because of his bushy tail.</p>
+
+          <p>When he had finished talking, an old Fox stood up and said, smiling, "You sir, Mr. Fox, kindly turn around for a moment, and everyone here shall have their answer to why you are being so persuasive." When the poor Fox Without a Tail turned around, there was such a storm of laughter that he saw how it would be impossible to persuade the foxes to part with their tails.</p>
+        `;
+      } else if (String(level) === '4' && String(story) === '11') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">THE HUNGRY MOUSE</h2>
+          <p>A mouse was having a very thought time. She had no food for many days and made strenuous efforts get her food. All her efforts went in vain. She looked everywhere to find her food. As the days pass by, she became very thin.</p>
+
+          <p>One day, the mouse found a basket with corns. She also noticed a tiny hole in the basket, which was sufficient enough to move her in. She easily moved inside the hole. Since she had no foods for many days, she ate a large amount of corn. Without realizing her, she continuously ate more and more corns. She realized very later that she ate a lot more than she actually required. After eating a whole lot of corn, she became very fat!</p>
+
+          <p>Satisfied with corns, the fat mouse tried to come out of the basket through the small hole. Unfortunately, the tiny hole could not accommodate the big mouse!!!!!</p>
+
+          <p>The mouse started screaming 'Oh god! Let me come out, how can I come out?</p>
+
+          <p>A rat after hearing mouse's screaming voice from the
+
+          basket, asked her what happened! Mouse told the story and asked rat a solution.</p>
+
+          <p>Rat told, if you want to come out the basket, wait for sometime or even days to lose your all your fat until you grow thin.</p>
+
+          <p>Mouse started to starve now but with lots of food to come out of the trap!</p>
+        `;
+      } else if (String(level) === '4' && String(story) === '12') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">The Misadventures of Professor Bumblebee</h2>
+          <p>In the quirky world of academia, there lived a renowned but eccentric scientist known as Professor Bartholomew Bumbleben. With wild hair, mismatched socks, and a perpetually absent-minded demeanor, Professor Bumblebee was a walking embodiment of chaos. Yet, beneath his zany exterior lay a brilliant mind capable of groundbreaking discoveries.</p>
+
+          <p>One sunny morning, Professor Bumblebee burst into his cluttered laboratory with a jubilant grin. He had a groundbreaking idea that would revolutionize the world of science—unbreakable glass made from jellybeans! With boundless enthusiasm, he began mixing beakers filled with colorful jellybeans, hoping to create the ultimate glass formula.</p>
+
+          <p>As he stirred and experimented, jellybeans flew in every direction, sticking to the walls and ceiling. Professor Bumblebee, oblivious to the mess, continued his work. The laboratory soon resembled a candy-coated explosion, and the sweet aroma of jellybeans filled the air.</p>
+
+          <p>Hours turned into days, and the professor's obsession with jellybean glass knew no bounds. He neglected sleep, meals, and even his own hygiene. Friends and colleagues began to worry about his well-being, but Professor Bumblebee was lost in a sugary trance.</p>
+
+          <p>One fateful night, as he attempted to create a glass beaker entirely out of jellybeans, disaster struck. The beaker shattered into a sticky, multicolored mess, leaving Professor Bumblebee covered in gooey jellybeans. His once-beloved invention had become his greatest misadventure.</p>
+
+          <p>With a sigh of defeat, Professor Bumblebee realized the impracticality of his idea. He spent days cleaning up the laboratory, removing jellybeans from every nook and cranny. The world would have to wait a bit longer for unbreakable glass.</p>
+
+          <p>Despite the chaos and stickiness, Professor Bumblebee's misadventures continued to bring laughter and wonder to the world of science. And who knows? Maybe one day, he would stumble upon a discovery even more remarkable than jellybean glass.</p>
+        `;
+      } else if (String(level) === '4' && String(story) === '13') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">The Nightmare of Reality</h2>
+          <p>Olson, a weary miner forced to work deep underground, endures brutal conditions alongside other suffering laborers. In the darkness of the tunnels, he receives a warning from an elderly man named Solomon: Olson's wife and child are in danger, and he must escape before it's too late. Holding onto hope, Olson imagines a peaceful future for his family as he continues his grueling work, waiting for a chance to leave.</p>
+
+          <p>When his shift finally ends, Olson races home through the forest, desperate to reach his village. But as he arrives, he sees torches and hears screams—the Lord he works for has attacked the village. Olson watches in horror as flames engulf the homes and innocent villagers are slaughtered. Terrified for his family, he charges into the chaos to save them, confronted with the nightmare reality Solomon warned him about.</p>
+        `;
+      } else if (String(level) === '4' && String(story) === '14') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">The Reign of Robespierre</h2>
+          <p>Following the events at the Bastille, the Third Estate's National Assembly again demanded that King Louis XVI address their concerns, but he was unable to do so. The Third Estate and their National Assembly then took over the country. A few years later, King Louis XVI was put on trial for treason by the revolutionaries, who formally ended the monarchy in France. Louis XVI was beheaded on January 21, 1793. The National Assembly changed its name several times. From 1793 to 1794, it was called the National Convention and led by a man named Maximilien Robespierre. This period was known as the Reign of Terror.</p>
+
+          <p>Robespierre was a member of the Jacobins, a group of radical revolutionaries who had a great amount of power at the time. The first Jacobins were National Assembly members with common political ideas who held meetings in the Jacobin monastery in Paris. The group grew quickly once the revolution began. At the height of its power, it included half a million members located all over the country. The Jacobins were made up of two factions. The more moderate faction was called the Girondists. The radical faction was called the Montagnards (mountain group) and was led by Robespierre.</p>
+
+          <p>In an attempt to restore order in a fractured country under siege from foreign enemies and civil war skirmishes, Robespierre took over the government of France on September 5, 1793. He declared that the "order of the day" would be terror. Thus began the most violent period of the French Revolution. During this time, it was a crime punishable by death to even be suspected of not supporting the revolution.</p>
+
+          <p>Robespierre was eventually removed from office by the French people and executed. The Jacobin Club was disbanded and many of its leaders were imprisoned or put to death.</p>
+        `;
+      } else if (String(level) === '4' && String(story) === '15') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">The Robbery</h2>
+          <p>The robbery was to be thoroughly planned and brilliantly executed. There were to be no mistakes. Everything must go according to plan. Everything must run smoothly. There must be no mess-ups. That's what was drilled into them day after day. They went through plan after plan, map after map, until they knew everything about everything. They knew each entry and exit point in detail and exactly what to do on the inside. There was no room for anything to go wrong. At least that's what they thought at the time. The robbery would take place at exactly 3am—late enough that there would be very few, if any, people wandering around, early enough that it would still be pitch black.</p>
+
+          <p>"Having memorised the maps and the alarm codes, Rob pulled a balaclava down over his face. Him and Dave were to go in alone. They waited outside in the bushes, checking no one was around. Once it was clear the place was empty, they went up to the door of the bank. In this area the streetlamps were turned off at one in the morning, so it was deathly dark. Rob picked the lock and Dave got ready to turn off the alarm. If it was done within three seconds it would turn off without alerting the police. One. Two. Three.</p>
+
+          <p>They did it. They were inside. Now all that had to be done was collecting the money and getting out. The safe was in the back room with a five-digit code. Dave shut the door behind them and they ran through to the back. Rob bent down to the safe and spun the dial for the code.</p>
+        `;
+      } else if (String(level) === '4' && String(story) === '16') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">The Servant and the Prince</h2>
+          <p>Once upon a time, in Mongolia, there lived a cruel prince. He was very wicked and unkind to his servant. The servant was very wise and hardworking. The prince got pleasure out of hitting his servant and would beat the servant black and blue without any fault of his.</p>
+
+          <p>One day, the prince and the servant were going to a neighbouring country. The prince rode a strong and sturdy horse while the servant followed him on a frail horse.</p>
+
+          <p>They had to travel a long distance. After a few hours, the sky became overcast and loud thunder could be heard at a distance behind them. The prince was a coward and was very frightened by the clap of thunder. He looked around for a place to hide but found none. His servant had not caught up with him yet. So the prince made his strong horse walk slower and waited for the servant. When he saw the servant, he shouted, "Don't lag behind me, you fool! Keep up with me!"</p>
+
+          <p>The servant replied, "How can I keep pace with you? My horse is so weak." On hearing this, the prince was furious and he roared, "It means you have not fed the horse well. It is all your fault. What were you doing all this time, lazy man?" Then he struck the servant on his head as hard as he could.</p>
+
+          <p>At that very moment, there was a streak of lightning in the sky. The prince was so frightened that he closed his eyes tightly. The servant saw this and suddenly had a brilliant idea. He took advantage of the opportunity and swinging his riding whip, knocked the prince on his head. The prince thought that lightning had struck him. He was terrified.</p>
+        `;
+      } else if (String(level) === '4' && String(story) === '17') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">The Surprise Visitor</h2>
+          <p><em>By Judie Eberhandt</em></p>
+          <p>It was early spring and Toby and his little sister Kate were excitedly looking forward to their vacation break from school. Only two more days, thought Toby, and I will be able to have some fun in the sunny warm weather. It had been a long, cold winter and Toby wanted to be outside.</p>
+
+          <p>Toby suddenly had an idea that he wanted to go camping over the weekend to celebrate the start of spring break. What better way to enjoy the outdoors than to go camping? Toby ran into the house to find his Dad and tell him his idea. Dad thought it was a great idea too. "If you kids want, we can go to Quiet Lake." Kate started jumping up and down with excitement because the last time she went to Quiet Lake she caught her first fish. "Maybe I'll catch another fish!" Kate said hopefully. "Well, you two better go out to the shed and start finding our supplies and don't forget the tent," said Dad. Kate and Toby went to the dusty shed out back and found the fishing poles, the tent, and the cooking supplies they would need. Now all they needed was for the next two days of school to pass by quickly.</p>
+
+          <p>It was finally Friday and that night at dinner Dad said, "You kids need to get to bed early." Dad wanted to start for the lake around seven o'clock. Toby and Kate were so excited they could hardly sleep. Finally, the loud beeping sound of the alarm clock woke Toby. He rushed to get dressed, brushed his teeth, combed.</p>
+        `;
+      } else if (String(level) === '4' && String(story) === '18') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">To See into a Soul</h2>
+          <p>It is our conviction that if souls were visible to the eyes, we should be able to see distinctly that strange thing that each one individual of the human race corresponds to some one of the species of the animal creation; and we could easily recognize this truth, hardly perceived by the thinker, that from the oyster to the eagle, from the pig to the tiger, all animals exist in man, and that each one of them is in a man. Sometimes even several of them at a time. Animals are nothing else than the figures of our virtues and our vices, straying before our eyes, the visible phantoms of our souls. God shows them to us in order to induce us to reflect. Only since animals are mere shadows, God has not made them capable of education in the full sense of the word; what is the use? On the contrary, our souls being realities and having a goal which is appropriate to them, God has bestowed on them intelligence: that is to say, the possibility of education. Social education, when well done, can always draw from a soul, of whatever sort it may be, the utility which it contains.</p>
+
+          <p>This, be it said, is of course from the restricted point of view of the terrestrial life which is apparent, and without prejudging the profound question of the anterior or ulterior personality of the beings which are not man.</p>
+        `;
+      } else if (String(level) === '4' && String(story) === '19') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">Unstoppable Explorers</h2>
+          <p>In a magical forest, there was a group of unstoppable explorers who were always ready for an adventure. One bright morning, they discovered a hidden path that seemed navigable and decided to follow it. The path led them to an amazing treehouse, which was both comfortable and spacious.</p>
+
+          <p>Inside the treehouse, they found a map that was readable even though it looked ancient. The map showed a route to a hidden treasure that was supposed to be reachable only by those who were brave and capable. Excited, the explorers embarked on their quest, knowing it would be memorable.</p>
+
+          <p>Along the way, they encountered a friendly dragon who was very knowledgeable about the forest. The dragon offered them guidance, making their journey more manageable. They crossed a bridge that was barely passable, but with teamwork, they made it safely to the other side.</p>
+
+          <p>Finally, they reached the cave where the treasure was hidden. The cave entrance was narrow but climbable. Inside, they found a chest full of sparkling jewels and gold, confirming that their adventure was indeed valuable. The explorers cheered and celebrated their incredible discovery, promising to go on more adventures in the future.</p>
+        `;
+      } else if (String(level) === '4' && String(story) === '20') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">Welcome To Oregon</h2>
+          <p><em>Story By: Andrew Frinkle</em></p>
+          <p>I live in Oregon. It is a Northwestern state, near Canada. Oregon is famous for the Pacific Ocean, forests, the Cascade Range, hazelnuts, lumber, and Crater Lake! It is the 9th largest state and the 27th most populous. You might know some of the major cities, like Portland, Eugene, Salem, and Gresham. The state capital is Salem. Now that you know some of the basic facts about Oregon, let me tell you a little more about my state.</p>
+
+          <p>Oregon had several Pacific Northwest Indian tribes living there when the Spanish first visited the area that would become Oregon. The French and then the British held the land. In the 1840s, the Oregon Country was actually led by their own government, until it was annexed by the United States. The famous Oregon Trail for settlers led to the expansion of settlements in the area and eventual statehood.</p>
+
+          <p>Oregon is located just beneath Washington, making it one of the northernmost states on the Pacific Ocean. It has a long coastline on the ocean, and inland you find many forests leading up into The Cascade Range. These are the three major environments in the state: coast, forest, and mountains. There are also rich farmlands.</p>
+
+          <p>Oregon produces almost all of our nation's hazelnuts. Cattle, dairy, and cranberries are a few other agricultural products Oregon produces. Due to its location on the coast, of course fishing is a huge deal. With the forests, timber and lumber is a big industry. Oregon led the nation in softwood lumber production. With all this wood getting cut down, is it a surprise to know that Oregon is The Beaver State?</p>
+
+          <p>Oregon isn't so well known for sports as many other states, but they do have a professional soccer and a professional basketball team based in Portland. With the natural beauty, Portland is a great place to get outside. You can fish, hike, climb mountains, and do all sorts of things outside.</p>
+
+          <p>Oregon is interesting because it has no sales tax! Only 5 states have no sales tax. They also have very low state income taxes. Oregon is 41" in our nation for tax burdens, making it a good place to live if you don't want to pay much for taxes. They also have a tax revenue limit, so if too much money is collected in taxes, they have to give some back. What a place, right?</p>
+
+          <p>Now that you know a little more about Oregon, are you thinking about visiting? There are many things to see and do. Hope to see you soon!</p>
+        `;
+      } else if (String(level) === '5' && String(story) === '1') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">A Conversation From the Third Floor</h2>
+          <p><em>By Mohamed El-Bisatie</em></p>
+          <p>She came to the place for the second time. The policeman stared down at her from his horse.</p>
+          <p>The time was afternoon. The yellow-coloured wall was stretched right along the road. Inside the wall was a large rectangular three-storey building; its small identical windows looked more like dark apertures. The woman stood a few paces away from the horse. The policeman looked behind him at the windows, then at the woman. He placed both hands on the pommel of the saddle and closed his-eyes. After a while the horse moved. It was standing halfway down the street. Then, a moment later, it made a half-turn and once again stood itself at the top of the street.</p>
+          <p>The woman came two steps forward. The horse bent one of its forelegs, then gently lowered it.</p>
+          <p>“Sergeant, please, just let me say two words to him.”</p>
+          <p>His eyes remained closed, his hands motionless on the pommel. Above the wall stretched a fencing of barbed wire at the end of which was a wooden tower. Inside there stood an armed soldier.</p>
+          <p>The woman took another step forward.</p>
+          <p>“ You see, he’s been transferred ...”</p>
+          <p>The sun had passed beyond the central point in the sky. Despite this the weather was still hot. A narrow patch of shade lay at the bottom of the wall.</p>
+          <p>The woman transferred the child to her shoulder.</p>
+          <p>When she again looked at the policeman’s face, she noticed two thin lines of sweat on his forehead.</p>
+          <p>Quietly she moved away from in front of the horse and walked beside the wall. About halfway along it she sat down on a heap of stones opposite the building.</p>
+          <p>The prisoners’ washing, hung by the arms and legs, could be seen.</p>
+          <p>She took the child between her hands and lifted him above her head.</p>
+          <p>She noticed his arms suddenly being withdrawn inside and his hands gripping the iron bars of the window. Then his face disappeared from view. For a while she searched for him among the faces that looked down. She lowered her arms a little and heard shouts of laughter from the window. She spotted his arm once again stretching outwards, then his face appeared clearly in the middle.</p>
+          <p>“Up, Aziza. Up. Face him towards the sun so I can see him.” She lowered her arms for a moment, then raised him up again, turning his face towards the sun. The child closed his eyes and burst out crying.</p>
+          <p>“He’s crying.”</p>
+          <p>He turned round, laughing.</p>
+          <p>“The boy’s crying! The little so-and-so! Aziza, woman, keep him crying!”</p>
+          <p>He cupped his hand round his mouth and shouted, “Let him cry!”</p>
+          <p>Again he laughed. A few shouts went up around him. She heard their words and shouting. Then she saw his large nose poking out through the bars,</p>
+          <p>“Woman! Don’t be silly, that’s enough! Cover tile boy- he’ll get sunstroke!”</p>
+          <p>She hugged the child to her chest and saw the soldier withdrawing inside the tower,</p>
+          <p>“Did you prune the two date palms?”</p>
+          <p>She shook her head.</p>
+          <p>“Why not? Why don’t you talk? I’m being transferred. Pass by Abu Ismail and tell him I send him my best wishes. He’ll do it as a favour and prune the trees, then you can bring along a few dates. Did you bring the cigarettes?”</p>
+          <p>She made a sign with her hand.</p>
+          <p>“Talk. What are you saying?”</p>
+          <p>“You’ve got ‘em,”</p>
+          <p>“Louder, woman.”</p>
+          <p>“You’ve got ‘em, I sent them to you.”</p>
+          <p>“When?”</p>
+          <p>“Just Now.”</p>
+          <p>Her face was against the sun. She shifted her head-veil slightly from her head.</p>
+          <p>“They took a couple of packets. Never mind, Aziza. Never mind.”</p>
+          <p>He laughed. His voice had become calm. The other faces disappeared from above him, only a single face remaining alongside his.</p>
+          <p>“Did you build the wall?”</p>
+          <p>“Not yet.”</p>
+          <p>“Why not?”</p>
+          <p>“When Uncle Ahmed lights the furnace, I’ll get some bricks from him.”</p>
+          <p>“All right. Be careful on the tram. Look after the boy.”</p>
+          <p>She remained standing.</p>
+          <p>“Anything you want?”</p>
+          <p>“No.”</p>
+          <p>She gazed at his face, his large nose, his bare arms. She smiled. The face next to him smiled back.</p>
+          <p>Suddenly he shouted. “Did you get the letter? I’m being transferred.”</p>
+          <p>“Where to?”</p>
+          <p>“I don’t know.”</p>
+          <p>“When?”</p>
+          <p>“You see, they’re pulling down the prison.”</p>
+          <p>“Where will you go?”</p>
+          <p>“God knows-anywhere. No one knows.”</p>
+          <p>“When?”</p>
+          <p>“In two or three days. Don’t come here again. I’ll let you know when I’m transferred. Has the boy gone to sleep?”</p>
+          <p>“No, he’s awake.”</p>
+          <p>He stared back for a while in silence.</p>
+          <p>“Aziza !”</p>
+          <p>Again there was silence. The face alongside his smiled, then slowly slid back inside and disappeared. Her husband remained silent, his arms around the bars.</p>
+          <p>Suddenly he glanced behind him and quickly drew in his arms. He signalled to her to move away, then disappeared from the window.</p>
+          <p>She stepped back, though she remained standing looking up at the window.</p>
+        `;
+      } else if (String(level) === '5' && String(story) === '2') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">A Gentleman’s C</h2>
+          <p><em>By Padgett Powell</em></p>
+          <p>The narrator’s father, determined to graduate from college at the age of sixty-two, unexpectedly enrolls in an English class taught by his own child. The narrator, reflecting on their childhood, admits to grading his father more strictly than other students, giving him a hard, honest, low C—mirroring the tough approach the father had always shown toward him.</p>
+          <p>During this period, the narrator and his mother leave town to attend a family funeral, while the father remains behind to finish his final exams. Upon returning home, they discover that the father’s grades were too low to allow him to graduate. The shock and disappointment overwhelm him as he reads the news on the sofa, and he suffers a fatal heart attack.</p>
+          <p>Although the narrator initially believed that his father’s death would leave little emotional impact, he ultimately finds himself deeply affected. The story reflects on themes of parental expectations, the weight of legacy, and the unexpected ways life and death can shape personal emotions and relationships.</p>
+        `;
+      } else if (String(level) === '5' && String(story) === '3') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">Cemetery Path</h2>
+          <p><em>By Leonard Q. Ross</em></p>
+          <p>Ivan was a timid man mocked by the villagers with nicknames like “Pigeon” and “Ivan the Terrible.” Every night he passed by the village cemetery on his way home but never dared to cross it, even though it would save him time. The villagers, particularly a young Cossack lieutenant, often taunted him for his fear, daring him to walk through the cemetery in the bitter winter cold. One night, tempted by the lieutenant’s challenge and the promise of five gold rubles, Ivan reluctantly agreed to cross the cemetery and plant a saber in front of the largest tomb.</p>
+          <p>As Ivan entered the cemetery, the wind howled and the cold pierced through his coat. Though he repeated to himself that the earth was “just earth,” his fear grew stronger as he ran toward the central tomb. Trembling and shivering, he finally drove the saber into the ground and pounded it to the hilt, completing the task. At first, it seemed he had succeeded in meeting the challenge, but as he tried to rise, something invisible gripped him.</p>
+          <p>By morning, the villagers found Ivan lying in front of the tomb, dead from a nameless horror rather than the cold. The saber remained planted in the ground, evidence that he had completed the lieutenant’s challenge. Ivan’s tragic end highlighted the power of fear and the terror of the unknown, leaving the villagers to contemplate the mysterious forces that had claimed him.</p>
+        `;
+      } else if (String(level) === '5' && String(story) === '4') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">Harrison Bergeron</h2>
+          <p><em>By Kurt Vonnegut, Jr.</em></p>
+          <p>In a future where the government enforces absolute equality through handicaps, Harrison Bergeron, a supremely gifted and physically imposing teenager, breaks free of his constraints and declares himself Emperor on live television. He tears off his handicaps and selects a ballerina as his Empress; together they dance with transcendent grace. Their defiant display is cut short when the Handicapper General arrives and shoots them dead, reasserting the regime’s cruel control. The story critiques enforced conformity, the suppression of individuality, and the brutal lengths a society may go to maintain an illusion of equality.</p>
+        `;
+      } else if (String(level) === '5' && String(story) === '5') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">Identities</h2>
+          <p><em>By W.D. Valgardson</em></p>
+          <p>A man wanders through a suburban neighborhood on a Saturday, drawn by smells and memories, and becomes acutely aware of the uniformity and controlled appearance of his surroundings. He notices small imperfections that unsettle him, and his daydreams and anxieties about potential threats lead to a tense encounter with a police officer. The story explores identity, perception, and how societal roles and fear shape behavior.</p>
+        `;
+      } else if (String(level) === '5' && String(story) === '6') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">Important Things</h2>
+          <p><em>By Barbara L. Greenberg</em></p>
+          <p>A parent who long promised to explain “The Important Things” finally attempts to do so when their children press for answers as adults. The parent's mixture of worldly advice, moral lessons, and ultimately the confession of mortality fails to satisfy the children, exposing the limits of language, expectation, and the shifting power of parental authority as children grow into independent minds.</p>
+        `;
+      } else if (String(level) === '5' && String(story) === '7') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">Isaac Asimov’s</h2>
+          <p><em>Adapted excerpt</em></p>
+          <p>In a future where children are taught at home by mechanical teachers, Margie discovers an old book about traditional schools. She learns that children once gathered together, helped each other, and shared experiences—an idea that seems strange to her. The story reflects on changing educational practices and the human need for shared learning and social interaction.</p>
+        `;
+      } else if (String(level) === '5' && String(story) === '8') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">Joy</h2>
+          <p><em>By Anton Chekhov</em></p>
+          <p>Mitya Kuldarov bursts into his family's flat late at night, ecstatic because his name appears in the newspaper in connection with an accident from which he emerged unharmed. He runs through the rooms to share the news and revel in sudden fame, celebrating the small, almost comic triumph of having his ordinary life briefly noticed by the world.</p>
+        `;
+      } else if (String(level) === '5' && String(story) === '9') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">Lather and Nothing Else</h2>
+          <p><em>By Hernando Téllez</em></p>
+          <p>A barber recognizes Captain Torres—the man responsible for executions—sits him in his chair, and faces a moral crisis. While shaving Torres, the barber contemplates killing him but ultimately chooses his role as a barber over becoming an assassin. He shaves Torres carefully and lets him go, swallowing his secret hatred and leaving the moral ambiguity unresolved.</p>
+        `;
+      } else if (String(level) === '5' && String(story) === '10') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">One Of These Days</h2>
+          <p><em>By Gabriel García Márquez</em></p>
+          <p>Aurelio Escovar, an unlicensed dentist, is visited by the Mayor who threatens him. Calmly, Escovar extracts the Mayor’s abscessed tooth without anesthesia and tells him, with bitter tenderness, that the Mayor will now pay for the town’s murders. The moment is an understated act of private revenge and moral justice.</p>
+        `;
+      } else if (String(level) === '5' && String(story) === '11') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">Popular Mechanics</h2>
+          <p><em>By Raymond Carver</em></p>
+          <p>A couple’s argument over custody of their baby culminates in a violent tug-of-war in the kitchen. As they struggle, the atmosphere darkens and the child’s safety is threatened. The story ends abruptly with the unresolved, tragic consequences of their conflict.</p>
+        `;
+      } else if (String(level) === '5' && String(story) === '12') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">Skipper (The Last of Her Sons)</h2>
+          <p><em>By Alden Nowlan</em></p>
+          <p>Skipper, the youngest of five sons, is raised by a loving mother and an abusive father. Hopes for Skipper to escape the family cycle of hard labor falter as he gradually embraces the mill life and the habits of his older brothers. The story traces Ethel’s hopes and the bittersweet inevitability of generational patterns.</p>
+        `;
+      } else if (String(level) === '5' && String(story) === '13') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">There Was Once</h2>
+          <p>A critical voice interrupts and revises a traditional fairy tale repeatedly, challenging every aspect from social class to characterization. The result is an unresolved meditation on how contemporary critique reshapes storytelling and complicates simple moral tales.</p>
+        `;
+      } else if (String(level) === '5' && String(story) === '14') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">The Awful Fate of Melpomenus Jones</h2>
+          <p><em>By H.G. Wells</em></p>
+          <p>Melpomenus Jones, a timid curate, becomes trapped by excessive politeness and social obligation during a family visit. He grows increasingly anxious and ill, ultimately succumbing to his stress in a quietly tragic ending that underscores the costs of extreme timidity and social pressure.</p>
+        `;
+      } else if (String(level) === '5' && String(story) === '15') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">The Golden Kite, the Silver Wind</h2>
+          <p>Two neighboring towns engage in a futile competition of wall shapes, exhausting their citizens. The Mandarin’s daughter proposes cooperation instead, and transforming rivalry into harmony restores peace—teaching a lesson about collaboration over pride.</p>
+        `;
+      } else if (String(level) === '5' && String(story) === '16') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">The Key Game</h2>
+          <p><em>By Ida Fink</em></p>
+          <p>In wartime, a family’s “key game” trains their child to act in emergencies. The ritualized practice highlights fear, survival, and how wartime conditions shape innocence—ending with the chilling suggestion that the child will be forced to adult responsibilities in a dangerous world.</p>
+        `;
+      } else if (String(level) === '5' && String(story) === '17') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">The Lottery</h2>
+          <p><em>By Shirley Jackson</em></p>
+          <p>A seemingly ordinary village conducts a longstanding ritual lottery that culminates in a brutal, communal stoning. The story exposes the darkest side of tradition, conformity, and collective violence hidden beneath everyday normalcy.</p>
+        `;
+      } else if (String(level) === '5' && String(story) === '18') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">The Model Millionaire</h2>
+          <p><em>By Oscar Wilde</em></p>
+          <p>Hughie Erskine, a charming but impecunious young man, meets a beggar who later turns out to be a millionaire in disguise. Hughie’s act of generosity is rewarded unexpectedly, exploring themes of appearance, generosity, and true worth.</p>
+        `;
+      } else if (String(level) === '5' && String(story) === '19') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">The Other Wife</h2>
+          <p><em>By Colette</em></p>
+
+          <p>Alice and her husband, Marc, go to a seaside restaurant for lunch. Marc deliberately chooses a table in the middle of the room, rather than by the window, to prevent Alice from sitting near his ex-wife, who is also staying at the hotel. When Alice notices the woman, curiosity and unease stir within her, but Marc reassures her that his previous marriage ended amicably and that he is now fully devoted to her.</p>
+
+          <p>During their meal, Alice and Marc share an affectionate and lively conversation, enjoying each other’s company. Marc praises Alice’s beauty and charm, while Alice occasionally sneaks glances at the ex-wife, observing her calm, composed, and somewhat dissatisfied demeanor. Despite the ex-wife’s presence, the couple continues to eat and drink heartily, immersed in their shared happiness.</p>
+
+          <p>As they leave the restaurant, Alice reflects on the contrast between herself and the ex-wife. She wonders why the other woman seemed so dissatisfied and what she might have wanted from Marc. The story closes with Alice feeling both envy and curiosity, recognizing the subtle complexities of love, memory, and the delicate nature of marital happiness.</p>
+        `;
+      } else if (String(level) === '5' && String(story) === '20') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">The Possibility of Evil</h2>
+          <p><em>By Shirley Jackson</em></p>
+
+          <p>Miss Adela Strangeworth stepped daintily along Main Street on her way to the grocery. The sun was shining, the air was fresh and clear after the night’s heavy rain, and everything in Miss Strangeworth’s little town looked washed and bright. Miss Strangeworth took deep breaths, and thought that there was nothing in the world like a fragrant summer day.</p>
+
+          <p>She knew everyone in town, of course; she was fond of telling strangers – tourists who sometimes passed through the town and stopped to admire Miss Strangeworth’s roses – that she had never spent more than a day outside this town in all her long life. She was seventy-one, Miss Strangeworth told the tourists, with a pretty little dimple showing by her lip, and she sometimes found herself thinking that the town belonged to her. “My grandfather built the first house on Pleasant Street,” she would say, opening her blue eyes with the wonder of it. This house, right here. My family has lived here for better than a hundred years. My grandmother planted these roses, and my mother tended them, just as I do.”</p>
+
+          <p>Miss Strangeworth never gave away any of her roses, although the tourists often asked her. The roses belonged on Pleasant Street, and it bothered Miss Strangeworth to think of people wanting to carry them away, to take them into strange towns and down strange streets.</p>
+
+          <p>Walking down Main Street on a summer morning, Miss Strangeworth had to stop every minute or so to say good morning to someone or to ask after someone’s health. When she came into the grocery, half a dozen people turned away from the shelves and counters to wave at her or call out good morning. “And good morning to you, Mr. Lewis,” Miss Strangeworth said at last… “Good morning,” Mr. Lewis said, and added politely, “lovely day.” “It is a very nice day,” Miss Strangeworth said as though she had only just decided that it would do after all. “I would like a chop, please, Mr. Lewis, a small, lean veal chop. Are those strawberries from Arthur Parker’s garden? They’re early this year.” “He brought them in this morning,” Mr. Lewis said. “I shall have a box,” Miss Strangeworth said. Mr. Lewis looked worried, she thought, and for a minute she hesitated, but then she decided that he surely could not be worried over the strawberries. He looked very tired indeed….</p>
+
+          <p>Carrying her little bag of groceries, Miss Strangeworth came out of the store into the bright sunlight and stopped to smile down on the Crane baby. Don and Helen Crane were really the two most infatuated young parents she had every known, she thought indulgently, looking at the delicately embroidered baby cap and the lace-edged carriage cover. “That little girl is going to grow up expecting luxury all her life,” she said to Helen Crane. Helen laughed. “That’s the way we want her to feel,” she said. “Like a princess.”</p>
+
+          <p>“A princess can be a lot of trouble sometimes,” Miss Strangeworth said dryly. “How old is her highness now?” “Six months next Tuesday,” Helen Crane said.</p>
+
+          <p>Miss Strangeworth moved on, stopping to speak with townspeople and noting the smallest signs of disorder or sloppiness. Back at home she tended her roses, unlocked the desk where she kept her notepaper, and began to write anonymous letters designed to “open people’s eyes” to imagined moral failings. She wrote in colored sheets—pink, green, blue—each with a stinging, insinuating line about someone’s supposed impropriety.</p>
+
+          <p>She mailed the letters secretly and took a furtive pleasure in their effect. For a year she had been sending such notes; she never signed them, and she convinced herself she was doing a civic duty. One evening she dropped three letters into the post slot and walked home contented, imagining the town being purged of its hidden wickedness.</p>
+
+          <p>The next morning she discovered a green envelope among her own mail. Inside was a note that read: “Look out at what used to be your roses.” The letter, returned to her, revealed that someone had intercepted one of her own anonymous notes and—worse—had responded. It was the first time Miss Strangeworth realized that her letters had consequences aimed back at her. The story closes on the implied ruin of her roses, and on the unsettling realization that the town could fight back against her private campaigns of suspicion.</p>
+        `;
+      } else if (String(level) === '5' && String(story) === '21') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">The Story of an Hour</h2>
+          <p><em>By Kate Chopin</em></p>
+
+          <p>Knowing that Mrs. Mallard was afflicted with a heart trouble, great care was taken to break to her as gently as possible the news of her husband's death.</p>
+          <p>It was her sister Josephine who told her, in broken sentences; veiled hints that revealed in half concealing. Her husband's friend Richards was there, too, near her. It was he who had been in the newspaper office when intelligence of the railroad disaster was received, with Brently Mallard's name leading the list of “killed.”</p>
+
+          <p>She did not hear the story as many women have heard the same, with a paralyzed inability to accept its significance.</p>
+          <p>She wept at once, with sudden, wild abandonment, in her sister's arms.</p>
+          <p>When the storm of grief had spent itself she went away to her room alone.</p>
+          <p>She would have no one follow her.</p>
+          <p>There stood, facing the open window, a comfortable, roomy armchair. Into this she sank, pressed down by a physical exhaustion that haunted her body and seemed to reach into her soul.</p>
+
+          <p>She could see in the open square before her house the tops of trees that were all aquiver with the new spring life.</p>
+          <p>The delicious breath of rain was in the air.</p>
+          <p>In the street below a peddler was crying his wares.</p>
+          <p>The notes of a distant song which someone was singing reached her faintly, and countless sparrows were twittering in the eaves.</p>
+          <p>There were patches of blue sky showing here and there through the clouds that had met and piled one above the other in the west.</p>
+          <p>She sat with her head thrown back upon the cushion of the chair, quite motionless, except when a sob came up into her throat and shook her.</p>
+          <p>She was young, with a fair, calm face, whose lines bespoke repression and even a certain strength.</p>
+          <p>But now there was a dull stare in her eyes, whose gaze was fixed away off yonder on one of those patches of blue sky.</p>
+          <p>It was not a glance of reflection, but rather indicated a suspension of intelligent thought.</p>
+          <p>There was something coming to her and she was waiting for it, fearfully.</p>
+          <p>What was it?</p>
+          <p>She did not know; it was too subtle and elusive to name.</p>
+          <p>But she felt it, creeping out of the sky, reaching toward her through the sounds, the scents, the color that filled the air.</p>
+          <p>Now her bosom rose and fell tumultuously.</p>
+          <p>She was beginning to recognize this thing that was approaching to possess her, and she was striving to beat it back with her will—</p>
+          <p>but she could not.</p>
+          <p>When she abandoned herself a little, a whispered word escaped her slightly parted lips.</p>
+          <p>She said it over and over under her breath:</p>
+          <p>“Free, free, free!”</p>
+
+          <p>The vacant stare and the look of terror that had followed it went from her eyes.</p>
+          <p>They stayed keen and bright.</p>
+          <p>Her pulses beat fast, and the coursing blood warmed and relaxed every inch of her body.</p>
+          <p>She did not stop to ask if it were or were not a monstrous joy that held her.</p>
+          <p>A clear and exalted perception enabled her to dismiss the suggestion as trivial.</p>
+          <p>She knew that she would weep again when she saw the kind, tender hands folded in death; the face that had never looked save with love upon her, fixed and gray and dead.</p>
+          <p>But she saw beyond that bitter moment a long procession of years to come that would belong to her absolutely.</p>
+          <p>And she opened and spread her arms out to them in welcome.</p>
+          <p>There would be no one to live for during those coming years; she would live for herself.</p>
+          <p>There would be no powerful will bending hers in that blind persistence with which men and women believe they have a right to impose a private will upon a fellow-creature.</p>
+          <p>And yet she had loved him—sometimes.</p>
+          <p>Often she had not.</p>
+          <p>What did it matter!</p>
+          <p>What could love, the unsolved mystery, count for in face of this possession of self-assertion which she suddenly recognized as the strongest impulse of her being!</p>
+          <p>“Free! Body and soul free!” she kept whispering.</p>
+
+          <p>Josephine was kneeling before the closed door with her lips to the keyhole, imploring for admission.</p>
+          <p>“Louise, open the door! I beg; open the door—you will make yourself ill. What are you doing, Louise? For heaven's sake open the door!”</p>
+          <p>“Go away. I am not making myself ill.”</p>
+          <p>No; she was drinking in a very elixir of life through that open window.</p>
+          <p>Her fancy was running riot along those days ahead of her.</p>
+          <p>Spring days, and summer days, and all sorts of days that would be her own.</p>
+          <p>She breathed a quick prayer that life might be long.</p>
+          <p>It was only yesterday she had thought with a shudder that life might be long.</p>
+          <p>She arose at length and opened the door to her sister’s importunities.</p>
+          <p>There was a feverish triumph in her eyes, and she carried herself unwittingly like a goddess of Victory.</p>
+          <p>She clasped her sister’s waist, and together they descended the stairs.</p>
+          <p>Richards stood waiting for them at the bottom.</p>
+          <p>Someone was opening the front door with a latchkey.</p>
+          <p>It was Brently Mallard who entered, a little travel-stained, composedly carrying his grip-sack and umbrella.</p>
+          <p>He had been far from the scene of the accident, and did not even know there had been one.</p>
+          <p>He stood amazed at Josephine’s piercing cry; at Richards’ quick motion to screen him from the view of his wife.</p>
+          <p>But Richards was too late.</p>
+          <p>When the doctors came they said she had died of heart disease—of joy that kills.</p>
+        `;
+      } else if (String(level) === '5' && String(story) === '22') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">The Trout</h2>
+          <p>Julia loved running through The Dark Walk, a wild laurel tunnel, where she experienced both fear and exhilaration. Each year she revisited the tunnel, enjoying the thrill and often teasing her younger brother, Stephen, who could not keep up with her. Their playful quarrels and laughter marked the beginning of their holiday adventures, filled with exploration and discovery.</p>
+
+          <p>One day, Julia discovered a small well hidden in the walk, containing a panting trout trapped in a tiny pool of water. She and Stephen were fascinated by the trout, and while her brother enjoyed hearing imaginative stories about it, Julia was troubled by its helplessness. She thought about how the fish had endured the winter alone in the confined space and felt a mixture of concern and wonder.</p>
+
+          <p>Determined to save the trout, Julia secretly brought water from the house and carefully rescued it from the well, carrying it to the river and releasing it safely. This courageous act brought her immense joy and satisfaction, and she reveled in the freedom she had restored to the fish. Her holiday was enriched by the experience, and the adventure left her feeling proud and exhilarated, sharing the story playfully with Stephen the next morning.</p>
+        `;
+      } else if (String(level) === '5' && String(story) === '23') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">The Use of Force</h2>
+          <p><em>By William Carlos Williams (1883-1963)</em></p>
+
+          <p>They were new patients to me, all I had was the name, Olson. Please come down as soon as you can, my daughter is very sick.</p>
+          <p>When I arrived I was met by the mother, a big startled looking woman, very clean and apologetic who merely said, Is this the doctor? and let me in. In the back, she added. You must excuse us, doctor, we have her in the kitchen where it is warm. It is very damp here sometimes.</p>
+
+          <p>The child was fully dressed and sitting on her father's lap near the kitchen table. He tried to get up, but I motioned for him not to bother, took off my overcoat and started to look things over. I could see that they were all very nervous, eyeing me up and down distrustfully. As often, in such cases, they weren't telling me more than they had to, it was up to me to tell them; that's why they were spending three dollars on me.</p>
+
+          <p>The child was fairly eating me up with her cold, steady eyes, and no expression to her face whatever. She did not move and seemed, inwardly, quiet; an unusually attractive little thing, and as strong as a heifer in appearance. But her face was flushed, she was breathing rapidly, and I realized that she had a high fever. She had magnificent blonde hair, in profusion. One of those picture children often reproduced in advertising leaflets and the photogravure sections of the Sunday papers.</p>
+
+          <p>"She's had a fever for three days," began the father, "and we don't know what it comes from. My wife has given her things, you know, like people do, but it don't do no good. And there's been a lot of sickness around. So we tho't you'd better look her over and tell us what is the matter."</p>
+
+          <p>As doctors often do I took a trial shot at it as a point of departure. "Has she had a sore throat?"</p>
+
+          <p>Both parents answered me together, "No . . . No, she says her throat don't hurt her."</p>
+
+          <p>"Does your throat hurt you?" added the mother to the child. But the little girl's expression didn't change nor did she move her eyes from my face.</p>
+
+          <p>"Have you looked?"</p>
+
+          <p>"I tried to," said the mother, "but I couldn't see."</p>
+
+          <p>As it happens we had been having a number of cases of diphtheria in the school to which this child went during that month and we were all, quite apparently, thinking of that, though no one had as yet spoken of the thing.</p>
+
+          <p>"Well," I said, "suppose we take a look at the throat first." I smiled in my best professional manner and asking for the child's first name I said, "Come on, Mathilda, open your mouth and let's take a look at your throat."</p>
+
+          <p>Nothing doing.</p>
+
+          <p>"Aw, come on," I coaxed, "just open your mouth wide and let me take a look. Look," I said opening both hands wide, "I haven't anything in my hands. Just open up and let me see."</p>
+
+          <p>"Such a nice man," put in the mother. "Look how kind he is to you. Come on, do what he tells you. He won't hurt you."</p>
+
+          <p>At that I ground my teeth in disgust. If only they wouldn't use the word "hurt" I might be able to get somewhere. But I did not allow myself to be hurried or disturbed but speaking quietly and slowly I approached the child again.</p>
+
+          <p>As I moved my chair a little nearer suddenly with one catlike movement both her hands clawed instinctively for my eyes and she almost reached them too. In fact she knocked my glasses flying and they fell, though unbroken, several feet away from me on the kitchen floor.</p>
+
+          <p>Both the mother and father almost turned themselves inside out in embarrassment and apology. "You bad girl," said the mother, taking her and shaking her by one arm. "Look what you've done. The nice man . . ."</p>
+
+          <p>"For heaven's sake," I broke in. "Don't call me a nice man to her. I'm here to look at her throat on the chance that she might have diphtheria and possibly die of it. But that's nothing to her. Look here," I said to the child, "we're going to look at your throat. You're old enough to understand what I'm saying. Will you open it now by yourself or shall we have to open it for you?"</p>
+
+          <p>Not a move. Even her expression hadn't changed. Her breaths however were coming faster and faster. Then the battle began. I had to do it. I had to have a throat culture for her own protection. But first I told the parents that it was entirely up to them. I explained the danger but said that I would not insist on a throat examination so long as they would take the responsibility.</p>
+
+          <p>"If you don't do what the doctor says you'll have to go to the hospital," the mother admonished her severely.</p>
+
+          <p>"Oh yeah?" I had to smile to myself. After all, I had already fallen in love with the savage brat, the parents were contemptible to me. In the ensuing struggle they grew more and more abject, crushed, exhausted while she surely rose to magnificent heights of insane fury of effort bred of her terror of me.</p>
+
+          <p>The father tried his best, and he was a big man but the fact that she was his daughter, his shame at her behavior and his dread of hurting her made him release her just at the critical times when I had almost achieved success, till I wanted to kill him. But his dread also that she might have diphtheria made him tell me to go on, go on though he himself was almost fainting, while the mother moved back and forth behind us raising and lowering her hands in an agony of apprehension.</p>
+
+          <p>"Put her in front of you on your lap," I ordered, "and hold both her wrists."</p>
+
+          <p>But as soon as he did the child let out a scream. "Don't, you're hurting me. Let go of my hands. Let them go I tell you." Then she shrieked terrifyingly, hysterically. "Stop it! Stop it! You're killing me!"</p>
+
+          <p>"Do you think she can stand it, doctor!" said the mother.</p>
+
+          <p>"You get out," said the husband to his wife. "Do you want her to die of diphtheria?"</p>
+
+          <p>"Come on now, hold her," I said.</p>
+
+          <p>Then I grasped the child's head with my left hand and tried to get the wooden tongue depressor between her teeth. She fought, with clenched teeth, desperately! But now I also had grown furious--at a child. I tried to hold myself down but I couldn't. I know how to expose a throat for inspection. And I did my best. When finally I got the wooden spatula behind the last teeth and just the point of it into the mouth cavity, she opened up for an instant but before I could see anything she came down again and gripping the wooden blade between her molars she reduced it to splinters before I could get it out again.</p>
+
+          <p>"Aren't you ashamed," the mother yelled at her. "Aren't you ashamed to act like that in front of the doctor?"</p>
+
+          <p>"Get me a smooth-handled spoon of some sort," I told the mother. "We're going through with this." The child's mouth was already bleeding. Her tongue was cut and she was screaming in wild hysterical shrieks. Perhaps I should have desisted and come back in an hour or more. No doubt it would have been better. But I have seen at least two children lying dead in bed of neglect in such cases, and feeling that I must get a diagnosis now or never I went at it again. But the worst of it was that I too had got beyond reason. I could have torn the child apart in my own fury and enjoyed it. It was a pleasure to attack her. My face was burning with it.</p>
+
+          <p>The damned little brat must be protected against her own idiocy, one says to one's self at such times. Others must be protected against her. It is a social necessity. And all these things are true. But a blind fury, a feeling of adult shame, bred of a longing for muscular release are the operatives. One goes on to the end.</p>
+
+          <p>In a final unreasoning assault I overpowered the child's neck and jaws. I forced the heavy silver spoon back of her teeth and down her throat till she gagged. And there it was--both tonsils covered with membrane. She had fought valiantly to keep me from knowing her secret. She had been hiding that sore throat for three days at least and lying to her parents in order to escape just such an outcome as this.</p>
+
+          <p>Now truly she was furious. She had been on the defensive before but now she attacked. Tried to get off her father's lap and fly at me while tears of defeat blinded her eyes.</p>
+        `;
+      } else if (String(level) === '5' && String(story) === '24') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">Thou Art the Man</h2>
+          <p><em>By Edgar Allan Poe</em></p>
+
+          <p>A wealthy man named Augustus is found dead, and the local authorities are desperate to find the culprit. The narrator introduces a clever yet unconventional approach to solving the crime, centering around the idea of forcing the guilty party to confess by playing on human psychology and pride.</p>
+
+          <p>The investigation focuses on identifying the murderer among a group of potential suspects, each of whom had motives and opportunities. The detective, Mr. George, devises a plan to subtly accuse each suspect in a public setting without directly pointing fingers. By doing so, he carefully observes their reactions for signs of guilt, using their pride, fear, and nervousness as tools for deduction. This method emphasizes Poe’s recurring theme of the intellect and ingenuity overcoming brute force or chance in solving crimes.</p>
+
+          <p>Ultimately, Mr. George exposes the murderer in a dramatic and ironic twist. During a gathering, he points to the guilty man and exclaims, “Thou art the man!” The accused, caught off guard by the direct accusation and unable to hide his guilt, immediately confesses. Poe’s story is notable for its concise plot, clever psychological insights, and moral undertones, demonstrating that the mind’s sharpness can uncover truth even when traditional methods fail. The tale leaves readers with a sense of satisfaction at the detective’s ingenuity and the justice served.</p>
+        `;
+      } else if (String(level) === '5' && String(story) === '25') {
+        content.innerHTML = `
+          <h2 style="margin-top:0;">Three Questions</h2>
+          <p>It once occurred to a certain king, that if he always knew the right time to begin everything; if he knew who were the right people to listen to, and whom to avoid; and, above all, if he always knew what was the most important thing to do, he would never fail in anything he might undertake. And this thought having occurred to him, he had it proclaimed throughout his kingdom that he would give a great reward to any one who would teach him what was the right time for every action, and who were the most necessary people, and how he might know what was the most important thing to do.</p>
+
+          <p>And learned men came to the King, but they all answered his questions differently. In reply to the first question, some said that to know the right time for every action, one must draw up in advance, a table of days, months and years, and must live strictly according to it. Only thus, said they, could everything be done at its proper time. Others declared that it was impossible to decide beforehand the right time for every action; but that, not letting oneself be absorbed in idle pastimes, one should always attend to all that was going on, and then do what was most needful.</p>
+
+          <p>Others, again, said that however attentive the King might be to what was going on, it was impossible for one man to decide correctly the right time for every action, but that he should have a Council of wise men, who would help him to fix the proper time for everything. But then again others said there were some things which could not wait to be laid before a Council, but about which one had at once to decide whether to undertake them or not. But in order to decide that, one must know beforehand what was going to happen. It is only magicians who know that; and, therefore, in order to know the right time for every action, one must consult magicians.</p>
+
+          <p>Equally various were the answers to the second question. Some said, the people the King most needed were his councillors; others, the priests; others, the doctors; while some said the warriors were the most necessary. To the third question, as to what was the most important occupation: some replied that the most important thing in the world was science. Others said it was skill in warfare; and others, again, that it was religious worship. All the answers being different, the King agreed with none of them, and gave the reward to none.</p>
+
+          <p>But still wishing to find the right answers to his questions, he decided to consult a hermit, widely renowned for his wisdom. The hermit lived in a wood which he never quitted, and he received none but common folk. So the King put on simple clothes, and before reaching the hermit's cell dismounted from his horse, and, leaving his body-guard behind, went on alone.</p>
+
+          <p>When the King approached, the hermit was digging the ground in front of his hut. Seeing the King, he greeted him and went on digging. The hermit was frail and weak, and each time he stuck his spade into the ground and turned a little earth, he breathed heavily. The King went up to him and said: 'I have come to you, wise hermit, to ask you to answer three questions: How can I learn to do the right thing at the right time? Who are the people I most need, and to whom should I, therefore, pay more attention than to the rest? And, what affairs are the most important, and need my first attention?'</p>
+
+          <p>The hermit listened to the King, but answered nothing. He just spat on his hand and recommenced digging. 'You are tired,' said the King, 'let me take the spade and work awhile for you.' 'Thanks!' said the hermit, and, giving the spade to the King, he sat down on the ground. When he had dug two beds, the King stopped and repeated his questions. The hermit again gave no answer, but rose, stretched out his hand for the spade, and said: 'Now rest awhile—and let me work a bit.' But the King did not give him the spade, and continued to dig. One hour passed, and another. The sun began to sink behind the trees, and the King at last stuck the spade into the ground, and said: 'I came to you, wise man, for an answer to my questions. If you can give me none, tell me so, and I will return home.'</p>
+
+          <p>'Here comes some one running,' said the hermit, 'let us see who it is.' The King turned round, and saw a bearded man come running out of the wood. The man held his hands pressed against his stomach, and blood was flowing from under them. When he reached the King, he fell fainting on the ground moaning feebly. The King and the hermit unfastened the man's clothing. There was a large wound in his stomach.</p>
+
+          <p>The King washed it as best he could, and bandaged it with his handkerchief and with a towel the hermit had. But the blood would not stop flowing, and the King again and again removed the bandage soaked with warm blood, and washed and rebandaged the wound. When at last the blood ceased flowing, the man revived and asked for something to drink. The King brought fresh water and gave it to him. Meanwhile the sun had set, and it had become cool.</p>
+
+          <p>So the King, with the hermit's help, carried the wounded man into the hut and laid him on the bed. Lying on the bed the man closed his eyes and was quiet; but the King was so tired with his walk and with the work he had done, that he crouched down on the threshold, and also fell asleep—so soundly that he slept all through the short summer night.</p>
+
+          <p>When he awoke in the morning, it was long before he could remember where he was, or who was the strange bearded man lying on the bed and gazing intently at him with shining eyes. 'Forgive me!' said the bearded man in a weak voice, when he saw that the King was awake and was looking at him. 'I do not know you, and have nothing to forgive you for,' said the King. 'You do not know me, but I know you. I am that enemy of yours who swore to revenge himself on you, because you executed his brother and seized his property.</p>
+
+          <p>I knew you had gone alone to see the hermit, and I resolved to kill you on your way back. But the day passed and you did not return. So I came out from my ambush to find you, and I came upon your bodyguard, and they recognized me, and wounded me. I escaped from them, but should have bled to death had you not dressed my wound. I wished to kill you, and you have saved my life. Now, if I live, and if you wish it, I will serve you as your most faithful slave, and will bid my sons do the same. Forgive me!'</p>
+
+          <p>The King was very glad to have made peace with his enemy so easily, and to have gained him for a friend, and he not only forgave him, but said he would send his servants and his own physician to attend him, and promised to restore his property. Having taken leave of the wounded man, the King went out into the porch and looked around for the hermit. Before going away he wished once more to beg an answer to the questions he had put.</p>
+
+          <p>The hermit was outside, on his knees, sowing seeds in the beds that had been dug the day before. The King approached him, and said: 'For the last time, I pray you to answer my questions, wise man.' 'You have already been answered!' said the hermit still crouching on his thin legs, and looking up at the King, who stood before him. 'How answered? What do you mean?' asked the King.</p>
+
+          <p>'Do you not see,' replied the hermit. 'If you had not pitied my weakness yesterday, and had not dug those beds for me, but had gone your way, that man would have attacked you, and you would have repented of not having stayed with me. So the most important time was when you were digging the beds; and I was the most important man; and to do me good was your most important business.</p>
+
+          <p>Afterwards when that man ran to us, the most important time was when you were attending to him, for if you had not bound up his wounds he would have died without having made peace with you. So he was the most important man, and what you did for him was your most important business. Remember then: there is only one time that is important—Now! It is the most important time because it is the only time when we have any power.</p>
+
+          <p>The most necessary man is he with whom you are, for no man knows whether he will ever have dealings with any one else: and the most important affair is, to do him good, because for that purpose alone was man sent into this life!</p>
+        `;
+      } else {
+        content.innerHTML = `<p><strong>Story ${story}</strong></p><p>This is placeholder text for Level ${level}, Story ${story}. Replace this paragraph with the actual reading passage you want students to read.</p>`;
+      }
+
+      // Populate story index (all story numbers for this level)
+      const storyIndex = document.getElementById('story-index');
+      if (storyIndex) {
+        storyIndex.innerHTML = '';
+        // same mapping as reading.html
+        const levelCounts = { 1:5, 2:10, 3:15, 4:20, 5:25 };
+        const total = levelCounts[level] || 0;
+        for (let i=1;i<=total;i++){
+          const b = document.createElement('button');
+          b.className = 'index-badge no-num';
+          // visually hide numbers but keep accessible label
+          b.setAttribute('aria-label', `Go to story ${i}`);
+          if (String(i) === String(story)) b.classList.add('current');
+          b.addEventListener('click', () => {
+            // navigate to the selected story within same level
+            location.href = `story.html?level=${level}&story=${i}`;
+          });
+          storyIndex.appendChild(b);
+        }
+      }
+
+      // Questions modal behavior
+      const qBtn = document.getElementById('questionsBtn');
+      const modal = document.getElementById('questionsModal');
+      const modalYes = document.getElementById('modalYes');
+      const modalNo = document.getElementById('modalNo');
+      function showModal(){
+        if(modal){ modal.classList.add('active'); modal.setAttribute('aria-hidden','false'); }
+      }
+      function hideModal(){
+        if(modal){ modal.classList.remove('active'); modal.setAttribute('aria-hidden','true'); }
+      }
+      if (qBtn){
+        qBtn.addEventListener('click', () => {
+          showModal();
+        });
+      }
+      if (modalNo){ modalNo.addEventListener('click', hideModal); }
+      if (modalYes){
+        modalYes.addEventListener('click', () => {
+          // Navigate to a questions page for this level/story (if available)
+          const target = `questions.html?level=${level}&story=${story}`;
+          window.location.href = target;
+        });
+      }
+      // close modal with Escape key
+      document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') hideModal(); });
+    })();
+  </script>
+
+</body>
+</html>

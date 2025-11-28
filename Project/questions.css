@@ -1,0 +1,119 @@
+:root {
+  --q-max-width: 780px;
+}
+
+.questions-header {
+  text-align: center;
+  margin: 16px auto 8px;
+}
+.questions-container {
+  max-width: var(--q-max-width);
+  margin: 16px auto;
+  padding: 8px 12px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.question {
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.question h2 {
+  margin: 0 0 8px;
+  font-size: 18px;
+}
+
+.question-choice {
+  display: block;
+  margin: 6px 0;
+}
+
+/* Result panel styles moved from inline */
+.result {
+  max-width: var(--q-max-width);
+  margin: 24px auto;
+  padding: 18px;
+  background: #fff;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.result h2 {
+  margin: 0 0 12px;
+}
+
+.result p {
+  margin: 0 0 16px;
+  color: #444;
+}
+
+.result-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.btn-submit {
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: none;
+  background: #402688;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+.btn-submit:hover { opacity: 0.95; }
+
+/* List-style for interactive choices in questions.html */
+.choices {
+  list-style: none;
+  padding: 0;
+  margin: 6px 0 0;
+}
+
+.choice {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  margin: 8px 0;
+  cursor: pointer;
+  user-select: none;
+  background: #fff;
+}
+
+.choice:hover {
+  border-color: #cfd8dc;
+  background: #fafafa;
+}
+
+
+.choice.selected {
+  border-color: #402688;
+  background: #402688;
+  color: #fff;
+}
+
+.choice .letter {
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  background: transparent;
+  color: #37474f;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+
+.choice.selected .letter {
+  color: #ffffff;
+  background: transparent;
+
+}
+
+.choice .text {
+  flex: 1 1 auto;
+}

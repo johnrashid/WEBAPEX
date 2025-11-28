@@ -1,0 +1,184 @@
+/* RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    font-family: Arial, sans-serif;
+    background: #f4efff;
+    overflow: hidden;
+}
+
+/* FULLSCREEN CENTER */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* TOP CIRCLE */
+.circle {
+    width: 160px;
+    height: 160px;
+    background: #402688;
+    border-radius: 50%;
+    margin: 0 auto 25px;
+
+     background-image: url("logo.png");
+  background-repeat: no-repeat;
+  background-size: cover;    /* crop/scale to fill the circle */
+  background-position: center;
+  background-color: transparent; /* fallback while image loads */
+  border-radius: 50%;
+  z-index: 10;
+
+  margin-top: 24px;
+  margin-bottom: 5px;
+
+}
+
+/* TITLE */
+.title {
+    font-size: 36px;
+    font-weight: 800;
+    margin-bottom: 30px;
+}
+
+/* SUBTITLE */
+.subtitle{
+  font-size: 22px;
+  font-weight: 700;
+  color: #402688;
+  opacity: 0.9;
+  margin-bottom: 18px;
+}
+
+/* PLAY BUTTON (intro) */
+.play-btn{
+    padding: 14px 26px;
+    border: none;
+    border-radius: 28px;
+    background: #b86cff;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+    transition: transform .15s ease, opacity .15s ease, box-shadow .15s ease;
+}
+.play-btn:hover{ transform: translateY(-3px); opacity: 0.95; box-shadow: 0 10px 18px rgba(0,0,0,0.14); }
+.play-btn:active{ transform: translateY(-1px); }
+
+/* NEXT BUTTON */
+.next-btn{
+    padding: 12px 22px;
+    border: none;
+    border-radius: 24px;
+    background: #402688;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+    transition: transform .15s ease, opacity .15s ease, box-shadow .15s ease;
+}
+.next-btn:hover{ transform: translateY(-2px); opacity: 0.96; box-shadow: 0 10px 18px rgba(0,0,0,0.14); }
+.next-btn:active{ transform: translateY(-1px); }
+.next-btn:disabled{ opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: 0 6px 14px rgba(0,0,0,0.12); }
+/* BUTTONS */
+.levels button {
+    display: block;
+    width: 100%;
+    margin: 12px auto;
+    padding: 15px;
+    border-radius: 30px;
+    border: none;
+    background: #ffffff;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: .2s;
+}
+.levels button:hover {
+    background: #e5e2e9;
+      opacity: 0.95;
+  transform: translateY(-1px);
+}
+.menu button:hover {
+    background: #9a4fe7;
+}
+
+.container::before {
+    content: "";
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    top: -50%;
+    left: -50%;
+    background: linear-gradient(120deg, #ffffff 40%, #eee2ff 60%);
+    transform: rotate(8deg);
+    z-index: -2;
+}
+
+.canvas{
+  position: relative; /* enable absolute-positioning inside canvas */
+  width: 100%;
+  max-width: 780px;
+  margin: 0 auto;
+}
+
+/* Back button in the upper-left */
+.back-btn{
+  position: absolute;
+  top: -10px;
+  left: -550px;
+  z-index: 10;
+  padding: 8px 14px;
+  border-radius: 14px;
+  border: none;
+  background: #402688; /* match circle deep purple */
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+}
+.back-btn:hover{
+  opacity: 0.95;
+  transform: translateY(-1px);
+}
+
+/* Back button (upper-left, fixed to viewport) */
+.back-btn{
+  position: fixed;
+  top: 18px;
+  left: 18px;
+  z-index: 9999;
+  width: 48px;
+  height: 40px;
+  padding: 6px 10px;
+  border: none;
+  border-radius: 10px;
+  background: #402688;       /* deep purple */
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+  transition: transform .15s ease, opacity .15s ease;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1;
+}
+.back-btn:hover{ transform: translateY(-3px); opacity: 0.95; }
+.back-btn:focus{ outline: 3px solid rgba(64,38,136,0.18); outline-offset: 2px; }
+
+/* small screens */
+@media (max-width:420px){
+  .back-btn{ top: 10px; left: 10px; width:40px; height:36px; font-size:13px; border-radius:8px; }
+}
+

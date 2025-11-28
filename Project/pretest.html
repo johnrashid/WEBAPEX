@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Web Apex - Levels</title>
+
+  <!-- Shared background (common to other screens) -->
+    <link rel="stylesheet" href="pretest.css">
+</head>
+<body>
+
+  <!-- Back button (fixed upper-left) -->
+  <button type="button" class="back-btn" onclick="history.back()" aria-label="Go back">
+    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M20 11H7.83l5.58-5.59L12 4 4 12l8 8 1.41-1.41L7.83 13H20v-2z" fill="#fff"/>
+    </svg>
+  </button>
+
+  <!-- optional: hidden reference image (local path) -->
+  <img src="/mnt/data/e24e5444-a8ac-4566-95b1-2cc5ab38518a.png" alt="reference" style="display:none;">
+
+  <div class="wrapper">
+    <div class="canvas">
+      <!-- Intro view -->
+      <section id="intro-view" class="intro" style="max-width:780px; text-align:center;">
+        <h1 class="title">Welcome to Pretest Mode</h1>
+        <button id="start-pretest" class="next-btn" aria-label="Start Pretest">Next</button>
+      </section>
+
+      <!-- Synonyms intro view -->
+      <section id="synonyms-intro" class="intro" style="max-width:780px; text-align:center; display:none;">
+        <h1 class="title">Synonyms</h1>
+        <p class="subtitle">Choose the word that has the SAME meaning as the underlined word.</p>
+        <button id="start-synonyms" class="play-btn" aria-label="Start Synonyms">Play</button>
+      </section>
+
+      <!-- Question view (dynamic) -->
+      <div id="question-view" class="question" style="max-width:780px; text-align:center; display:none;">
+        <p id="q-text" class="q-text" style="font-size:24px; font-weight:800; color:#07101a; margin: 0 0 18px;"></p>
+        <div id="choices" class="levels" style="gap:16px;"></div>
+        <div id="feedback" class="feedback" aria-live="polite" style="margin-top:14px; font-weight:700;"></div>
+        <button id="next-btn" class="next-btn" style="margin-top:16px; display:none;">Next</button>
+      </div>
+
+      <!-- Antonyms intro view -->
+      <section id="antonyms-intro" class="intro" style="max-width:780px; text-align:center; display:none;">
+        <h1 class="title">Antonyms</h1>
+        <p class="subtitle">Choose the word that is OPPOSITE in meaning to the underlined word.</p>
+        <button id="start-antonyms" class="play-btn" aria-label="Start Antonyms">Play</button>
+      </section>
+
+      <!-- Parts of Speech intro view -->
+      <section id="parts-intro" class="intro" style="max-width:780px; text-align:center; display:none;">
+        <h1 class="title">Parts of Speech</h1>
+        <p class="subtitle">Identify the part of speech of the underlined word.</p>
+        <button id="start-parts" class="play-btn" aria-label="Start Parts of Speech">Play</button>
+      </section>
+
+      <!-- Completion view -->
+      <section id="completion-view" class="intro" style="max-width:780px; text-align:center; display:none;">
+        <h1 class="title">Pretest Completed!</h1>
+        <p id="score-display" class="subtitle" style="font-size:28px; margin-top:20px;"></p>
+      </section>
+
+      <script>
+        // Toggle from intro to synonyms intro
+        (function(){
+          const intro = document.getElementById('intro-view');
+          const synonymsIntro = document.getElementById('synonyms-intro');
+          const questionView = document.getElementById('question-view');
+          const startBtn = document.getElementById('start-pretest');
+          const startSynonyms = document.getElementById('start-synonyms');
+          
+          if (startBtn) {
+            startBtn.addEventListener('click', () => {
+              if (intro) intro.style.display = 'none';
+              if (synonymsIntro) synonymsIntro.style.display = 'block';
+            });
+          }
+          
+          if (startSynonyms) {
+            startSynonyms.addEventListener('click', () => {
+              if (synonymsIntro) synonymsIntro.style.display = 'none';
+              if (questionView) questionView.style.display = 'block';
+            });
+          }
+        })();
+
+        // Multi-question quiz logic
+        (function(){
+          const synonyms = [
+            { q: '1. The teacher gave a BRIEF explanation.', choices: ['a. long','b. short','c. confusing','d. repeated'], correct: 1 },
+            { q: '2. The students were EAGER to learn.', choices: ['a. bored','b. unwilling','c. excited','d. silent'], correct: 2 },
+            { q: '3. The room was IMMENSE.', choices: ['a. tiny','b. loud','c. huge','d. crowded'], correct: 2 },
+            { q: '4. She ADMIRED by her mother.', choices: ['a. disliked','b. respected','c. ignored','d. helped'], correct: 1 },
+            { q: '5. The movie was very HUMOROUS.', choices: ['a. sad','b. funny','c. dull','d. plain'], correct: 1 },
+            { q: '6. The FRAGILE vase broke easily.', choices: ['a. strong','b. cheap','c. delicate','d. colorful'], correct: 2 },
+            { q: '7. He COMPLETED his homework early.', choices: ['a. started','b. skipped','c. erased','d. finished'], correct: 3 },
+            { q: '8. The scenery was MAGNIFICENT.', choices: ['a. ugly','b. ordinary','c. beautiful','d. dark'], correct: 2 },
+            { q: '9. She felt WEARY after walking all day.', choices: ['a. rested','b. tired','c. excited','d. angry'], correct: 1 },
+            { q: '10. The child had a VIVID imagination.', choices: ['a. dull','b. lively','c. weak','d. short'], correct: 1 },
+            { q: '11. The jungle was DENCE.', choices: ['a. thin','b. thick','c. wet','d. high'], correct: 1 },
+            { q: '12. He spoke in a TIMID voice.', choices: ['a. loud','b. shy','c. happy','d. angry'], correct: 1 },
+            { q: '13. She made a CRUCIAL decision.', choices: ['a. unimportant','b. risky','c. central','d. delayed'], correct: 2 },
+            { q: '14. The air was FRIGID this morning.', choices: ['a. cold','b. warm','c. clear','d. polluted'], correct: 0 },
+            { q: '15. They gave GENEROUS donations.', choices: ['a. large','b. selfish','c. few','d. secret'], correct: 0 },
+            { q: '16. The message was URGENT.', choices: ['a. slow','b. unimportant','c. immediate','d. late'], correct: 2 },
+            { q: '17. She wore a GLORIOUS dress.', choices: ['a. ordinary','b. bright','c. splendid','d. simple'], correct: 2 },
+            { q: '18. The boy was OBEDIENT.', choices: ['a. helpful','b. careful','c. respectful','d. compliant'], correct: 3 },
+            { q: '19. They lived in a TRANQUIL place.', choices: ['a. noisy','b. peaceful','c. crowded','d. far'], correct: 1 },
+            { q: '20. The old man looked FRAIL.', choices: ['a. strong','b. weak','c. sick','d. tall'], correct: 1 }
+          ];
+
+          const antonyms = [
+            { q: '21. The girl was POLITE.', choices: ['a. rude','b. sweet','c. quiet','d. shy'], correct: 0 },
+            { q: '22. The lake was SHALLOW.', choices: ['a. wide','b. deep','c. clear','d. narrow'], correct: 1 },
+            { q: '23. It was a GLOOMY day.', choices: ['a. sad','b. bright','c. cold','d. long'], correct: 1 },
+            { q: '24. He gave a TRUTHFUL answer.', choices: ['a. honest','b. complete','c. polite','d. dishonest'], correct: 3 },
+            { q: '25. The dog was HOSTILE.', choices: ['a. friendly','b. big','c. playful','d. fast'], correct: 0 },
+            { q: '26. The results were ACCURATE.', choices: ['a. wrong','b. old','c. fast','d. late'], correct: 0 },
+            { q: '27. She wore CASUAL clothes.', choices: ['a. fancy','b. dirty','c. new','d. comfortable'], correct: 0 },
+            { q: '28. He is very BRAVE.', choices: ['a. strong','b. cowardly','c. quick','d. noisy'], correct: 1 },
+            { q: '29. That was a COMMON mistake.', choices: ['a. unusual','b. easy','c. frequent','d. correct'], correct: 0 },
+            { q: '30. The boy seemed ARROGANT.', choices: ['a. proud','b. shy','c. humble','d. angry'], correct: 2 },
+            { q: '31. The worker was DILIGENT.', choices: ['a. lazy','b. helpful','c. slow','d. happy'], correct: 0 },
+            { q: '32. The river flowed RAPIDLY.', choices: ['a. quickly','b. slowly','c. quietly','d. steadily'], correct: 1 },
+            { q: '33. She gave a VAGUE answer.', choices: ['a. unclear','b. long','c. complete','d. clear'], correct: 3 },
+            { q: '34. The soup is BLAND.', choices: ['a. tasteless','b. spicy','c. warm','d. old'], correct: 1 },
+            { q: '35. He felt CONFIDENT before the test.', choices: ['a. nervous','b. ready','c. energetic','d. proud'], correct: 0 }
+          ];
+
+          const partsOfSpeech = [
+            { q: '36. The CAT slept on the couch.', choices: ['a. noun','b. verb','c. adjective','d. adverb'], correct: 0 },
+            { q: '37. She sings BEAUTIFULLY.', choices: ['a. noun','b. adverb','c. adjective','d. verb'], correct: 1 },
+            { q: '38. The BLUE ribbon was shiny.', choices: ['a. adjective','b. noun','c. verb','d. pronoun'], correct: 0 },
+            { q: '39. They RUN every morning.', choices: ['a. verb','b. noun','c. adverb','d. adjective'], correct: 0 },
+            { q: '40. WOW! That was amazing.', choices: ['a. conjunction','b. interjection','c. verb','d. noun'], correct: 1 },
+            { q: '41. The cat hid UNDER the bed.', choices: ['a. preposition','b. adverb','c. pronoun','d. noun'], correct: 0 },
+            { q: '42. SHE is my best friend.', choices: ['a. pronoun','b. noun','c. verb','d. adverb'], correct: 0 },
+            { q: '43. The QUICK fox jumped over the fence.', choices: ['a. adjective','b. adverb','c. pronoun','d. verb'], correct: 0 },
+            { q: '44. They walked SLOWLY.', choices: ['a. verb','b. noun','c. adverb','d. adjective'], correct: 2 },
+            { q: '45. The children PLAYED in the park.', choices: ['a. noun','b. adverb','c. adjective','d. verb'], correct: 3 },
+            { q: '46. I bought a NEW notebook.', choices: ['a. adjective','b. noun','c. verb','d. adverb'], correct: 0 },
+            { q: '47. The teacher wrote on the board AND explained the lesson.', choices: ['a. conjunction','b. verb','c. adverb','d. noun'], correct: 0 },
+            { q: '48. Please close the door QUIETLY.', choices: ['a. adjective','b. pronoun','c. adverb','d. noun'], correct: 2 },
+            { q: '49. The TEAM won the game.', choices: ['a. verb','b. adjective','c. noun','d. pronoun'], correct: 2 },
+            { q: '50. We saw a bird BEHIND the tree.', choices: ['a. adverb','b. verb','c. preposition','d. adjective'], correct: 2 }
+          ];
+
+          let quiz = synonyms;
+          let section = 'synonyms';
+          let score = 0;
+
+          let index = 0;
+          const qText = document.getElementById('q-text');
+          const choicesEl = document.getElementById('choices');
+          const feedback = document.getElementById('feedback');
+          const nextBtn = document.getElementById('next-btn');
+
+          function render() {
+            const item = quiz[index];
+            // Highlight the word in capital letters
+            qText.innerHTML = item.q.replace(/([A-Z]{2,})/g, '<strong>$1</strong>');
+            choicesEl.innerHTML = '';
+            feedback.textContent = '';
+            nextBtn.style.display = 'none';
+
+            item.choices.forEach((label, i) => {
+              const btn = document.createElement('button');
+              btn.className = 'level-btn choice-btn';
+              btn.textContent = label;
+              btn.addEventListener('click', () => {
+                // disable all
+                const all = choicesEl.querySelectorAll('button');
+                all.forEach(b => b.disabled = true);
+                const isCorrect = i === item.correct;
+                if (isCorrect) {
+                  feedback.textContent = 'Correct!';
+                  feedback.style.color = '#0a8a0a';
+                  score++; // Increment score for correct answer
+                } else {
+                  const correctLabel = item.choices[item.correct];
+                  feedback.textContent = 'Incorrect. The correct answer is ' + correctLabel + '.';
+                  feedback.style.color = '#c62828';
+                }
+                nextBtn.textContent = index < quiz.length - 1 ? 'Next' : 'Finish';
+                nextBtn.style.display = 'inline-block';
+              });
+              choicesEl.appendChild(btn);
+            });
+          }
+
+          nextBtn.addEventListener('click', () => {
+            if (index < quiz.length - 1) {
+              index++;
+              render();
+            } else {
+              // Check which section just finished
+              if (section === 'synonyms') {
+                // Show Antonyms intro
+                document.getElementById('question-view').style.display = 'none';
+                document.getElementById('antonyms-intro').style.display = 'block';
+              } else if (section === 'antonyms') {
+                // Show Parts of Speech intro
+                document.getElementById('question-view').style.display = 'none';
+                document.getElementById('parts-intro').style.display = 'block';
+              } else {
+                // Finished all sections - show completion with score
+                document.getElementById('question-view').style.display = 'none';
+                const completionView = document.getElementById('completion-view');
+                const scoreDisplay = document.getElementById('score-display');
+                scoreDisplay.textContent = 'You got ' + score + '/50';
+                completionView.style.display = 'block';
+              }
+            }
+          });
+
+          // Antonyms intro Play button handler
+          const antonymsIntro = document.getElementById('antonyms-intro');
+          const startAntonyms = document.getElementById('start-antonyms');
+          if (startAntonyms) {
+            startAntonyms.addEventListener('click', () => {
+              antonymsIntro.style.display = 'none';
+              // Switch to antonyms questions
+              quiz = antonyms;
+              section = 'antonyms';
+              index = 0;
+              document.getElementById('question-view').style.display = 'block';
+              render();
+            });
+          }
+
+          // Parts of Speech intro Play button handler
+          const partsIntro = document.getElementById('parts-intro');
+          const startParts = document.getElementById('start-parts');
+          if (startParts) {
+            startParts.addEventListener('click', () => {
+              partsIntro.style.display = 'none';
+              // Switch to parts of speech questions
+              quiz = partsOfSpeech;
+              section = 'parts';
+              index = 0;
+              document.getElementById('question-view').style.display = 'block';
+              render();
+            });
+          }
+
+          // When the question view is shown (after Play), render first question
+          const observer = new MutationObserver(() => {
+            if (document.getElementById('question-view').style.display !== 'none' && qText.textContent === '') {
+              render();
+            }
+          });
+          observer.observe(document.getElementById('question-view'), { attributes: true, attributeFilter: ['style'] });
+        })();
+      </script>
+
+    </div>
+  </div>
+
+</body>
+</html>

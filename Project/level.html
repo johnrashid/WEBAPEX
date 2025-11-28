@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Choose Level</title>
+  <link rel="stylesheet" href="reading.css">
+</head>
+<body>
+
+  <!-- Back button (fixed upper-left) -->
+  <button type="button" class="back-btn" aria-label="Go back" onclick="location.href='reading.html'">
+    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M20 11H7.83l5.58-5.59L12 4 4 12l8 8 1.41-1.41L7.83 13H20v-2z" fill="#fff"/>
+    </svg>
+  </button>
+
+  <div class="wrapper">
+    <div class="canvas">
+      <!-- Levels view -->
+      <section id="levels-view" class="intro" style="max-width:780px; text-align:center; display:block;">
+        <h1 class="title">Choose a Level</h1>
+        <div id="levels-list" class="levels">
+          <button class="level-btn" data-level="1">Level 1</button>
+          <button class="level-btn" data-level="2">Level 2</button>
+          <button class="level-btn" data-level="3">Level 3</button>
+          <button class="level-btn" data-level="4">Level 4</button>
+          <button class="level-btn" data-level="5">Level 5</button>
+        </div>
+      </section>
+
+      <!-- Stories view (populated dynamically) -->
+      <section id="stories-view" class="intro" style="max-width:780px; text-align:center; display:none;">
+        <h1 id="stories-title" class="title">Choose a Story</h1>
+        <div id="stories-list" class="levels"></div>
+      </section>
+
+      <script>
+        // Dynamic levels -> stories navigation (same behavior as on reading page)
+        (function(){
+          const levelsView = document.getElementById('levels-view');
+          const levelsList = document.getElementById('levels-list');
+          const storiesView = document.getElementById('stories-view');
+          const storiesList = document.getElementById('stories-list');
+          const storiesTitle = document.getElementById('stories-title');
+
+          // mapping: level -> number of stories
+          const levelCounts = { 1: 5, 2: 10, 3: 15, 4: 20, 5: 25 };
+
+          // populate stories for a given level
+          function populateStoriesForLevel(level) {
+            const count = levelCounts[level] || 0;
+            storiesList.innerHTML = '';
+            for (let i = 1; i <= count; i++) {
+              const sbtn = document.createElement('button');
+              sbtn.className = 'level-btn story-card';
+              sbtn.innerHTML = `<span class="story-badge">${i}</span><span class="story-label">Story ${i}</span>`;
+              sbtn.addEventListener('click', () => {
+                window.location.href = `story.html?level=${level}&story=${i}`;
+              });
+              storiesList.appendChild(sbtn);
+            }
+            storiesTitle.textContent = 'Level ' + level + ' - Choose a Story';
+            levelsView.style.display = 'none';
+            storiesView.style.display = 'block';
+          }
+
+          // delegate clicks on level buttons
+          levelsList.addEventListener('click', (e) => {
+            const btn = e.target.closest('button[data-level]');
+            if (!btn) return;
+            const level = Number(btn.getAttribute('data-level'));
+            populateStoriesForLevel(level);
+          });
+
+          // If a `level` query param is present, open that level's stories directly
+          (function(){
+            const params = new URLSearchParams(location.search);
+            const prelevel = params.get('level');
+            if (prelevel) {
+              populateStoriesForLevel(Number(prelevel));
+            }
+          })();
+
+        })();
+      </script>
+
+    </div>
+  </div>
+
+</body>
+</html>

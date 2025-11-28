@@ -1,0 +1,278 @@
+/* RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    font-family: Arial, sans-serif;
+    background: #f4efff;
+    overflow: hidden;
+}
+
+/* FULLSCREEN CENTER */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* TITLE */
+.title {
+    font-size: 36px;
+    font-weight: 800;
+    margin-bottom: 30px;
+}
+
+
+
+/* Make story section scrollable and keep story-number visible */
+#story {
+    max-height: calc(100vh - 100px);
+    overflow-y: auto;
+    padding: 18px;
+}
+
+#story{ position: relative; }
+
+#story .story-number{
+    position: -webkit-sticky;
+    position: sticky;
+    top: 12px;
+    z-index: 10;
+    margin-bottom: 14px;
+}
+
+#story #story-content{
+    /* let the content flow and be scrollable inside the #story container */
+    font-size: 18px;
+    line-height: 1.6;
+}
+
+/* Stories list: present story buttons as boxed cards and make list scrollable */
+#stories-list{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    align-items: flex-start;
+    max-height: calc(100vh - 220px);
+    overflow-y: auto;
+    padding: 12px;
+}
+
+#stories-list .level-btn{
+    width: 120px;
+    height: 84px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 10px;
+    border-radius: 12px;
+    background: linear-gradient(180deg, #b86cff, #9a4fe7);
+    box-shadow: 0 8px 18px rgba(64,38,136,0.12);
+}
+
+.story-badge{
+    display: inline-block;
+    min-width: 34px;
+    height: 28px;
+    line-height: 28px;
+    padding: 0 8px;
+    border-radius: 8px;
+    background: #fff;
+    color: #402688;
+    font-weight: 800;
+    font-size: 14px;
+    border: 1px solid rgba(64,38,136,0.08);
+    margin-bottom: 6px;
+}
+
+.story-label{
+    color: #fff;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+/* ensure scrollbars are visible and usable on small screens */
+@media (max-width:520px){
+    #stories-list{ gap:10px; padding:8px; }
+    #stories-list .level-btn{ width: 46%; height:72px; }
+}
+
+/* Index badges on individual story page */
+#story-index{
+    display:flex;
+    gap:8px;
+    align-items:center;
+    padding:6px 4px;
+    overflow-x:auto;
+}
+
+.index-badge{
+    min-width:40px;
+    height:36px;
+    padding:0 10px;
+    border-radius:8px;
+    border:none;
+    background:#fff;
+    color:#402688;
+    font-weight:800;
+    cursor:pointer;
+    box-shadow:0 4px 10px rgba(64,38,136,0.06);
+}
+.index-badge.current{
+    background: #402688;
+    color: #fff;
+}
+
+/* make sure the horizontal scroll is touch-friendly */
+#story-index::-webkit-scrollbar{ height:8px; }
+#story-index::-webkit-scrollbar-thumb{ background: rgba(64,38,136,0.12); border-radius:4px; }
+
+/* SUBTITLE */
+.subtitle{
+    font-size: 22px;
+    font-weight: 700;
+    color: #402688;
+    opacity: 0.9;
+    margin-bottom: 18px;
+}
+
+/* PLAY BUTTON (intro) */
+.play-btn{
+    padding: 14px 26px;
+    border: none;
+    border-radius: 28px;
+    background: #b86cff;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+    transition: transform .15s ease, opacity .15s ease, box-shadow .15s ease;
+}
+.play-btn:hover{ transform: translateY(-3px); opacity: 0.95; box-shadow: 0 10px 18px rgba(0,0,0,0.14); }
+.play-btn:active{ transform: translateY(-1px); }
+
+/* LEVEL BUTTONS */
+.levels {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.level-btn {
+    display: block;
+    width: 50%;
+    padding: 15px;
+    border-radius: 30px;
+    border: none;
+    background: #b86cff;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+    transition: transform .15s ease, opacity .15s ease, box-shadow .15s ease;
+}
+
+.level-btn:hover {
+    transform: translateY(-2px);
+    opacity: 0.95;
+    background: #9a4fe7;
+    box-shadow: 0 10px 18px rgba(0,0,0,0.14);
+}
+
+.level-btn:active{ transform: translateY(-1px); }
+
+.canvas{
+    position: relative;
+    width: 100%;
+    max-width: 780px;
+    margin: 0 auto;
+}
+
+/* Back button (upper-left, fixed to viewport) */
+.back-btn{
+    position: fixed;
+    top: 18px;
+    left: 18px;
+    z-index: 9999;
+    width: 48px;
+    height: 40px;
+    padding: 6px 10px;
+    border: none;
+    border-radius: 10px;
+    background: #402688;
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+    transition: transform .15s ease, opacity .15s ease;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 1;
+}
+.back-btn:hover{ transform: translateY(-3px); opacity: 0.95; }
+.back-btn:focus{ outline: 3px solid rgba(64,38,136,0.18); outline-offset: 2px; }
+
+/* Questions button (lower-left) */
+.questions-btn{
+    position: static;
+    z-index: 30;
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: #6b3bd6;
+    color: #fff;
+    border: none;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+    cursor: pointer;
+    font-weight:700;
+}
+.index-row{ width: 100%; }
+.questions-btn:hover{ transform: translateY(-3px); opacity: 0.98; }
+
+/* Simple modal for confirmation */
+.modal-overlay{
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.35);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+}
+.modal-overlay.active{ display: flex; }
+.modal-box{
+    background: #fff;
+    padding: 20px 22px;
+    border-radius: 10px;
+    max-width: 420px;
+    width: 92%;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.18);
+    text-align: left;
+}
+.modal-message{ color:#222; font-size:16px; margin-bottom:12px; }
+.modal-actions{ display:flex; gap:10px; justify-content:flex-end; }
+.modal-actions button{ padding:8px 12px; border-radius:8px; border:none; cursor:pointer; font-weight:700; }
+.modal-actions .btn-yes{ background:#402688; color:#fff; }
+.modal-actions .btn-no{ background:#f0f0f0; color:#222; }
+
+/* small screens */
+@media (max-width:420px){
+    .back-btn{ top: 10px; left: 10px; width:40px; height:36px; font-size:13px; border-radius:8px; }
+}
+
+/* Questions page specifics (if present) */
+.questions-container{ max-width:780px; margin:0 auto; }
+.questions-header{ font-size:28px; font-weight:800; }

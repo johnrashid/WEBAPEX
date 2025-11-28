@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Web Apex - Main</title>
+  <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="background.css">
+</head>
+<body>
+  <div class="wrapper">
+    <!-- floating words (decorative) -->
+    <div class="floating-words">
+      <span class="word" style="left:6%;  top:8%;   animation-duration:10s; animation-delay:-2s;">LEARN</span>
+      <span class="word" style="left:24%; top:18%;  animation-duration:12s; animation-delay:-4s;">CREATE</span>
+      <span class="word" style="left:62%; top:6%;   animation-duration:9s;  animation-delay:-1s;">EXPLORE</span>
+      <span class="word" style="left:78%; top:26%;  animation-duration:11s; animation-delay:-3s;">BUILD</span>
+      <span class="word" style="left:46%; top:44%;  animation-duration:13s; animation-delay:-5s;">UNDERSTAND</span>
+      <span class="word" style="left:14%; top:56%;  animation-duration:14s; animation-delay:-6s;">PRACTICE</span>
+      <span class="word" style="left:64%; top:60%;  animation-duration:10s; animation-delay:-2s;">PLAY</span>
+      <span class="word" style="left:36%; top:72%;  animation-duration:12s; animation-delay:-4s;">GROW</span>
+    </div>
+
+  <script src="audio.js" defer></script>
+
+    <audio id="bg-audio" src="bgmusic.mp3" loop preload="auto" autoplay></audio>
+
+<!-- Audio control (lower-right) -->
+<div class="audio-control" aria-hidden="false">
+    <button class="audio-btn" id="audio-toggle" aria-label="Toggle sound" title="Sound">
+      <!-- speaker icon (svg) -->
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+        <path d="M3 10v4h4l5 5V5L7 10H3z" fill="currentColor"></path>
+        <path class="wave" d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v8.06c1.48-.74 2.5-2.26 2.5-4.03z" fill="currentColor"></path>
+      </svg>
+    </button>
+
+    <div class="audio-panel" id="audio-panel" aria-hidden="true">
+      <input type="range" id="audio-volume" class="audio-volume" min="0" max="1" step="0.01" value="0.6" aria-label="Volume">
+      <button id="audio-mute" class="audio-mute" aria-label="Mute">Mute</button>
+    </div>
+  </div>
+
+  <script>
+(function(){
+  const audio = document.getElementById('bg-audio');
+  const toggle = document.getElementById('audio-toggle');
+  const icon = document.getElementById('audio-icon');
+  if (!audio || !toggle || !icon) return;
+
+  // Do not mute on load; let it play immediately
+  audio.muted = false;
+  audio.volume = 0.6;
+  audio.play().catch(()=>{}); // best effort
+
+  function updateButton() {
+    if (audio.muted) {
+      toggle.setAttribute('aria-pressed', 'true');
+      toggle.title = 'Unmute music';
+      icon.innerHTML = `
+        <path d="M3 10v4h4l5 5V5L7 10H3z" fill="currentColor"></path>
+        <line x1="20" y1="4" x2="4" y2="20" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line>
+      `;
+      toggle.style.opacity = '0.7';
+    } else {
+      toggle.setAttribute('aria-pressed', 'false');
+      toggle.title = 'Mute music';
+      icon.innerHTML = `
+        <path d="M3 10v4h4l5 5V5L7 10H3z" fill="currentColor"></path>
+        <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v8.06c1.48-.74 2.5-2.26 2.5-4.03z" fill="currentColor"></path>
+      `;
+      toggle.style.opacity = '1';
+    }
+  }
+
+  toggle.addEventListener('click', function(){
+    audio.muted = !audio.muted;
+    updateButton();
+  });
+
+  updateButton();
+})();
+</script>
+
+    <div class="canvas">
+      <!-- top image / logo -->
+      <div class="circle"></div>
+
+      <!-- welcome message -->
+      <h1 class="title" style="text-align:center; margin-top:40px;">Welcome to Web Apex</h1>
+      <h1 class="subtitle" style="text-align:center; margin-top:1px;">Where reading becomes winning.</h1>
+      <!-- centered Play button (reuses .level-btn styling) -->
+      <div class="play" style="top: calc(320px * var(--scale));">
+        <button class="play-btn" onclick="location.href='index.html'"><span>PLAY</span></button>
+      </div>
+    </div>
+      </div>
+
+      </body>
+    </html>

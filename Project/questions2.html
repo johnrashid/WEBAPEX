@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<title>Questions - Level 2</title>
+	<link rel="stylesheet" href="reading.css">
+	<link rel="stylesheet" href="questions.css">
+</head>
+<body>
+
+	<button type="button" class="back-btn" aria-label="Go back" onclick="goBack()">
+		<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+			<path d="M20 11H7.83l5.58-5.59L12 4 4 12l8 8 1.41-1.41L7.83 13H20v-2z" fill="#fff"/>
+		</svg>
+	</button>
+
+		<h1 class="questions-header" id="questionsHeader">Questions</h1>
+
+		<main class="questions-container" id="questionsContainer" tabindex="0">
+		<!-- Questions will be injected here -->
+	</main>
+
+	<script>
+		const params = new URLSearchParams(location.search);
+		const level = params.get('level') || '2';
+		const story = params.get('story') || '1';
+
+		function goBack(){
+			window.location.href = `story.html?level=${level}&story=${story}`;
+		}
+
+		const questionsByLevel = {
+			'2': {
+				'1': {
+					title: 'Checkouts',
+					questions: [
+						{ q: '1. Where did the girl\u2019s parents move her?', choices: ['A. New York','B. Cincinnati','C. Chicago','D. Boston'] },
+						{ q: '2. How did the girl feel at first?', choices: ['A. Happy','B. Lonely','C. Excited','D. Angry'] },
+						{ q: '3. What did the girl spend most of her time doing at first?', choices: ['A. Sleeping','B. Looking at photos','C. Playing outside','D. Reading'] },
+						{ q: '4. What did the girl enjoy doing secretly?', choices: ['A. Grocery shopping','B. Cooking','C. Cleaning','D. Watching TV'] },
+						{ q: '5. Who worked at the supermarket?', choices: ['A. Her brother','B. The bag boy','C. Her friend','D. The cashier'] },
+						{ q: '6. What did the bag boy do by accident?', choices: ['A. Gave her flowers','B. Dropped her jar of mayonnaise','C. Ran into her','D. Stole her money'] },
+						{ q: '7. How did the girl feel when the mayonnaise broke?', choices: ['A. Angry','B. Sad','C. Loved him','D. Surprised'] },
+						{ q: '8. What color was her bow in her hair?', choices: ['A. Red','B. Blue','C. Orange','D. Yellow'] },
+						{ q: '9. Did they see each other again right away?', choices: ['A. Yes','B. No','C. Sometimes','D. Always'] },
+						{ q: '10. How did the girl act when she saw him again?', choices: ['A. She smiled','B. She ignored him','C. She waved','D. She shouted'] },
+						{ q: '11. How did the bag boy act when he saw her again?', choices: ['A. He smiled','B. He ignored her','C. He ran to her','D. He waved'] },
+						{ q: '12. How did meeting the bag boy help the girl?', choices: ['A. Made her angry','B. Helped her feel better about moving','C. Made her sad','D. Made her sleepy'] },
+						{ q: '13. How did working at the supermarket feel for the bag boy after seeing her?', choices: ['A. Boring','B. Exciting and romantic','C. Easy','D. Difficult'] },
+						{ q: '14. Did the girl and bag boy ever talk much at first?', choices: ['A. Yes','B. No','C. Sometimes','D. Often'] },
+						{ q: '15. Where did they meet months later?', choices: ['A. At school','B. At a movie theater with dates','C. At the supermarket','D. At a party'] }
+					],
+					key: []
+				},
+				'2': {
+					title: 'Little Women',
+					questions: [
+						{ q: '1. What does Jo say Christmas won\u2019t be Christmas without?', choices: ['A. Food','B. Presents','C. Music','D. Snow'] },
+						{ q: '2. Why does Meg feel sad?', choices: ['A. Her old dress','B. She lost something','C. She is tired','D. She is sick'] },
+						{ q: '3. What does Amy complain about?', choices: ['A. Chores','B. Girls having pretty things','C. School','D. Boys teasing her'] },
+						{ q: '4. Why are the girls sad about their father?', choices: ['A. He is sick','B. He is far away at war','C. He is angry','D. He moved away'] },
+						{ q: '5. Why does Mother suggest not having presents?', choices: ['A. They forgot','B. Winter will be hard for everyone','C. They don\u2019t like gifts','D. They are too busy'] },
+						{ q: '6. What does Jo want to buy for herself?', choices: ['A. Shoes','B. Undine and Sintram','C. A dress','D. Sweets'] },
+						{ q: '7. What does Beth want to buy?', choices: ['A. Music','B. Candy','C. A new coat','D. A pet'] },
+						{ q: '8. What does Amy really want?', choices: ['A. A doll','B. Drawing pencils','C. A book','D. A necklace'] },
+						{ q: '9. What job does Meg complain about?', choices: ['A. Cooking','B. Cleaning the house','C. Teaching children','D. Gardening'] },
+						{ q: '10. Which chore does Jo dislike?', choices: ['A. Sweeping','B. Cooking','C. Washing dishes and keeping tidy','D. Sewing'] },
+						{ q: '11. What does Amy say she doesn\u2019t believe?', choices: ['A. That Meg suffers','B. That Jo suffers','C. That Beth suffers','D. That they are poor'] },
+						{ q: '12. What do the girls wish they still had?', choices: ['A. More toys','B. Their father\u2019s old money','C. A bigger house','D. Time to play'] },
+						{ q: '13. What type of story is this passage from?', choices: ['A. Mystery','B. Fairy tale','C. Classic literature','D. Science fiction'] },
+						{ q: '14. How many sisters are speaking in the passage?', choices: ['A. Two','B. Three','C. Four','D. Five'] },
+						{ q: '15. What feeling do the girls share at the beginning of the passage?', choices: ['A. Happiness','B. Anger','C. Sadness about being poor','D. Excitement'] }
+					],
+					key: []
+				},
+				'3': {
+					title: 'Malala Yousofai',
+					questions: [
+						{ q: '1. Where was Malala born?', choices: ['A. India','B. Pakistan','C. China','D. Japan'] },
+						{ q: '2. When was Malala born?', choices: ['A. July 12, 1997','B. June 10, 1995','C. May 12, 1999','D. August 1, 1990'] },
+						{ q: '3. What was Malala\u2019s father\u2019s job?', choices: ['A. Doctor','B. Teacher','C. Farmer','D. Nurse'] },
+						{ q: '4. Who took over Malala\u2019s village?', choices: ['A. Police','B. Soldiers','C. Taliban','D. Teachers'] },
+						{ q: '5. What did the Taliban stop girls from doing?', choices: ['A. Playing','B. Singing','C. Going to school','D. Eating'] },
+						{ q: '6. What did a man on the bus ask Malala?', choices: ['A. \u201cWhere is your school?\u201d','B. \u201cWho is Malala?\u201d','C. \u201cWhat is your name?\u201d','D. \u201cWhere are you going?\u201d'] },
+						{ q: '7. What happened to Malala after the man asked the question?', choices: ['A. She ran away','B. He shot her','C. She hid','D. He left her alone'] },
+						{ q: '8. How many days was Malala in the hospital before waking up?', choices: ['A. 5 days','B. 10 days','C. 20 days','D. 30 days'] },
+						{ q: '9. Where does Malala live now?', choices: ['A. United States','B. China','C. United Kingdom','D. India'] },
+						{ q: '10. What did Malala and her father create?', choices: ['A. Malala School','B. Malala Group','C. Malala Fund','D. Malala Club'] },
+						{ q: '11. What does the Malala Fund help girls do?', choices: ['A. Play sports','B. Eat healthy food','C. Achieve their dreams','D. Learn music'] },
+						{ q: '12. What prize did Malala win in 2014?', choices: ['A. Best Student Award','B. Nobel Peace Prize','C. Writer of the Year','D. World Education Prize'] },
+						{ q: '13. What makes Malala special about winning that prize?', choices: ['A. She was the first girl','B. She was the oldest winner','C. She was the youngest winner','D. She was the only winner'] },
+						{ q: '14. Where did Malala graduate from?', choices: ['A. Harvard','B. Oxford','C. Cambridge','D. Stanford'] },
+						{ q: '15. What does Malala do today?', choices: ['A. She stops working','B. She only stays at home','C. She travels and supports education','D. She works as a singer'] }
+					],
+					key: []
+				},
+				'4': {
+					title: 'Rice Bowl Wishes',
+					questions: [
+						{ q: '1. How old were the three boys when they were adopted?', choices: ['A. Nine','B. Ten','C. Eleven','D. Twelve'] },
+						{ q: '2. Who adopted the three boys?', choices: ['A. A kind teacher','B. Nii Yoo, an old lady','C. Their parents','D. A wealthy merchant'] },
+						{ q: '3. Which boy was blind?', choices: ['A. Lan Dua','B. Swa Jow','C. Gow Sir','D. None of them'] },
+						{ q: '4. How did Nii Yoo treat Gow Sir at first?', choices: ['A. Sent him to school','B. Treated him as a servant','C. Bought him new clothes','D. Gave him gold'] },
+						{ q: '5. What did Gow Sir do during the fire?', choices: ['A. Ran away','B. Helped Lan Dua and Swa Jow','C. Saved Lady Nii Yoo by carrying her','D. Hid in a corner'] },
+						{ q: '6. What gift did Nii Yoo give Gow Sir?', choices: ['A. A bag of gold','B. A rice bowl that could grant wishes','C. A library of books','D. A mansion'] },
+						{ q: '7. How many wishes could the rice bowl grant every three years?', choices: ['A. One','B. Two','C. Three','D. Four'] },
+						{ q: '8. What did Gow Sir wish for most of the time?', choices: ['A. Gold and houses','B. Mansions and wives','C. More books and knowledge','D. Food and clothes'] },
+						{ q: '9. What did Lan Dua and Swa Jow mostly wish for?', choices: ['A. Books','B. Houses, gold, and wealth','C. Friendship','D. Knowledge'] },
+						{ q: '10. What happened when the rice bowl was dropped?', choices: ['A. Nothing','B. Gow Sir lost his vision, the others lost possessions','C. The boys gained more wishes','D. The bowl granted more wishes'] },
+						{ q: '11. What lesson did Lan Dua and Swa Jow learn?', choices: ['A. To work hard and study','B. To wish for more','C. To ignore Gow Sir','D. To leave the village'] },
+						{ q: '12. What happened to Gow Sir\u2019s knowledge after the bowl broke?', choices: ['A. He forgot everything','B. He lost some knowledge','C. He kept all the knowledge','D. He shared it with the bowl'] },
+						{ q: '13. What did Gow Sir do with the broken rice bowl?', choices: ['A. Threw it away','B. Glued it and kept it on his desk','C. Gave it to the other boys','D. Buried it'] },
+						{ q: '14. What was Gow Sir later known for?', choices: ['A. Being the richest man','B. Being the wisest teacher in China','C. Being a soldier','D. Being a merchant'] },
+						{ q: '15. What is the moral of the story?', choices: ['A. Always wish for gold','B. Life is what you choose to make of it','C. Magic can solve all problems','D. Never share with others'] }
+					],
+					key: []
+				},
+				'5': {
+					title: 'The Adventure of Tom Sawyer',
+					questions: [
+						{ q: '1. What time did Tom and Sid go to bed?', choices: ['A. Seven o\u2019clock','B. Eight o\u2019clock','C. Half-past nine','D. Midnight'] },
+						{ q: '2. Who fell asleep first?', choices: ['A. Tom','B. Sid','C. Aunt Polly','D. Huck Finn'] },
+						{ q: '3. What did Tom do while lying in bed?', choices: ['A. Read a book','B. Talked to Sid','C. Waited restlessly','D. Played with a toy'] },
+						{ q: '4. What time did the clock strike when Tom thought it was nearly morning?', choices: ['A. Nine','B. Ten','C. Eleven','D. Twelve'] },
+						{ q: '5. Why didn\u2019t Tom toss and fidget?', choices: ['A. He was too tired','B. He didn\u2019t want to wake Sid','C. He was afraid of Aunt Polly','D. He heard footsteps'] },
+						{ q: '6. What noise came from Aunt Polly\u2019s chamber?', choices: ['A. A cough','B. A scream','C. A snore','D. A song'] },
+						{ q: '7. What insect made a bothersome chirping sound?', choices: ['A. A beetle','B. A cricket','C. A moth','D. A spider'] },
+						{ q: '8. What sound made Tom shudder?', choices: ['A. A dog bark','B. The wind blowing','C. The ticking of a death-watch','D. Footsteps on the stairs'] },
+						{ q: '9. What did Tom think the death-watch meant?', choices: ['A. A storm was coming','B. Someone\u2019s days were numbered','C. Someone was outside','D. Morning was near'] },
+						{ q: '10. What animal howled in the distance?', choices: ['A. A wolf','B. A cat','C. A dog','D. A cow'] },
+						{ q: '11. What noise woke Tom fully?', choices: ['A. A loud snore','B. A bottle crashing','C. A scream','D. Thunder'] },
+						{ q: '12. How did Tom signal as he sneaked out?', choices: ['A. He whistled','B. He barked','C. He meowed','D. He tapped the window'] },
+						{ q: '13. Who was waiting for Tom?', choices: ['A. Sid','B. Aunt Polly','C. Huckleberry Finn','D. A neighbor'] },
+						{ q: '14. What was Huck carrying with him?', choices: ['A. A lantern','B. A rope','C. A bucket','D. A dead cat'] },
+						{ q: '15. Where were the boys heading?', choices: ['A. The river','B. The woods','C. The schoolyard','D. The graveyard'] }
+					],
+					key: []
+				},
+				'6': {
+					title: 'The Brave Tin Soldier',
+					questions: [
+						{ q: '1. How many tin soldiers were there?', choices: ['A. 10','B. 25','C. 15','D. 20'] },
+						{ q: '2. What were the tin soldiers made from?', choices: ['A. Wood','B. Plastic','C. Tin','D. Cloth'] },
+						{ q: '3. What color were their uniforms?', choices: ['A. Green and yellow','B. Red and blue','C. Black and white','D. Brown and orange'] },
+						{ q: '4. Who first said \u201cTin soldiers\u201d?', choices: ['A. The boy','B. The tin soldier','C. The father','D. A girl'] },
+						{ q: '5. Why were the tin soldiers given to the boy?', choices: ['A. For Christmas','B. For his birthday','C. As a reward','D. As a gift from a friend'] },
+						{ q: '6. What was different about one of the soldiers?', choices: ['A. He was taller','B. He had one leg','C. He was a different color','D. He had no arms'] },
+						{ q: '7. How many legs did the remarkable soldier have?', choices: ['A. One','B. Two','C. Three','D. Four'] },
+						{ q: '8. Where did the boy place the tin soldier?', choices: ['A. On the floor','B. In the window','C. On the chair','D. In the box'] },
+						{ q: '9. What happened when the window flew open?', choices: ['A. The soldiers fell','B. The boy ran','C. The tin soldier fell outside','D. Nothing happened'] },
+						{ q: '10. What kind of weather occurred after the soldier fell?', choices: ['A. Sunny','B. Snowy','C. Rainy','D. Windy'] },
+						{ q: '11. Who found the tin soldier outside?', choices: ['A. Two boys','B. The little boy','C. A girl','D. The soldier\u2019s friends'] },
+						{ q: '12. What did the boys make for the tin soldier?', choices: ['A. A small house','B. A newspaper boat','C. A paper plane','D. A swing'] },
+						{ q: '13. Where did the tin soldier sail?', choices: ['A. In a river','B. In the ocean','C. Down the street','D. On a newspaper boat'] },
+						{ q: '14. Why was the one-legged soldier considered remarkable?', choices: ['A. Because he was taller','B. Because he could stand on one leg','C. Because he was red','D. Because he was smaller'] },
+						{ q: '15. Did all the soldiers look the same?', choices: ['A. Yes, except for one','B. Yes, all were the same','C. No, all were different','D. No, they had different colors'] }
+					],
+					key: []
+				},
+				'7': {
+					title: 'The Eight Tail',
+					questions: [
+						{ q: '1. Where were the children gathered at the beginning of the passage?', choices: ['A. In the school','B. Around a wood-fire in Uncle Alec\u2019s kitchen','C. On the playground','D. Inside the living room'] },
+						{ q: '2. What game had they been playing before the new idea came?', choices: ['A. Tag','B. Hide and Seek','C. Blind-Man\u2019s Buff','D. Chess'] },
+						{ q: '3. What idea did the Story Girl suggest?', choices: ['A. To start a club','B. To create a newspaper','C. To go on a trip','D. To write a book'] },
+						{ q: '4. Who said the idea was \u201csilly\u201d at first?', choices: ['A. Felicity','B. Cecily','C. The Story Girl','D. Bev'] },
+						{ q: '5. Why couldn\u2019t they print the newspaper?', choices: ['A. They didn\u2019t have paper','B. It was too expensive','C. The teacher didn\u2019t allow it','D. They had no printer'] },
+						{ q: '6. Who wanted to be editor?', choices: ['A. Dan','B. Bev','C. Peter','D. Felix'] },
+						{ q: '7. What name did they decide to call their newspaper?', choices: ['A. The Winter News','B. Our Magazine','C. The Kid Times','D. Story Girl Weekly'] },
+						{ q: '8. If the speaker became editor, what would the others become?', choices: ['A. Reporters','B. Teachers','C. Sub-editors','D. Story writers only'] },
+						{ q: '9. Which department did Felicity say they should have?', choices: ['A. Sports','B. Etiquette','C. Weather','D. Gardening'] },
+						{ q: '10. Who was asked to edit the household department?', choices: ['A. Cecily','B. Peter','C. Felicity','D. Felix'] },
+						{ q: '11. Who would edit the jokes and information bureau?', choices: ['A. Dan','B. Bev','C. Felix','D. Cecily'] },
+						{ q: '12. Who must be the fashion editor?', choices: ['A. Cecily','B. Felicity','C. Peter','D. The Story Girl'] },
+						{ q: '13. What section did the Story Girl say was very important?', choices: ['A. Weather','B. Editorials','C. Sports','D. The front page'] },
+						{ q: '14. What must all contributions be, except the personals?', choices: ['A. Funny','B. Original','C. Short','D. Hand-drawn'] },
+						{ q: '15. When did they expect to release the first issue?', choices: ['A. Mid-January','B. End of February','C. Around the first of January','D. Before December ends'] }
+					],
+					key: []
+				},
+				'8': {
+					title: 'The Golden Road',
+					questions: [
+						{ q: '1. Where were the children gathered at the beginning of the passage?', choices: ['A. In the school','B. Around a wood-fire in Uncle Alec\u2019s kitchen','C. On the playground','D. Inside the living room'] },
+						{ q: '2. What game had they been playing before the new idea came?', choices: ['A. Tag','B. Hide and Seek','C. Blind-Man\u2019s Buff','D. Chess'] },
+						{ q: '3. What idea did the Story Girl suggest?', choices: ['A. To start a club','B. To create a newspaper','C. To go on a trip','D. To write a book'] },
+						{ q: '4. Who said the idea was \u201csilly\u201d at first?', choices: ['A. Felicity','B. Cecily','C. The Story Girl','D. Bev'] },
+						{ q: '5. Why couldn\u2019t they print the newspaper?', choices: ['A. They didn\u2019t have paper','B. It was too expensive','C. The teacher didn\u2019t allow it','D. They had no printer'] },
+						{ q: '6. Who wanted to be editor?', choices: ['A. Dan','B. Bev','C. Peter','D. Felix'] },
+						{ q: '7. What name did they decide to call their newspaper?', choices: ['A. The Winter News','B. Our Magazine','C. The Kid Times','D. Story Girl Weekly'] },
+						{ q: '8. If the speaker became editor, what would the others become?', choices: ['A. Reporters','B. Teachers','C. Sub-editors','D. Story writers only'] },
+						{ q: '9. Which department did Felicity say they should have?', choices: ['A. Sports','B. Etiquette','C. Weather','D. Gardening'] },
+						{ q: '10. Who was asked to edit the household department?', choices: ['A. Cecily','B. Peter','C. Felicity','D. Felix'] },
+						{ q: '11. Who would edit the jokes and information bureau?', choices: ['A. Dan','B. Bev','C. Felix','D. Cecily'] },
+						{ q: '12. Who must be the fashion editor?', choices: ['A. Cecily','B. Felicity','C. Peter','D. The Story Girl'] },
+						{ q: '13. What section did the Story Girl say was very important?', choices: ['A. Weather','B. Editorials','C. Sports','D. The front page'] },
+						{ q: '14. What must all contributions be, except the personals?', choices: ['A. Funny','B. Original','C. Short','D. Hand-drawn'] },
+						{ q: '15. When did they expect to release the first issue?', choices: ['A. Mid-January','B. End of February','C. Around the first of January','D. Before December ends'] }
+					],
+					key: []
+				},
+				'9': {
+					title: 'The Hare and the Tortoise',
+					questions: [
+						{ q: '1. Who was boastful?', choices: ['A. Tortoise','B. Hare','C. Both','D. None'] },
+						{ q: '2. Who challenged the other to a race?', choices: ['A. Hare challenged Tortoise','B. Tortoise challenged Hare','C. Both challenged each other','D. No one'] },
+						{ q: '3. What did the hare think about the tortoise?', choices: ['A. It would win','B. It would lose','C. It would cheat','D. It would stop'] },
+						{ q: '4. How did the hare run at the start?', choices: ['A. Slowly','B. Fast','C. Stopped','D. Walked'] },
+						{ q: '5. What did the hare do in the middle of the race?', choices: ['A. Kept running','B. Took a nap','C. Helped the tortoise','D. Cheered'] },
+						{ q: '6. How did the tortoise move?', choices: ['A. Slowly and steadily','B. Very fast','C. Ran and stopped','D. Walked backwards'] },
+						{ q: '7. Who won the race?', choices: ['A. Hare','B. Tortoise','C. Both','D. No one'] },
+						{ q: '8. What happened when the tortoise passed the hare?', choices: ['A. The hare woke up','B. The tortoise finished the race','C. The hare ran faster','D. The tortoise stopped'] },
+						{ q: '9. How did the animals react when the tortoise won?', choices: ['A. They laughed','B. They cheered','C. They cried','D. They ran away'] },
+						{ q: '10. Why did the hare lose the race?', choices: ['A. It was slow','B. It took a nap','C. It got lost','D. It fell'] },
+						{ q: '11. What lesson does the story teach?', choices: ['A. Always run fast','B. Slow and steady wins the race','C. Never race','D. Sleep is good'] },
+						{ q: '12. Was the tortoise smart?', choices: ['A. Yes','B. No','C. Sometimes','D. Not sure'] },
+						{ q: '13. Did the hare finish the race first?', choices: ['A. Yes','B. No','C. Partly','D. Maybe'] },
+						{ q: '14. Who stayed steady in the race?', choices: ['A. Hare','B. Tortoise','C. Both','D. No one'] },
+						{ q: '15. What should you do to win, according to the story?', choices: ['A. Be fast and careless','B. Be slow and steady','C. Take naps','D. Boast loudly'] }
+					],
+					key: []
+				},
+				'10': {
+					title: 'Underwater Volcanoes',
+					questions: [
+						{ q: '1. What are volcanoes described as?', choices: ['A. Boring landforms','B. Natural wonders','C. Man-made structures','D. Cities underwater'] },
+						{ q: '2. What do volcanoes remind us of?', choices: ['A. Peaceful oceans','B. Quiet mountains','C. The superheated environment inside Earth','D. The cold climate'] },
+						{ q: '3. Where are most volcanoes found?', choices: ['A. On land','B. In forests','C. Under the sea','D. On islands'] },
+						{ q: '4. What percentage of magma output comes from underwater volcanoes?', choices: ['A. 10%','B. 25%','C. 50%','D. 75%'] },
+						{ q: '5. How deep are most submarine volcanoes buried?', choices: ['A. 10 feet','B. 100 miles','C. 2,600 miles of water','D. 5,000 miles'] },
+						{ q: '6. How many known submarine volcanoes are active?', choices: ['A. 100','B. 1,000','C. 5,000','D. 10,000'] },
+						{ q: '7. How tall can submarine volcanoes get?', choices: ['A. Up to 10 meters only','B. Up to 100 meters','C. Up to 3,500 meters','D. Up to 10,000 meters'] },
+						{ q: '8. What role do submarine volcanoes play in marine life?', choices: ['A. They have no effect','B. They always destroy life','C. They can help or harm ecosystems','D. They only create land'] },
+						{ q: '9. What can submarine volcanoes create?', choices: ['A. New oceans','B. New islands','C. Bigger beaches','D. Rivers'] },
+						{ q: '10. Which islands were formed by submarine volcanic eruptions?', choices: ['A. Japan','B. Greenland','C. Hawaii','D. Philippines'] },
+						{ q: '11. What causes volcanoes to form?', choices: ['A. Rainfall','B. Wind patterns','C. Shifting tectonic plates','D. Sunlight'] },
+						{ q: '12. What is the lithosphere?', choices: ['A. The Earth\u2019s core','B. The outermost layer of Earth','C. The water layer','D. The sky'] },
+						{ q: '13. What can affect tectonic plates?', choices: ['A. Air temperature','B. Rotation of the planet','C. Animal movement','D. Human noise'] },
+						{ q: '14. Where do submarine volcanoes occur?', choices: ['A. Anywhere in the ocean','B. Only on islands','C. Only near beaches','D. At convergent and divergent boundaries'] },
+						{ q: '15. How many types of boundaries are there?', choices: ['A. One','B. Two','C. Three','D. Four'] }
+					],
+					key: []
+				}
+			}
+		};
+
+            // select by level then story; fall back to level 1 story 1 if missing
+    const levelData = questionsByLevel[level] || questionsByLevel['1'];
+    const storyData = (levelData && levelData[story]) || (levelData && levelData['1']);
+    const questions = storyData.questions;
+    const header = document.getElementById('questionsHeader');
+    if (header) header.textContent = storyData.title;
+    // update document title too
+    document.title = `Questions - ${storyData.title}`;
+
+    const container = document.getElementById('questionsContainer');
+
+    function render(){
+      container.innerHTML = '';
+        questions.forEach((item, idx) => {
+        const qDiv = document.createElement('div');
+        qDiv.className = 'question';
+        const h = document.createElement('h2'); h.textContent = item.q;
+        qDiv.appendChild(h);
+        const ul = document.createElement('ul'); ul.className = 'choices';
+        item.choices.forEach((c, ci) => {
+          const li = document.createElement('li');
+          li.className = 'choice';
+          li.setAttribute('role','button');
+          li.setAttribute('tabindex','0');
+          li.dataset.q = idx;
+          li.dataset.choice = ci;
+          // extract letter (first non-space char) and text after label (supports 'A.','A)','A -', etc.)
+          const letter = c.trim().charAt(0);
+          // remove only the leading choice label (e.g. 'A.', 'A)', 'A) ', 'A -')
+          const text = c.replace(/^[A-Za-z]+\s*[\)\.\-]?\s*/, '').trim();
+          li.innerHTML = `<span class="letter">${letter}</span><span class="text">${text}</span>`;
+          li.addEventListener('click', onChoice);
+          li.addEventListener('keydown', (e)=>{ if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onChoice.call(li, e); }});
+          ul.appendChild(li);
+        });
+        qDiv.appendChild(ul);
+        container.appendChild(qDiv);
+      });
+
+      // Append submit footer at the end so it is inside the scrollable area
+      const footer = document.createElement('div');
+      footer.className = 'questions-footer';
+      footer.innerHTML = '<button id="submitBtn" class="btn-submit">Submit</button>';
+      container.appendChild(footer);
+    }
+
+    function onChoice(e){
+      const el = (this === undefined || this === window) ? e.currentTarget : this;
+      const q = el.dataset.q;
+      // remove selected in same question
+      const choices = container.querySelectorAll(`.choice[data-q="${q}"]`);
+      choices.forEach(ch => ch.classList.remove('selected'));
+      el.classList.add('selected');
+    }
+
+    render();
+
+    // submit handler (attach after render so the button exists)
+    function attachSubmit(){
+      const submit = document.getElementById('submitBtn');
+      if(!submit) return;
+      submit.addEventListener('click', ()=>{
+        // use key from story data
+        const key = storyData.key || [];
+        const selected = container.querySelectorAll('.choice.selected');
+        // build answers array (undefined if unanswered)
+        const answers = Array(key.length).fill(null);
+        selected.forEach(s => { answers[Number(s.dataset.q)] = Number(s.dataset.choice); });
+        // score
+        let score = 0;
+        for (let i=0;i<key.length;i++){
+          if (answers[i] !== null && answers[i] === key[i]) score++;
+        }
+
+        // Show result inside the scrollable container
+        container.innerHTML = `
+          <div class="result">
+            <h2>You got ${score}/${key.length}</h2>
+            <p>Well done! Click below to continue.</p>
+            <div class="result-actions">
+              <button id="nextStoryBtn" class="btn-submit">${Number(story) === 5 ? 'Choose Level' : 'Next Story'}</button>
+            </div>
+          </div>
+        `;
+
+        // navigate when clicked: if this is story 5 go to level selection, else go to next story
+        const next = document.getElementById('nextStoryBtn');
+        if (next) {
+          if (Number(story) === 5) {
+            next.addEventListener('click', ()=>{ window.location.href = 'level.html'; });
+          } else {
+            next.addEventListener('click', ()=>{
+              const nextStory = Number(story) + 1;
+              window.location.href = `story.html?level=${level}&story=${nextStory}`;
+            });
+          }
+        }
+      });
+    }
+    attachSubmit();
+  </script>
+</body>
+</html>
+
+ 

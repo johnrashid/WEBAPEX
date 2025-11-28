@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Questions - Level 3</title>
+  <link rel="stylesheet" href="reading.css">
+  <link rel="stylesheet" href="questions.css">
+</head>
+<body>
+
+  <button type="button" class="back-btn" aria-label="Go back" onclick="goBack()">
+    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M20 11H7.83l5.58-5.59L12 4 4 12l8 8 1.41-1.41L7.83 13H20v-2z" fill="#fff"/>
+    </svg>
+  </button>
+
+  <h1 class="questions-header" id="questionsHeader">Questions</h1>
+
+  <main class="questions-container" id="questionsContainer" tabindex="0">
+    <!-- Questions will be injected here -->
+  </main>
+
+  <script>
+    const params = new URLSearchParams(location.search);
+    const level = params.get('level') || '3';
+    const story = params.get('story') || '1';
+
+    function goBack(){
+      window.location.href = `story.html?level=${level}&story=${story}`;
+    }
+
+    const questionsByLevel = {
+      '3': {
+        '1': {
+          title: `FOG, MUD, MIRE`,
+          questions: [
+            { q: `What city is the passage mainly describing?`, choices: [`A) Edinburgh`,`B) London`,`C) New York`,`D) Paris`] },
+            { q: `What season is mentioned at the beginning of the passage?`, choices: [`A) Summer`,`B) Spring`,`C) Michaelmas term (Autumn/Early Winter)`,`D) Christmas`] },
+            { q: `The air is described as what color due to the chimney-pots?`, choices: [`A) White`,`B) Yellow`,`C) Blue`,`D) Black`] },
+            { q: `The fog is compared to what kind of animal in the third paragraph?`, choices: [`A) A cat`,`B) A fish`,`C) A person creeping (as in "creeping into the cots")`,`D) A dog`] },
+            { q: `What word describes the river and water-side as being "greatly defiled" (made dirty)?`, choices: [`A) Pure`,`B) Clear`,`C) Dirty`,`D) Fresh`] },
+            { q: `The mud in the streets is described as being "not wonderful to meet a megalosaurus." A megalosaurus is a type of:`, choices: [`A) Dinosaur/Lizard`,`B) Bird`,`C) Small child`,`D) Type of carriage`] },
+            { q: `What falls down from the chimney-pots?`, choices: [`A) Snow`,`B) Black drizzle and soft soot`,`C) Rain`,`D) Leaves`] },
+            { q: `What is happening to the pedestrians on the street?`, choices: [`A) They are running quickly.`,`B) They are singing happily.`,`C) They are slipping and sliding.`,`D) They are sitting on the ground.`] },
+            { q: `The fog is described as filling the river and the "green alts and meadows" of the river-side. What does "alts" likely refer to?`, choices: [`A) Trees`,`B) Bridges`,`C) Flat areas/river banks`,`D) Buildings`] },
+            { q: `What is the fog doing in the rigging of the great ships?`, choices: [`A) Making the ropes glow`,`B) Hanging out on the yards`,`C) Warming the sailors`,`D) Making a loud noise`] },
+            { q: `What object does the fog "choke the eyes and throats of"?`, choices: [`A) Dogs`,`B) Ancient Greenwich pensioners`,`C) Children`,`D) Policemen`] },
+            { q: `When the sun tries to break through, it is compared to what?`, choices: [`A) A fire`,`B) A dog shaking water`,`C) Gas looming through the fog`,`D) A bell ringing`] },
+            { q: `The mud is described as "impassable for the Lord Chancellor." What is a Lord Chancellor?`, choices: [`A) A military leader`,`B) A ship captain`,`C) A high-ranking government/law official`,`D) A baker`] },
+            { q: `What are the people on Temple Bar doing due to the fog?`, choices: [`A) Singing songs`,`B) Eating lunch`,`C) Feeling around them, as if they were up in a balloon`,`D) Waiting for a bus`] },
+            { q: `The sun is trying to be "loom by husbandman." A husbandman is primarily:`, choices: [`A) A married man`,`B) A sailor`,`C) A farmer/cultivator of the land`,`D) A shopkeeper`] }
+          ],
+          key: []
+        },
+        '2': {
+          title: `Johnny Appleseed`,
+          questions: [
+            { q: `What kind of man was Johnny Appleseed?`, choices: [`A) Rich and stern`,`B) Angry and young`,`C) Kind and happy`,`D) Sad and quiet`] },
+            { q: `Where did the old man live?`, choices: [`A) In a big house`,`B) In a little hut`,`C) In a boat`,`D) In the city`] },
+            { q: `What was his main job or work?`, choices: [`A) Cutting down trees`,`B) Making pies`,`C) Taking care of his apple trees`,`D) Selling vegetables`] },
+            { q: `What fruit was the old man eating when he got his idea?`, choices: [`A) A banana`,`B) A red apple`,`C) An orange`,`D) A pear`] },
+            { q: `What did the old man realize he could save and use?`, choices: [`A) The leaves`,`B) The branches`,`C) The cores (and seeds) of the apples`,`D) The whole apples`] },
+            { q: `After he got his idea, what did he take with him when he left home?`, choices: [`A) A basket of apples`,`B) A new coat`,`C) A bag with apple-cores`,`D) A shovel`] },
+            { q: `What did he do every time he stopped by the side of the road?`, choices: [`A) Made a hole and planted an apple core`,`B) Built a small fire`,`C) Took a nap`,`D) Talked to travelers`] },
+            { q: `Where did he do this good deed?`, choices: [`A) Only in his garden`,`B) Only in the city`,`C) Everywhere he went`,`D) Only near rivers`] },
+            { q: `What grew from the cores that he planted?`, choices: [`A) Fine apple trees`,`B) Small bushes`,`C) Wildflowers`,`D) Oak trees`] },
+            { q: `Why is the nickname "Johnny Appleseed" appropriate?`, choices: [`A) He sold seeds`,`B) He only ate seeds`,`C) He planted apple seeds everywhere`,`D) He had a seed business`] },
+            { q: `What would tired, hungry people do when they stopped at the trees?`, choices: [`A) Build houses`,`B) Eat apples and rest in the shade`,`C) Cut the trees down`,`D) Plant more trees`] },
+            { q: `What was another benefit of the trees besides the fruit?`, choices: [`A) Money`,`B) Water`,`C) Shade and rest`,`D) Warmth`] },
+            { q: `What emotion did Johnny Appleseed feel when thinking of helping others?`, choices: [`A) Anger`,`B) Confusion`,`C) Worry`,`D) Joy (he suddenly smiled)`] },
+            { q: `How long did Johnny Appleseed continue planting apple cores?`, choices: [`A) For one year`,`B) For one month`,`C) For the rest of his life`,`D) Until he ran out of seeds`] },
+            { q: `What is the main theme or lesson of the story?`, choices: [`A) Apples are the best fruit`,`B) It is important to be kind and help others`,`C) You should always stay in your hut`,`D) Only old men can plant trees`] }
+          ],
+          key: []
+        },
+        '3': {
+          title: `The Ant and the Dove`,
+          questions: [
+            { q: `What was the ant searching for on a hot day?`, choices: [`A) Food`,`B) Water`,`C) Shade`,`D) A friend`] },
+            { q: `What did the ant come to after walking around for some time?`, choices: [`A) A big river`,`B) A lake`,`C) A spring`,`D) A large tree`] },
+            { q: `What did the ant try to climb to reach the spring?`, choices: [`A) A blade of grass`,`B) A small stone`,`C) A tree branch`,`D) A flower petal`] },
+            { q: `What happened to the ant while she was climbing?`, choices: [`A) She found water.`,`B) She slipped and fell into the water.`,`C) She met a frog.`,`D) She saw a hunter.`] },
+            { q: `What danger did the ant face after falling into the water?`, choices: [`A) Being eaten by a fish`,`B) Drowning`,`C) Being carried away by the current`,`D) Getting too cold`] },
+            { q: `Where was the dove located when she saw the ant in trouble?`, choices: [`A) Flying high in the sky`,`B) Drinking from the spring`,`C) On a nearby tree`,`D) In a nest`] },
+            { q: `What did the dove quickly do to help the ant?`, choices: [`A) She called for help.`,`B) She flew down to the water.`,`C) She plucked off a leaf and dropped it into the water.`,`D) She gave the ant a seed.`] },
+            { q: `What did the ant do after the leaf was dropped into the water?`, choices: [`A) She ignored it.`,`B) She moved toward the leaf and climbed up.`,`C) She swam away.`,`D) She started talking to the dove.`] },
+            { q: `Where did the ant safely reach after climbing onto the leaf?`, choices: [`A) Dry ground`,`B) The dove's nest`,`C) A flower`,`D) The hunter's net`] },
+            { q: `Who arrived just as the ant reached safety?`, choices: [`A) The ant's family`,`B) Another dove`,`C) A hunter`,`D) A farmer`] },
+            { q: `What was the hunter hoping to do?`, choices: [`A) Catch a fish.`,`B) Trap the dove.`,`C) Catch the ant.`,`D) Set up a tent.`] },
+            { q: `What did the hunter throw out towards the struggling dove?`, choices: [`A) A rope`,`B) His net`,`C) A stone`,`D) A large branch`] },
+            { q: `How did the ant save the dove?`, choices: [`A) She called other ants.`,`B) She quickly bit the hunter on the heel.`,`C) She pushed the net away.`,`D) She flew onto the hunter's face.`] },
+            { q: `What happened to the hunter after the ant bit him?`, choices: [`A) He caught the dove.`,`B) He dropped his net.`,`C) He ran away scared.`,`D) He began to cry.`] },
+            { q: `What is the moral (lesson) of the story?`, choices: [`A) "One good turn deserves another."`,`B) Never trust a hunter.`,`C) Always stay on the ground.`,`D) Doves are better than ants.`] }
+          ],
+          key: []
+        },
+        '4': {
+          title: `The Cats And The Monkey`,
+          questions: [
+            { q: `What did the two cats find at the beginning of the story?`, choices: [`A) A piece of cheese`,`B) A piece of bread`,`C) A piece of cake`,`D) A piece of meat`] },
+            { q: `What was the main reason the cats started fighting?`, choices: [`A) They were bored.`,`B) They wanted to play a game.`,`C) They were unwilling to share the food.`,`D) They didn't like each other.`] },
+            { q: `What was one cat's argument for claiming the bread?`, choices: [`A) It smelled it first.`,`B) "I found it first."`,`C) It was bigger.`,`D) It was faster.`] },
+            { q: `Who was watching the cats fight from a distance?`, choices: [`A) A dog`,`B) A bird`,`C) A monkey`,`D) A person`] },
+            { q: `What did the monkey want to do with the bread?`, choices: [`A) Give it to a friend.`,`B) Throw it away.`,`C) Eat it himself.`,`D) Plant it.`] },
+            { q: `How did the monkey approach the cats?`, choices: [`A) He yelled at them.`,`B) He asked them why they were quarreling.`,`C) He tried to steal the bread.`,`D) He joined the fight.`] },
+            { q: `What did the monkey offer to do to solve the problem?`, choices: [`A) Find them new food.`,`B) Buy them a scale.`,`C) Divide the bread into two equal halves.`,`D) Make them trade turns.`] },
+            { q: `Did the cats agree to the monkey's proposal?`, choices: [`A) Yes, both cats agreed.`,`B) No, they kept fighting.`,`C) Only one cat agreed.`,`D) They asked him to leave.`] },
+            { q: `When the monkey first divided the bread, what did he do on purpose?`, choices: [`A) He cut it into three pieces.`,`B) He gave one cat a big drink of water.`,`C) He divided it into two uneven pieces (one bigger than the other).`,`D) He divided it perfectly equally.`] },
+            { q: `When did the two cats realize the monkey's cleverness (cunning)?`, choices: [`A) When the monkey first divided the bread.`,`B) When the monkey asked them to stop fighting.`,`C) When the monkey had eaten the bread right in front of them.`,`D) When the monkey took the second bite.`] },
+            { q: `What is the moral (lesson) of the story?`, choices: [`A) If two people fight, the third one takes an undue advantage.`,`B) Always share your food with others.`,`C) Monkeys are better at dividing bread than cats.`,`D) It is good to be clever and cunning.`] }
+          ],
+          key: []
+        },
+        '5': {
+          title: `The Forgotten Library`,
+          questions: [
+            { q: 'What is the name of the girl in the story?', choices: ['A) Eerba','B) Amara','C) Fierna','D) Bianca'] },
+            { q: 'What season is mentioned in the first paragraph?', choices: ['A) Summer','B) Spring','C) Winter','D) Autumn'] },
+            { q: 'The library entrance was hidden behind a tangle of vines and what kind of stone?', choices: ['A) Granite','B) Marble','C) Weathered stone','D) Limestone'] },
+            { q: 'What was etched over the archway?', choices: ['A) Amara\'s House','B) Fierna Bibliotheca','C) The Hidden Garden','D) Forgotten Memories'] },
+            { q: 'What was the wooden door like when Amara opened it?', choices: ['A) Locked','B) New and clean','C) Heavy and its hinges groaned','D) Painted bright red'] },
+            { q: 'What was the air inside the library filled with the smell of?', choices: ['A) Fresh flowers and wax','B) Dust and forgotten memories','C) Cooking food and spices','D) Pine needles and rain'] },
+            { q: 'What covered the windows, causing light to filter through?', choices: ['A) Thick curtains','B) Wooden boards','C) Shattered stained-glass','D) Metal bars'] },
+            { q: 'What material was the floor made of?', choices: ['A) Dirt','B) Worn marble','C) Wood planks','D) Carpet'] },
+            { q: 'What peculiar thing did Amara notice about some of the books?', choices: ['A) They were singing','B) They were wet','C) They glowed faintly','D) They were floating'] },
+            { q: 'What kind of feelings did the strange book\'s pages begin to recount?', choices: ['A) Happy childhood memories','B) Jokes and funny stories','C) Memories, fears, and dreams','D) Recipes and spells'] },
+            { q: 'Why did Amara hum softly when she saw a strange symbol on one of the books?', choices: ['A) She didn\'t recognize it, but her instinct told her to open it','B) She was trying to scare away animals','C) She was happy to find a map','D) She was trying to remember a song'] },
+            { q: 'What was initially on the pages of the strange book?', choices: ['A) Recipes','B) Drawings of stars','C) Blank pages','D) An old poem'] },
+            { q: 'When the pages spoke directly to her, how did Amara react?', choices: ['A) She laughed','B) She closed the book and stepped back','C) She cried','D) She dropped the book'] },
+            { q: 'What was “awoken” behind her as she left the library?', choices: ['A) The moon','B) The wind','C) The library itself','D) A small animal'] },
+            { q: 'The library was known to hold stories within its crumbling walls. This suggests that it is:', choices: ['A) Very new','B) Very old and has a history','C) A magical school','D) About to be torn down'] }
+          ],
+          key: []
+        },
+        '6': {
+          title: 'The Fox and the Woodcutter',
+          questions: [
+            { q: 'Why did the fox approach the woodcutter?', choices: ['A) To ask for food','B) To ask for help','C) To chase the hunters','D) To hide a treasure'] },
+            { q: 'Where did the fox hide?', choices: ['A) In the forest','B) Under a rock','C) Inside the woodcutter\'s house','D) Behind a tree'] },
+            { q: 'How did the woodcutter answer the hunters’ question about the fox?', choices: ['A) He said “Yes” and pointed away','B) He said “No” but pointed to his house','C) He stayed silent','D) He told them to search the woods'] },
+            { q: 'Why did the hunters leave?', choices: ['A) They believed the woodcutter','B) They found tracks','C) It got dark','D) The fox escaped'] },
+            { q: 'Why didn\'t the fox say “Thank you” first?', choices: ['A) He was scared','B) He forgot','C) He noticed the woodcutter’s signal','D) He was still hiding'] },
+            { q: 'What did the fox notice about the woodcutter?', choices: ['A) He was honest','B) He was brave','C) His words and actions were different','D) He wanted to protect the fox'] },
+            { q: 'What does the story mainly teach us?', choices: ['A) Always trust people','B) Be faster than hunters','C) Actions should match words','D) Never hide in houses'] },
+            { q: 'Which best describes the fox at the end?', choices: ['A) Confused','B) Thankful','C) Wise and observant','D) Angry and rude'] }
+          ],
+          key: []
+        },
+        '7': {
+          title: 'The Lost Library Card',
+          questions: [
+            { q: 'What is the main character\'s name?', choices: ['A) Judy','B) Lisa','C) Mom','D) Sue'] },
+            { q: 'Before getting her own card, how many books could Lisa buy when she went to the bookstore?', choices: ['A) Two','B) Three','C) Ten','D) None'] },
+            { q: 'Where did Lisa and her Mom go the day after Mom decided Lisa needed a library card?', choices: ['A) The bookstore','B) The library','C) School','D) The park'] },
+            { q: 'What did the lady at the desk ask Lisa to fill out?', choices: ['A) A check','B) A survey','C) A shopping list','D) A paper'] },
+            { q: 'What kind of books did Lisa particularly love to read?', choices: ['A) Cookbooks','B) Science books','C) Mystery books','D) Picture books'] },
+            { q: 'How many books was Lisa excited to take out on her first day with the card?', choices: ['A) One','B) Two','C) Three','D) Many shelves'] },
+            { q: 'What did Lisa have to return the next day before taking out new books?', choices: ['A) The library card','B) Her wallet','C) Three old books','D) Her pen'] },
+            { q: 'When Lisa got to the library the second time, what problem did she have?', choices: ['A) She forgot her money','B) The library was closed','C) She could not find her library card','D) The mystery section was empty'] },
+            { q: 'Who found Lisa\'s lost library card?', choices: ['A) The lady at the desk','B) A boy from the sidewalk','C) Lisa\'s Mom','D) Lisa herself'] },
+            { q: 'Where had Lisa carelessly dropped her card?', choices: ['A) In the mystery section','B) In her coat pocket','C) On the sidewalk near the library','D) Under the round table'] },
+            { q: 'What did Lisa\'s Mom say was a "big responsibility"?', choices: ['A) Reading books','B) Buying books','C) Having a library card','D) Going to school'] },
+            { q: 'Where did Lisa promise to keep her card safe from then on?', choices: ['A) In her shoe','B) In her wallet','C) Under her pillow','D) Taped to her forehead'] },
+            { q: 'What did Lisa and the boy who found her card end up doing together?', choices: ['A) Eating lunch','B) Playing a game','C) Looking for mystery books','D) Reading a newspaper'] },
+            { q: 'How many new friends did Lisa make by the end of the story?', choices: ['A) Zero','B) One (the boy)','C) Two (the boy and the lady)','D) Three (the boy, the Mom, and the lady)'] }
+          ],
+          key: []
+        },
+        '8': {
+          title: 'The Mango Tree',
+          questions: [
+            { q: 'Where does the passage say this story is from?', choices: ['A) China','B) America','C) Europe','D) India'] },
+            { q: 'Who lived in a small house in the small town?', choices: ['A) A young woman and her sister','B) A gardener and his son','C) A young man, his wife, and the young man\'s sister','D) An old man and a mango tree'] },
+            { q: 'What was planted in the small garden behind the house?', choices: ['A) A rose bush','B) A small mango tree','C) Some vegetables','D) A banana tree'] },
+            { q: 'Who came to the brother (young man) one day with a complaint?', choices: ['A) His wife','B) His sister','C) The gardener','D) His neighbor'] },
+            { q: 'What was the complaint about?', choices: ['A) The house being too small','B) The wife being lazy','C) The food being bad','D) The brother being late'] },
+            { q: 'The sister says her complaints fall on deaf ears. What does this mean?', choices: ['A) The brother cannot hear.','B) The sister whispers too quietly.','C) The complaints are ignored (no one listens).','D) The wife is far away.'] },
+            { q: 'What does the sister say she has to do "up early in the morning"?', choices: ['A) Go shopping','B) Cook breakfast, draw water, and scrub pots','C) Talk to her brother','D) Water the garden'] },
+            { q: 'What is the lazy sister-in-law (the wife) doing all day?', choices: ['A) Nothing (doing no housework)','B) Reading books','C) Sewing clothes','D) Working in the fields'] },
+            { q: 'The sister describes her sister-in-law as only doing two things: watering the mango tree and what else?', choices: ['A) Sleeping','B) Eating','C) Clearing away dead leaves and feeding it manure','D) Talking on the phone'] },
+            { q: 'What did the sister say the mango tree alone should teach the wife?', choices: ['A) How to cook','B) How to talk less','C) How to draw water','D) How to be more responsible (do housework)'] },
+            { q: 'The sister said if the wife knew the housework she should have done, her brother should do what?', choices: ['A) Send her home','B) Punish her','C) Marry her off (find her a new husband)','D) Teach her himself'] },
+            { q: 'Why did the brother think his sister\'s idea of finding a new husband for the wife might not work?', choices: ['A) She was too beautiful.','B) She was too kind.','C) He knew she could not cook/sew/do housework very well.','D) He knew she was not happy.'] },
+            { q: 'What was the final action that ended this part of the story?', choices: ['A) The wife started working.','B) The sister apologized.','C) A marriage was arranged (for the wife, as the sister suggested).','D) The brother moved out.'] }
+          ],
+          key: []
+        },
+        '9': {
+          title: 'The Mysterious Art Studio Adventure',
+          questions: [
+            { q: 'What are the names of the two adventure friends?', choices: ['A) Vincent and Van','B) Tom and Jerry','C) Mia and Jake','D) Sue and Bob'] },
+            { q: 'What kind of building did the friends stumble upon in the woods?', choices: ['A) A scary old cabin','B) A new school','C) An old, mysterious building covered in ivy and vines','D) A large house'] },
+            { q: 'What did the inside of the building turn out to be?', choices: ['A) An abandoned warehouse','B) An art studio filled with easels and canvases','C) An old church','D) A small library'] },
+            { q: 'What famous painter did the art studio once belong to?', choices: ['A) Leonardo da Vinci','B) Pablo Picasso','C) Vincent van Gogh','D) Claude Monet'] },
+            { q: 'What did Mia and Jake notice was missing when they looked at the room full of paintings?', choices: ['A) The door was gone.','B) The easels were empty.','C) A strange painting — one of the paintings on the wall — looked incomplete.','D) The colorful paints were missing.'] },
+            { q: 'What did the painting that looked incomplete primarily depict (show)?', choices: ['A) A field of sunflowers','B) A beautiful starry night sky','C) A portrait of a person','D) A vase of flowers'] },
+            { q: 'Where did Mia and Jake search "high and low" to investigate further?', choices: ['A) In the woods outside','B) Under the beds','C) The studio itself','D) Under the door mat'] },
+            { q: 'What did they eventually find that contained a hidden compartment?', choices: ['A) An old shoe','B) An old wooden chest','C) A small basket','D) A broken easel'] },
+            { q: 'What was inside the hidden compartment?', choices: ['A) Money and jewels','B) Old rags and brushes','C) A notebook filled with sketches and notes','D) A key to the front door'] },
+            { q: 'What did the secret message tell the friends to find in order to solve the mystery?', choices: ['A) A map of the city','B) The name of a book','C) The missing piece under the oak tree by the river','D) A hidden gold coin'] },
+            { q: 'Where did the friends rush to after reading the secret message?', choices: ['A) The city museum','B) The oak tree by the river','C) The local police station','D) Van Gogh\'s grave'] },
+            { q: 'Where exactly did Jake find the object he was looking for?', choices: ['A) Hanging from a branch','B) Floating in the river','C) Digging in the soft soil','D) In a bird\'s nest'] },
+            { q: 'What was the object that Jake found?', choices: ['A) A key','B) A small, five-centimeter piece of the painting','C) A treasure map','D) An old glove'] },
+            { q: 'What happened when the small piece was placed in its right spot on the canvas?', choices: ['A) The picture disappeared.','B) A loud noise rang out.','C) The painting came to life, and the night sky became luminous.','D) The lights in the studio turned off.'] },
+            { q: 'What did Mia and Jake realize about art at the end of the story?', choices: ['A) That art should always be kept a secret.','B) That art holds powerful secrets and stories waiting to be uncovered.','C) That Van Gogh was the only famous painter.','D) That they should sell the studio immediately.'] }
+          ],
+          key: []
+        },
+        '10': {
+          title: 'The Strong Lion and the Small Mouse',
+          questions: [
+            { q: 'Where did the story take place?', choices: ['A) In a small cave','B) In a city zoo','C) In a big jungle','D) On a farm'] },
+            { q: 'What was the lion doing when the mouse first woke him up?', choices: ['A) Sleeping','B) Hunting','C) Roaring','D) Eating'] },
+            { q: 'How did the mouse accidentally wake the lion?', choices: ['A) He shouted loudly.','B) He bit the lion\'s ear.','C) By running on the lion\'s nose.','D) By dropping a nut.'] },
+            { q: 'How did the lion catch the mouse?', choices: ['A) He grabbed it with his teeth.','B) He chased it down.','C) He caught it with his paw.','D) He used a net.'] },
+            { q: 'What did the little mouse do because he was so scared?', choices: ['A) He ran away.','B) He bit the lion.','C) He shook with fear.','D) He screamed for help.'] },
+            { q: 'What did the mouse ask the lion to do?', choices: ['A) Give him some food.','B) Let him go.','C) Be his friend.','D) Show him the way out.'] },
+            { q: 'What did the mouse promise the lion in the future?', choices: ['A) To bring him food.','B) To find him a mate.','C) To help the lion.','D) To guard his home.'] },
+            { q: 'What was the lion\'s first reaction to the mouse\'s promise?', choices: ['A) He was angry.','B) He laughed (because he didn\'t believe the small mouse could help).','C) He cried.','D) He ran away.'] },
+            { q: 'What did the lion finally decide to do with the mouse?', choices: ['A) Eat him.','B) Keep him as a pet.','C) Let the mouse go.','D) Trap him in his paw.'] },
+            { q: 'What happened to the lion a little while later?', choices: ['A) He found a feast.','B) He fell asleep again.','C) He got caught in a hunter\'s net.','D) He met another mouse'] },
+            { q: 'When the lion was caught, what did he do?', choices: ['A) He quietly tried to escape.','B) He screamed for help.','C) He tried to chew the net.','D) He slept through it.'] },
+            { q: 'Who appeared suddenly and saw the lion in trouble?', choices: ['A) The hunter','B) The hunter\'s dog','C) The mouse','D) Another lion'] },
+            { q: 'What did the mouse do to free the lion?', choices: ['A) He called his friends.','B) He started chewing the net.','C) He pushed the net over.','D) He pulled the stick holding the net.'] },
+            { q: 'What did the lion feel after the mouse freed him?', choices: ['A) Annoyed and ashamed','B) Angry and confused','C) Surprised and thankful','D) Brave and strong'] },
+            { q: 'What is the moral (lesson) of the story?', choices: ['A) Lions should always sleep carefully.','B) Never laugh at a promise.','C) Kindness is never wasted.','D) Only big animals can be strong.'] }
+          ],
+          key: []
+        },
+        '11': {
+          title: 'The Talkative Tortoise',
+          questions: [
+            { q: 'What three animals were very good friends at the beginning of the story?', choices: ['A) Two ducks and one frog','B) Two swans and one tortoise','C) One swan and two tortoises','D) Three swans'] },
+            { q: 'What was the tortoise\'s main characteristic?', choices: ['A) He was very slow.','B) He was very strong.','C) He was very quiet.','D) He was very talkative.'] },
+            { q: 'What natural disaster happened that lasted for a long time?', choices: ['A) A flood','B) A storm','C) A drought','D) An earthquake'] },
+            { q: 'What happened to the water in the pond?', choices: ['A) It became dirty.','B) It froze.','C) It dried up.','D) It got too cold.'] },
+            { q: 'What did the swans decide to do when the pond dried up?', choices: ['A) Stay and wait for rain.','B) Dig a new pond.','C) Fly away to some other place.','D) Ask the tortoise for help.'] },
+            { q: 'Who requested that the swans take him along?', choices: ['A) The villagers','B) The tortoise','C) The birds','D) A fish'] },
+            { q: 'Why couldn\'t the tortoise fly with the swans?', choices: ['A) He had no wings.','B) He was too heavy.','C) He was too old.','D) He was too scared.'] },
+            { q: 'What did the swans suggest the tortoise should hold onto?', choices: ['A) A vine','B) A rope','C) A stick','D) A piece of string'] },
+            { q: 'What part of his body would the tortoise use to hold the middle of the stick?', choices: ['A) His tail','B) His mouth','C) His feet','D) His shell'] },
+            { q: 'What did the swans warn the tortoise not to do during their journey?', choices: ['A) Blink','B) Cry','C) Talk','D) Look down'] },
+            { q: 'Over what did the three friends travel on their journey?', choices: ['A) A forest','B) A large ocean','C) Several villages','D) A mountain range'] },
+            { q: 'What did the villagers do when they saw the tortoise being carried?', choices: ['A) They ignored them.','B) They started throwing things.','C) They watched and made fun of the tortoise.','D) They ran away.'] },
+            { q: 'What emotion caused the tortoise to lose control and open his mouth?', choices: ['A) Happiness','B) Fear','C) Anger (enraged)','D) Hunger'] },
+            { q: 'What happened to the tortoise as soon as he opened his mouth to speak?', choices: ['A) He fell down and died.','B) He landed safely on the ground.','C) He flew away on his own.','D) He began to laugh.'] },
+            { q: 'What is the moral (lesson) of the story?', choices: ['A) Always travel with friends.','B) Never fly over villages.','C) Be careful with sticks.','D) We should listen to our friends\' advice.'] }
+          ],
+          key: []
+        },
+        '12': {
+          title: 'The Wise Old Farmer',
+          questions: [
+            { q: 'What was the name of the wise old farmer?', choices: ['A) Robert','B) John','C) Smith','D) Michael'] },
+            { q: 'A group of young villagers approached John to ask him for advice about what?', choices: ['A) How to grow wheat','B) How to buy land','C) The secret to a successful and fulfilling life','D) The best time to harvest'] },
+            { q: 'What did John show the young men that represented success?', choices: ['A) A large sack of money','B) A new house','C) A small, withered seed and soil','D) A happy family photograph'] },
+            { q: 'According to John, for the seed (life) to grow, it requires patience, effort, and what else?', choices: ['A) Good luck','B) Expensive tools','C) The right conditions','D) Strong sunlight'] },
+            { q: 'What word is used to describe the importance of hard work, honesty, and compassion in life?', choices: ['A) Irrelevant','B) Simple','C) Illustrating','D) Minimal'] },
+            { q: 'What did Robert, the businessman, known for?', choices: ['A) His kindness','B) His lack of compassion (ruthless business dealings)','C) His bad luck','D) His funny stories'] },
+            { q: 'What kind of dream did Robert have one night?', choices: ['A) A dream about flying','B) A dream about a party','C) A dream about a mirror that showed him his old self','D) A dream about his money being stolen'] },
+            { q: 'What did the reflection in the dream show Robert?', choices: ['A) A very rich man','B) A boy who had lost his way in life','C) A successful lawyer','D) An old enemy'] },
+            { q: 'What did the homeless man, whom Robert approached, talk about?', choices: ['A) The weather','B) The high cost of living','C) The joy of giving and serving others','D) How to make quick money'] },
+            { q: 'What did Robert find once he started giving and helping others?', choices: ['A) A new business','B) A new home','C) True fulfillment and satisfaction','D) A new car'] },
+            { q: 'According to the moral of "The Wise Old Farmer," success is built on a seed of nurturing. What does John say we must cultivate?', choices: ['A) Our money and bank accounts','B) Our enemies and competitors','C) Our character, learn from experiences, and contribute positively to society','D) Our knowledge of farming'] },
+            { q: 'The moral of "The Wise Old Farmer" states that we must harvest in wisdom and what other quality?', choices: ['A) Wealth','B) Courage','C) Thrive (succeed)','D) Speed'] },
+            { q: 'What did the mirror in Robert\'s dream symbolize?', choices: ['A) His future success','B) His true, inner self/conscience','C) His old apartment','D) His business partners'] },
+            { q: 'Robert learned that true success was not measured solely by his wealth, but also by:', choices: ['A) His good looks and popularity','B) Kindness and empathy','C) His knowledge of the law','D) The size of his office'] },
+            { q: 'What is the overall message (moral) that both stories share?', choices: ['A) Never forget your friends.','B) True success/a fulfilling life is found in good values, kindness, and hard work.','C) Always live in the countryside.','D) Money is the most important thing to own.'] }
+          ],
+          key: []
+        },
+        '13': {
+          title: 'The Wise Old Man',
+          questions: [
+            { q: 'What was the first character mentioned in the story?', choices: ['A) A gardener','B) A youth','C) A wealthy man','D) A sage'] },
+            { q: 'Who did the wealthy man request help from?', choices: ['A) A friend','B) An old scholar','C) A doctor','D) A policeman'] },
+            { q: 'What was the goal of the scholar\'s session with the wealthy man\'s son?', choices: ['A) To wean the son from his bad habits','B) To teach the son farming','C) To help the son find a job','D) To teach the son how to read'] },
+            { q: 'Where did the scholar take the youth for a stroll?', choices: ['A) Through the city','B) To a mountain','C) Through a garden','D) To a river'] },
+            { q: 'What was the first thing the scholar asked the boy to pull out?', choices: ['A) A big bush','B) A guava tree','C) A tiny plant','D) A weed'] },
+            { q: 'How did the youth easily pull out the tiny plant?', choices: ['A) With a shovel','B) With a rope','C) With his thumb and forefinger','D) With both hands'] },
+            { q: 'When the youth pulled out the slightly bigger plant, what came out with it?', choices: ['A) A flower','B) Roots and all','C) Only the leaves','D) A small animal'] },
+            { q: 'What did the youth have to use all his strength to pull out next?', choices: ['A) A small plant','B) A bush','C) A tree trunk','D) A large stone'] },
+            { q: 'What kind of tree did the old man ask the youth to try and pull out last?', choices: ['A) An oak tree','B) An apple tree','C) A guava tree','D) A pine tree'] },
+            { q: 'When the youth tried to pull the guava tree, what happened?', choices: ['A) He pulled it out easily.','B) The trunk broke.','C) It would not budge (move).','D) He fell down.'] },
+            { q: 'What did the youth say after failing to pull out the guava tree?', choices: ['A) "I need a shovel."','B) "It\'s impossible."','C) "I will try again later."','D) "It is too big."'] },
+            { q: 'What was the youth doing when he told the old man it was impossible to pull out the tree?', choices: ['A) Shouting','B) Laughing','C) Panting (breathing heavily)','D) Crying'] },
+            { q: 'The old man compared the small, easy-to-pull-out plants to what?', choices: ['A) Good friends','B) Bad habits when they are young','C) Easy homework','D) Good advice'] },
+            { q: 'The old man compared the unmovable guava tree to what?', choices: ['A) Good habits','B) Bad habits that take hold (are old and strong)','C) A strong house','D) The scholar\'s wisdom'] },
+            { q: 'What was the final result of the session with the old man?', choices: ['A) The youth got angry.','B) The old man was disappointed.','C) The session changed the boy\'s life.','D) The wealthy man paid the scholar.'] }
+          ],
+          key: []
+        },
+        '14': {
+          title: 'Tiny Homes',
+          questions: [
+            { q: 'What is the main topic of the reading passage?', choices: ['A) The history of American architecture','B) The Tiny House Movement','C) The cost of building conventional homes','D) The invention of the pickup truck'] },
+            { q: 'Around what years did the "household lifestyles of middle class Americans" start becoming "increasingly more extravagant"?', choices: ['A) In the 1940s','B) In the 1970s','C) Over the past 70 to 80 years','D) Since 2020'] },
+            { q: 'What movement began in the 1970s as a form of resistance against extravagant lifestyles?', choices: ['A) The Real Estate Boom','B) The Minimalist Movement','C) The Tiny House Movement','D) The Suburban Shift'] },
+            { q: 'Tiny houses are described as being small enough and light enough to be towed by a:', choices: ['A) Sports car','B) Train','C) Pickup truck','D) School bus'] },
+            { q: 'What do people who choose to live in a tiny home often seek?', choices: ['A) More space for entertaining','B) A bigger yard','C) Radical self-evaluation','D) A larger mortgage'] },
+            { q: 'In 1949, what was the average size of a single-family home in square feet?', choices: ['A) 2,480 square feet','B) 160 square feet','C) 909 square feet','D) 909 square feet'] },
+            { q: 'By 2021, the average size of a single-family home had reached how many square feet?', choices: ['A) 909 square feet','B) 2,480 square feet','C) 30 square feet','D) 70 to 80 square feet'] },
+            { q: 'What is the average size of a tiny house, in square feet?', choices: ['A) Between 909 and 2,480','B) Exactly 300','C) Between 160 and 200','D) Over 5,000'] },
+            { q: 'What is the typical cost for a handyman to build a tiny house, using the cheapest materials?', choices: ['A) Between $30,000 and $60,000','B) As little as $8,000','C) Over $100,000','D) $2,480'] },
+            { q: 'The cost of a tiny home is a fraction of what people are paying for a single-family real estate property every year. What is that fraction?', choices: ['A) A fraction of the total cost','B) One half','C) Ten percent','D) Two-thirds'] },
+            { q: 'According to the text, purchasing a home in America today comes with the expectation of a:', choices: ['A) Large family','B) Simple lifestyle','C) Deluge of interest and debt','D) Quick resale'] },
+            { q: 'The text suggests that the media and advertisements are designed to make people think they need more and more personal belongings to be:', choices: ['A) Wealthy','B) Successful','C) Happy','D) Tired'] },
+            { q: 'What is one practical benefit of tiny homes mentioned in the text?', choices: ['A) They have big basements.','B) They have large closets.','C) The home is potentially portable.','D) They are built with expensive materials.'] },
+            { q: 'The cost for a new homeowner to buy a typically built tiny home is between:', choices: ['A) $8,000 and $30,000','B) $160 and $200','C) $1949 and $2021','D) $30,000 and $60,000'] },
+            { q: 'What basic needs can a tiny house accommodate?', choices: ['A) A home theater and a garage','B) Cooking, living, sleeping, and bathing','C) A gym and a large office','D) Three bedrooms and two bathrooms'] }
+          ],
+          key: []
+        },
+        '15': {
+          title: 'What Causes Reflections?',
+          questions: [
+            { q: 'When light hits an object and bounces off of it, what is this action called?', choices: ['A) Refraction','B) Reflection','C) Magnification','D) Absorption'] },
+            { q: 'How does light travel from the sun or a light bulb?', choices: ['A) In curves','B) In spirals','C) In straight waves','D) In circles'] },
+            { q: 'What is sent to the brain to help us understand what we see?', choices: ['A) A picture of the object','B) A sound wave','C) The heat of the light','D) The reflection only'] },
+            { q: 'When light hits most objects, it bounces in how many directions?', choices: ['A) Only one direction','B) Two directions','C) Many directions','D) Zero directions'] },
+            { q: 'What kind of surface causes light waves to bounce directly back to your eyes?', choices: ['A) A piece of cloth','B) A smooth, shiny surface (like a mirror)','C) A rough surface','D) A dark stone'] },
+            { q: 'Besides a mirror, you can see yourself reflected in the rounded side of what two objects?', choices: ['A) A car or a window','B) A pot or a pan','C) A book or a table','D) A lake or a river'] },
+            { q: 'When a surface is smooth and still, what can you see on it?', choices: ['A) Only darkness','B) Blurry colors','C) Beautiful pictures of mountain scenes and sky','D) Only the color of the object'] },
+            { q: 'Why might a lake filled with people boating and swimming not act like a mirror?', choices: ['A) The air is too cold','B) The mountains are too far away','C) The water surface is not smooth and still','D) The sun is too bright'] },
+            { q: 'What happens to the reflection on a lake\'s surface if the water is moving?', choices: ['A) The reflection becomes unclear or spoiled','B) The reflection becomes brighter','C) The reflection gets bigger','D) The reflection disappears completely'] },
+            { q: 'What part of the image is often reflected on the smooth surface of a lake?', choices: ['A) The fish in the water','B) The sound of the wind','C) The mountains and sky','D) The nearby grass'] },
+            { q: 'What two common things have a special ability to reflect or bend light?', choices: ['A) Plastic and wood','B) Stone and metal','C) Water and glass','D) Cloth and paper'] },
+            { q: 'The ability of glass to bend light (refract it) allows us to create what?', choices: ['A) Smooth surfaces','B) Bright lights','C) Tools like magnifying glasses','D) Dark rooms'] },
+            { q: 'What does a magnifying glass allow us to do?', choices: ['A) See through walls','B) Hear distant sounds','C) Clearly see an object and make it look larger','D) Measure the light waves'] },
+            { q: 'When light passes from one material to another, what is the bending of light called?', choices: ['A) Reflection','B) Absorption','C) Refraction','D) Diffusion'] },
+            { q: 'Why does the brain need the picture of the object (from reflected light) to understand what we see?', choices: ['A) To help us feel the object','B) The brain needs information from the eye to process the image','C) To make the object glow','D) To make the object move'] }
+          ],
+          key: []
+        }
+      }
+    };
+
+   const levelData = questionsByLevel[level] || questionsByLevel['1'];
+    const storyData = (levelData && levelData[story]) || (levelData && levelData['1']);
+    const questions = storyData.questions;
+    const header = document.getElementById('questionsHeader');
+    if (header) header.textContent = storyData.title;
+    // update document title too
+    document.title = `Questions - ${storyData.title}`;
+
+    const container = document.getElementById('questionsContainer');
+
+    function render(){
+      container.innerHTML = '';
+        questions.forEach((item, idx) => {
+        const qDiv = document.createElement('div');
+        qDiv.className = 'question';
+        const h = document.createElement('h2');
+        h.textContent = `${idx + 1}. ${item.q}`;
+        qDiv.appendChild(h);
+        const ul = document.createElement('ul'); ul.className = 'choices';
+        item.choices.forEach((c, ci) => {
+          const li = document.createElement('li');
+          li.className = 'choice';
+          li.setAttribute('role','button');
+          li.setAttribute('tabindex','0');
+          li.dataset.q = idx;
+          li.dataset.choice = ci;
+          // extract letter (first non-space char) and text after label (supports 'A.','A)','A -', etc.)
+          const letter = c.trim().charAt(0);
+          // remove only the leading choice label (e.g. 'A.', 'A)', 'A) ', 'A -')
+          const text = c.replace(/^[A-Za-z]+\s*[\)\.\-]?\s*/, '').trim();
+          li.innerHTML = `<span class="letter">${letter}</span><span class="text">${text}</span>`;
+          li.addEventListener('click', onChoice);
+          li.addEventListener('keydown', (e)=>{ if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onChoice.call(li, e); }});
+          ul.appendChild(li);
+        });
+        qDiv.appendChild(ul);
+        container.appendChild(qDiv);
+      });
+
+      // Append submit footer at the end so it is inside the scrollable area
+      const footer = document.createElement('div');
+      footer.className = 'questions-footer';
+      footer.innerHTML = '<button id="submitBtn" class="btn-submit">Submit</button>';
+      container.appendChild(footer);
+    }
+
+    function onChoice(e){
+      const el = (this === undefined || this === window) ? e.currentTarget : this;
+      const q = el.dataset.q;
+      // remove selected in same question
+      const choices = container.querySelectorAll(`.choice[data-q="${q}"]`);
+      choices.forEach(ch => ch.classList.remove('selected'));
+      el.classList.add('selected');
+    }
+
+    render();
+
+    // submit handler (attach after render so the button exists)
+    function attachSubmit(){
+      const submit = document.getElementById('submitBtn');
+      if(!submit) return;
+      submit.addEventListener('click', ()=>{
+        // use key from story data
+        const key = storyData.key || [];
+        const selected = container.querySelectorAll('.choice.selected');
+        // build answers array (undefined if unanswered)
+        const answers = Array(key.length).fill(null);
+        selected.forEach(s => { answers[Number(s.dataset.q)] = Number(s.dataset.choice); });
+        // score
+        let score = 0;
+        for (let i=0;i<key.length;i++){
+          if (answers[i] !== null && answers[i] === key[i]) score++;
+        }
+
+        // Show result inside the scrollable container
+        container.innerHTML = `
+          <div class="result">
+            <h2>You got ${score}/${key.length}</h2>
+            <p>Well done! Click below to continue.</p>
+            <div class="result-actions">
+              <button id="nextStoryBtn" class="btn-submit">${Number(story) === 5 ? 'Choose Level' : 'Next Story'}</button>
+            </div>
+          </div>
+        `;
+
+        // navigate when clicked: if this is story 5 go to level selection, else go to next story
+        const next = document.getElementById('nextStoryBtn');
+        if (next) {
+          if (Number(story) === 5) {
+            next.addEventListener('click', ()=>{ window.location.href = 'level.html'; });
+          } else {
+            next.addEventListener('click', ()=>{
+              const nextStory = Number(story) + 1;
+              window.location.href = `story.html?level=${level}&story=${nextStory}`;
+            });
+          }
+        }
+      });
+    }
+    attachSubmit();
+  </script>
+</body>
+</html>
+

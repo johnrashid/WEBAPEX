@@ -1,0 +1,331 @@
+:root{
+  --scale: 1;
+  --purple-deep: #402688;
+
+}
+
+/* basic page layout */
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* constrain canvas */
+.canvas{
+  position: relative;
+  width: 100%;
+  max-width: 780px;
+  padding: 36px;
+  box-sizing: border-box;
+
+  /* center all inner content */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh; /* gives vertical space so content centers nicely */
+}
+
+/* top-left circle (matches pretest) */
+.circle{
+  position: relative;
+  left: auto;
+  top: auto;
+  transform: none;
+
+  /* bigger */
+  width: 200px;
+  height: 200px;
+
+  /* point this to your image file (relative to the HTML/CSS) */
+  background-image: url("logo.png");
+  background-repeat: no-repeat;
+  background-size: cover;    /* crop/scale to fill the circle */
+  background-position: center;
+  background-color: transparent; /* fallback while image loads */
+  border-radius: 50%;
+  z-index: 10;
+
+  /* lower (push down from the center) */
+  margin-top: 24px;
+  margin-bottom: -20px;
+}
+
+/* title */
+.title{
+  font-size: 36px;
+  font-weight: 800;
+  color: #07101a;
+  margin: 0 0 24px 0; /* reset previous top margin and add spacing below */
+  text-align: center;
+}
+
+.subtitle{
+  font-size: 20px;
+  font-weight: 600;
+  color: #333333;
+  margin: 0 0 24px 0; /* reset previous top margin and add spacing below */
+  text-align: center;
+}
+/* center the single Play button */
+.play{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 0;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    font-family: Arial, sans-serif;
+    background: #f4efff;
+    overflow: hidden;
+}
+
+
+.play-btn{
+  --btn-w: 100px;
+  --btn-h: 50px;
+  width: var(--btn-w);
+  height: var(--btn-h);
+  border: none;
+  border-radius: 28px;
+  background: linear-gradient(90deg, #3ad6d6 0%, #0c5fb0 100%);
+  color: #07101a;
+  font-weight: 800;
+  font-size: 20px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.08);
+}
+
+/* hover */
+.play-btn:hover{
+  transform: translateY(-2px);
+  filter: brightness(1.03);
+}
+
+/* small screens */
+@media (max-width: 420px){
+  .level-btn{ width: 260px; font-size: 20px; height: 56px; }
+  .circle{
+
+/* Logout confirmation modal (shared styling) */
+.confirm-overlay{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 100000;
+}
+.confirm-overlay.open{ display: flex; }
+.confirm-box{
+  background: #fff;
+  padding: 22px 20px;
+  border-radius: 12px;
+  width: min(92%, 420px);
+  box-shadow: 0 18px 40px rgba(0,0,0,0.18);
+  text-align: center;
+}
+.confirm-box h3{
+  margin: 0 0 10px;
+  font-size: 20px;
+  color: #07101a;
+}
+.confirm-actions{
+  display:flex;
+  gap:12px;
+  justify-content:center;
+  margin-top: 16px;
+}
+.confirm-actions button{
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+}
+.confirm-actions .cancel{
+  background: #f3f3f6;
+  color: #333;
+}
+.confirm-actions .logout{
+  background: #ff4b4b;
+  color: #fff;
+}
+
+    width: 110px;
+    height: 110px;
+    margin-top: 14px;
+    margin-bottom: 18px;
+  }
+}
+
+/* wrapper must be positioning context for floating words */
+.wrapper{
+  position: relative;
+  overflow: hidden;
+}
+
+/* ensure canvas sits above decorative words */
+.canvas{
+  z-index: 1; /* existing .canvas rules remain; this adds stacking */
+}
+
+/* floating words — falling effect across the viewport */
+.floating-words {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;               /* behind UI */
+  overflow: visible;
+  will-change: transform;
+}
+
+/* word base: start above the viewport and fall down continuously */
+.floating-words .word {
+  position: absolute;
+  left: 0;
+  top: -12%;                /* start above viewport */
+  font-weight: 900;
+  white-space: nowrap;
+  font-family: Arial, sans-serif;
+  mix-blend-mode: multiply;
+  filter: drop-shadow(0 8px 18px rgba(0,0,0,0.12));
+  opacity: .42;
+  transform-origin: center;
+  will-change: transform, opacity;
+
+  /* per-word vars (duration, delay, rotation) */
+  --d: 12s;                 /* duration */
+  --delay: 0s;              /* initial offset */
+  --r: -6deg;               /* base rotation */
+
+  /* run the fall animation infinitely; use negative delay so words are visually distributed immediately */
+  animation-name: fall;
+  animation-duration: var(--d);
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-delay: calc(var(--delay) * -1);
+  animation-fill-mode: none;
+
+  font-size: calc(32px * var(--scale));
+}
+
+/* varied colors / sizes */
+.floating-words .word:nth-child(3n+1){ color: rgba(64,38,136,0.54); font-size: calc(42px * var(--scale)); }
+.floating-words .word:nth-child(3n+2){ color: rgba(138,92,255,0.38); font-size: calc(30px * var(--scale)); }
+.floating-words .word:nth-child(3n)  { color: rgba(186,140,255,0.28); font-size: calc(24px * var(--scale)); }
+
+/* keyframe: fall from above to below viewport while slowly rotating and fading */
+@keyframes fall {
+  0%   { transform: translateY(-18vh) rotate(var(--r)); opacity: 1; }
+  60%  { opacity: .6; }
+  100% { transform: translateY(120vh) rotate(calc(var(--r) + 40deg)); opacity: .06; }
+}
+
+/* scattered horizontal placements + per-word timing so they fall independently (keeps negative delay) */
+.floating-words .word:nth-child(1){ left:4%;  --d:14s; --delay:0s;  --r:-12deg; }
+.floating-words .word:nth-child(2){ left:18%; --d:18s; --delay:1.8s; --r:6deg;  }
+.floating-words .word:nth-child(3){ left:38%; --d:12s; --delay:0.6s; --r:-6deg;  }
+.floating-words .word:nth-child(4){ left:60%; --d:16s; --delay:2.4s; --r:10deg;  }
+.floating-words .word:nth-child(5){ left:78%; --d:13s; --delay:1.1s; --r:-8deg;  }
+.floating-words .word:nth-child(6){ left:8%;  --d:20s; --delay:3.2s; --r:4deg;   }
+.floating-words .word:nth-child(7){ left:28%; --d:11s; --delay:0.2s; --r:-4deg;  }
+.floating-words .word:nth-child(8){ left:52%; --d:15s; --delay:2.0s; --r:2deg;   }
+.floating-words .word:nth-child(9){ left:72%; --d:17s; --delay:1.4s; --r:8deg;   }
+.floating-words .word:nth-child(10){left:12%; --d:19s; --delay:2.8s; --r:-6deg;  }
+.floating-words .word:nth-child(11){left:36%; --d:13s; --delay:0.9s; --r:6deg;   }
+.floating-words .word:nth-child(12){left:64%; --d:21s; --delay:3.6s; --r:-10deg; }
+
+/* responsive: reduce size / hide on very small screens */
+@media (max-width: 720px){
+  .floating-words .word { font-size: calc(20px * var(--scale)); opacity: .32; }
+}
+@media (max-width: 420px){
+  .floating-words { display: none; } /* keep UI clear on very small screens */
+}
+
+/* audio control (reuse from index.css) */
+.audio-control{
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 10050;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  pointer-events: auto;
+}
+
+.audio-btn{
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #402688;
+  color: #fff;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(64,38,136,0.18);
+  transition: transform .15s ease, background .15s;
+}
+.audio-btn:hover{ transform: translateY(-3px); }
+
+.audio-panel{
+  display: none;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,0.95);
+  padding: 8px;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  backdrop-filter: blur(6px);
+}
+.audio-control.open .audio-panel{ display: flex; }
+
+.audio-volume{
+  width: 160px;
+  -webkit-appearance: none;
+  height: 6px;
+  background: linear-gradient(90deg,#3ad6d6,#0c5fb0);
+  border-radius: 6px;
+  outline: none;
+}
+.audio-volume::-webkit-slider-thumb{
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  border: 2px solid rgba(64,38,136,0.12);
+}
+
+.audio-mute{
+  background: transparent;
+  border: none;
+  color: #402688;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 6px 8px;
+  border-radius: 8px;
+}
+.audio-mute:hover{ background: rgba(64,38,136,0.06); }
+
+@media (max-width:420px){
+  .audio-volume{ width: 110px; }
+  .audio-control{ right: 12px; bottom: 12px; }
+}

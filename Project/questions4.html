@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Questions - Level 4</title>
+  <link rel="stylesheet" href="reading.css">
+  <link rel="stylesheet" href="questions.css">
+</head>
+<body>
+
+  <button type="button" class="back-btn" aria-label="Go back" onclick="goBack()">Back</button>
+
+  <h1 class="questions-header" id="questionsHeader">Questions</h1>
+
+  <main class="questions-container" id="questionsContainer" tabindex="0">
+    <!-- Questions will be injected here -->
+  </main>
+
+  <script>
+    const params = new URLSearchParams(location.search);
+    const level = params.get('level') || '4';
+    const story = params.get('story') || '1';
+
+    function goBack(){
+      window.location.href = `story.html?level=${level}&story=${story}`;
+    }
+
+    const questionsByLevel = {
+      '4': {
+        '1': {
+          title: `The Servant and the Prince`,
+          questions: [
+            { q: `Who is the main character in the story?`, choices: [`A) The prince`,`B) The servant`,`C) The king`,`D) The queen`] },
+            { q: `What role does the servant play in the prince’s life?`, choices: [`A) Advisor`,`B) Friend and helper`,`C) Enemy`,`D) Teacher`] },
+            { q: `How does the prince initially treat the servant?`, choices: [`A) With kindness and respect`,`B) With indifference`,`C) With arrogance and superiority`,`D) As a teacher`] },
+            { q: `What lesson does the servant teach the prince?`, choices: [`A) How to fight in wars`,`B) The importance of humility and compassion`,`C) How to manage money`,`D) How to build a palace`] },
+            { q: `How does the prince change by the end of the story?`, choices: [`A) Becomes more selfish`,`B) Becomes wiser and kinder`,`C) Becomes weaker`,`D) Remains the same`] },
+            { q: `Which event in the story shows the servant’s loyalty?`, choices: [`A) When he disobeys the prince`,`B) When he helps the prince even in danger`,`C) When he leaves the palace`,`D) When he argues with the prince`] },
+            { q: `What quality of the servant is most admired?`, choices: [`A) Courage`,`B) Wisdom`,`C) Loyalty and humility`,`D) Wealth`] },
+            { q: `Why does the prince learn to value the servant?`, choices: [`A) Because of his wealth`,`B) Because of his wisdom and loyalty`,`C) Because of his beauty`,`D) Because of his family background`] },
+            { q: `What is the moral lesson of the story?`, choices: [`A) Power is more important than kindness`,`B) True leadership comes from humility and respect for others`,`C) Only the rich can be respected`,`D) Obedience is more important than compassion`] },
+            { q: `How does the servant handle difficult situations?`, choices: [`A) With patience and intelligence`,`B) With anger`,`C) With fear`,`D) With pride`] },
+            { q: `Which character experiences personal growth in the story?`, choices: [`A) The king`,`B) The queen`,`C) The prince`,`D) The court jester`] },
+            { q: `How does the relationship between the prince and servant develop?`, choices: [`A) They become enemies`,`B) They grow closer through mutual respect`,`C) They ignore each other`,`D) They compete for power`] },
+            { q: `What is the significance of the servant’s advice?`, choices: [`A) It helps the prince make better decisions`,`B) It teaches the servant to be powerful`,`C) It makes the prince arrogant`,`D) It causes conflict in the palace`] },
+            { q: `Which of the following best describes the servant’s character?`, choices: [`A) Arrogant and proud`,`B) Humble, wise, and loyal`,`C) Lazy and careless`,`D) Mean and selfish`] },
+            { q: `What lesson can readers take from “The Servant and the Prince”?`, choices: [`A) Only rulers deserve respect`,`B) Humility, loyalty, and kindness are more valuable than wealth or power`,`C) Power is the key to success`,`D) Intelligence is not important`] }
+          ],
+          key: []
+        },
+        '2': {
+          title: `To See Into a Soul`,
+          questions: [
+            { q: `Who is the main character of the story?`, choices: [`A) A scientist`,`B) A child`,`C) The narrator`,`D) A priest`] },
+            { q: `What is the main theme of the story?`, choices: [`A) Friendship and adventure`,`B) Understanding human nature and inner thoughts`,`C) Science and technology`,`D) Wealth and power`] },
+            { q: `How does the main character attempt to see into a soul?`, choices: [`A) Through magic`,`B) Through careful observation of behavior and emotions`,`C) By reading books`,`D) By asking questions`] },
+            { q: `What motivates the character to see into others’ souls?`, choices: [`A) Curiosity and desire to understand people deeply`,`B) Desire for wealth`,`C) Desire for fame`,`D) Revenge`] },
+            { q: `How do other characters react to the main character’s observations?`, choices: [`A) They are surprised or uncomfortable`,`B) They ignore him`,`C) They praise him immediately`,`D) They become angry and hostile`] },
+            { q: `Which skill is most important for seeing into a soul, according to the story?`, choices: [`A) Strength`,`B) Observation and empathy`,`C) Wealth`,`D) Intelligence`] },
+            { q: `What lesson does the main character learn about human nature?`, choices: [`A) People’s thoughts and feelings are easy to predict`,`B) Everyone has a complex inner life`,`C) People never change`,`D) Only children are innocent`] },
+            { q: `Which literary device is heavily used in the story?`, choices: [`A) Hyperbole`,`B) Symbolism`,`C) Onomatopoeia`,`D) Pun`] },
+            { q: `How does the story show the importance of empathy?`, choices: [`A) By illustrating the main character’s ability to understand and feel for others`,`B) By focusing on wealth`,`C) By describing battles`,`D) By ignoring emotions`] },
+            { q: `What is the narrator’s attitude toward people in the story?`, choices: [`A) Judgmental and critical`,`B) Curious and understanding`,`C) Indifferent`,`D) Hostile`] },
+            { q: `How does seeing into a soul affect the main character’s relationships?`, choices: [`A) It makes them superficial`,`B) It deepens understanding and trust`,`C) It causes jealousy`,`D) It creates confusion`] },
+            { q: `Which of the following best describes the story’s tone?`, choices: [`A) Humorous and lighthearted`,`B) Thoughtful and reflective`,`C) Angry and bitter`,`D) Exciting and adventurous`] },
+            { q: `What challenge does the main character face when trying to see into a soul?`, choices: [`A) People hiding their true feelings`,`B) Physical obstacles`,`C) Lack of money`,`D) Time travel`] },
+            { q: `What does the story suggest about appearances versus reality?`, choices: [`A) Appearances always reflect reality`,`B) Inner feelings and thoughts may differ from outward appearances`,`C) Reality is unimportant`,`D) Only appearance matters`] },
+            { q: `What moral can readers take from “To See Into a Soul”?`, choices: [`A) Judging people quickly is wise`,`B) Understanding others requires patience, empathy, and careful observation`,`C) Power is more important than understanding`,`D) Curiosity about others is dangerous`] }
+          ],
+          key: []
+        },
+        '3': {
+          title: `The Hungry Mouse`,
+          questions: [
+            { q: `Who is the main character of the story?`, choices: [`A) The cat`,`B) The hungry mouse`,`C) The farmer`,`D) The dog`] },
+            { q: `Why is the mouse described as hungry?`, choices: [`A) Because it just woke up`,`B) Because it cannot find food`,`C) Because it is lazy`,`D) Because it wants to play`] },
+            { q: `What is the first thing the mouse tries to eat?`, choices: [`A) Cheese`,`B) Bread`,`C) Fruit`,`D) Seeds`] },
+            { q: `How does the mouse get into trouble?`, choices: [`A) By being too greedy`,`B) By falling asleep`,`C) By fighting other mice`,`D) By running too fast`] },
+            { q: `Who helps the mouse in the story?`, choices: [`A) A kind bird`,`B) A cat`,`C) A dog`,`D) A farmer`] },
+            { q: `What lesson does the mouse learn?`, choices: [`A) Always eat as much as you can`,`B) Greed can lead to danger`,`C) Stealing is fun`,`D) Sleeping is better than working`] },
+            { q: `How does the mouse react when it sees the food?`, choices: [`A) It is scared`,`B) It is excited and greedy`,`C) It ignores it`,`D) It calls other animals`] },
+            { q: `Which quality of the mouse causes problems in the story?`, choices: [`A) Laziness`,`B) Greed`,`C) Bravery`,`D) Kindness`] },
+            { q: `How does the story end?`, choices: [`A) The mouse finds safety and learns its lesson`,`B) The mouse loses all its food`,`C) The mouse becomes king`,`D) The mouse leaves the village`] },
+            { q: `What is the moral of the story?`, choices: [`A) Always take risks`,`B) Greed can lead to trouble`,`C) Eating fast is good`,`D) Sharing is unnecessary`] },
+            { q: `Who is the mouse’s main antagonist?`, choices: [`A) The farmer`,`B) The cat`,`C) Another mouse`,`D) The dog`] },
+            { q: `Why does the mouse sneak into the house or kitchen?`, choices: [`A) To hide from predators`,`B) To find food`,`C) To play with other animals`,`D) To sleep`] },
+            { q: `What happens when the mouse is too greedy?`, choices: [`A) It is caught or almost caught`,`B) It finds more food`,`C) It becomes stronger`,`D) It meets new friends`] },
+            { q: `What can readers learn from the mouse’s behavior?`, choices: [`A) Greed can be dangerous`,`B) Laziness is good`,`C) Fear is unnecessary`,`D) Curiosity is bad`] },
+            { q: `Which of the following best describes the story’s tone?`, choices: [`A) Funny and lighthearted with a moral lesson`,`B) Sad and tragic`,`C) Angry and serious`,`D) Romantic and happy`] }
+          ],
+          key: []
+        },
+        '4': {
+          title: `Lost on the Trail`,
+          questions: [
+            { q: `Who is the main character of the story?`, choices: [`A) A hiker`,`B) A guide`,`C) A dog`,`D) A traveler`] },
+            { q: `Where does the story take place?`, choices: [`A) In a city`,`B) On a mountain trail`,`C) At the beach`,`D) In a forest village`] },
+            { q: `Why does the main character get lost?`, choices: [`A) They ignore the map`,`B) Bad weather and poor preparation`,`C) They are chased by animals`,`D) They fall asleep`] },
+            { q: `Who helps the main character during the adventure?`, choices: [`A) A park ranger`,`B) Another hiker or companion`,`C) A local villager`,`D) A dog`] },
+            { q: `What is the main character’s first reaction to being lost?`, choices: [`A) Calm and patient`,`B) Panic and fear`,`C) Excitement`,`D) Anger`] },
+            { q: `Which skill is most important for surviving while lost on a trail?`, choices: [`A) Strength`,`B) Navigation and problem-solving`,`C) Speed`,`D) Singing`] },
+            { q: `How does the main character find food or water?`, choices: [`A) By carrying supplies in advance`,`B) By foraging or finding natural resources`,`C) By asking other hikers`,`D) By hunting animals`] },
+            { q: `What lesson does the story teach about preparation?`, choices: [`A) Preparation is unnecessary`,`B) Being prepared helps in unexpected situations`,`C) Maps are useless`,`D) Equipment doesn’t matter`] },
+            { q: `How does the main character handle fear and uncertainty?`, choices: [`A) By panicking`,`B) By staying calm and thinking clearly`,`C) By giving up`,`D) By running aimlessly`] },
+            { q: `What is the role of nature in the story?`, choices: [`A) It provides challenges and lessons for the character`,`B) It is ignored`,`C) It is only a background setting`,`D) It helps the character without effort`] },
+            { q: `How does the story end?`, choices: [`A) The main character is rescued or finds their way`,`B) The main character gets lost forever`,`C) The main character decides to stay in the wilderness`,`D) The main character loses hope completely`] },
+            { q: `Which of the following is a key theme of the story?`, choices: [`A) Adventure and survival`,`B) Friendship only`,`C) Humor and fun`,`D) Magic and fantasy`] },
+            { q: `What mistake does the main character make that leads to being lost?`, choices: [`A) Ignoring trail markers or maps`,`B) Talking to strangers`,`C) Sleeping too long`,`D) Forgetting to bring water`] },
+            { q: `How can readers relate to the story?`, choices: [`A) By learning the importance of preparation and problem-solving`,`B) By learning magic spells`,`C) By learning to travel without care`,`D) By ignoring warnings`] },
+            { q: `What moral can be learned from “Lost on the Trail”?`, choices: [`A) Panic is the best reaction in danger`,`B) Careful planning, patience, and courage help overcome challenges`,`C) Avoid outdoor activities`,`D) Nature is always dangerous`] }
+          ],
+          key: []
+        },
+        '5': {
+          title: `The Surprise Visitor`,
+          questions: [
+            { q: `Who are the main characters in the story?`, choices: [`A) A family or household members`,`B) Two strangers`,`C) A teacher and students`,`D) Animals in the forest`] },
+            { q: `What is unusual about the visitor?`, choices: [`A) They arrive unexpectedly`,`B) They bring gifts`,`C) They are famous`,`D) They speak a foreign language`] },
+            { q: `How does the family react to the surprise visitor?`, choices: [`A) With anger`,`B) With curiosity and excitement`,`C) They ignore the visitor`,`D) With fear`] },
+            { q: `What is the visitor’s purpose for coming?`, choices: [`A) To deliver a message or important news`,`B) To steal something`,`C) To play a game`,`D) To get lost`] },
+            { q: `How does the visitor affect the household?`, choices: [`A) Creates conflict`,`B) Brings joy, lessons, or unexpected help`,`C) Causes them to leave their home`,`D) Brings sadness`] },
+            { q: `What lesson does the story teach about hospitality?`, choices: [`A) It is better to ignore strangers`,`B) Welcoming guests can bring unexpected happiness or knowledge`,`C) Visitors are always dangerous`,`D) Gifts are unnecessary`] },
+            { q: `How does the family prepare for the visitor?`, choices: [`A) They cook, clean, and make the visitor comfortable`,`B) They hide`,`C) They leave the house`,`D) They ignore preparations`] },
+            { q: `What is the tone of the story?`, choices: [`A) Suspenseful and exciting`,`B) Lighthearted and reflective`,`C) Sad and gloomy`,`D) Angry and serious`] },
+            { q: `How do the children (if present) react to the visitor?`, choices: [`A) They are curious and eager to interact`,`B) They are scared and hide`,`C) They ignore the visitor`,`D) They run away`] },
+            { q: `Which event surprises the family the most?`, choices: [`A) The visitor arrives when they least expect it`,`B) The visitor leaves immediately`,`C) The visitor refuses to talk`,`D) The visitor forgets something`] },
+            { q: `How does the story resolve?`, choices: [`A) The visitor leaves after teaching a lesson or bringing joy`,`B) The visitor causes lasting problems`,`C) The visitor never leaves`,`D) The family leaves the house`] },
+            { q: `Which character trait does the visitor demonstrate?`, choices: [`A) Patience and kindness`,`B) Greed`,`C) Anger`,`D) Laziness`] },
+            { q: `How does the story show the importance of being welcoming?`, choices: [`A) By showing rewards of kindness to strangers`,`B) By punishing the family`,`C) By ignoring the visitor`,`D) By hiding from strangers`] },
+            { q: `What can readers learn from the visitor’s actions?`, choices: [`A) Surprises can be meaningful and teach valuable lessons`,`B) All surprises are dangerous`,`C) Visitors are unnecessary`,`D) Only planned events matter`] },
+            { q: `What moral can be derived from “The Surprise Visitor”?`, choices: [`A) Greed brings happiness`,`B) Being kind and open-hearted to unexpected guests can bring joy and wisdom`,`C) Visitors are always harmful`,`D) Plans should never change`] }
+          ],
+          key: []
+        },
+        '6': {
+          title: `Noisy Neighbours`,
+          questions: [
+            { q: `What noise was bothering Derek at the start of the story?`, choices: [`A) Barking dogs`,`B) Loud drilling`,`C) Loud talking`,`D) A crying baby`] },
+            { q: `Why did Derek think the drilling was ridiculous?`, choices: [`A) It was early in the morning`,`B) They had been drilling for weeks`,`C) He believed they already made many holes in the walls`,`D) It only happened at night`] },
+            { q: `What reason did Rachel give to calm Derek down?`, choices: [`A) The noise would help them sleep`,`B) The neighbors had just moved in`,`C) The neighbors apologized`,`D) They were used to noise`] },
+            { q: `What noise replaced the drilling in the evening?`, choices: [`A) Barking`,`B) Construction hammering`,`C) Loud music`,`D) Sirens`] },
+            { q: `What did Derek assume the neighbors were doing?`, choices: [`A) Celebrating a birthday`,`B) Having a housewarming party`,`C) Cleaning their house`,`D) Watching a movie`] },
+            { q: `Why was Rachel worried about the noise?`, choices: [`A) She needed to study`,`B) The lights were shaking`,`C) It would wake the kids`,`D) It was damaging their walls`] },
+            { q: `At what time was the music still pounding?`, choices: [`A) 9 PM`,`B) 10 PM`,`C) 11 PM`,`D) Midnight`] },
+            { q: `What was Harriet wearing when she entered the kitchen?`, choices: [`A) Pajamas with stars`,`B) A pink nightgown`,`C) A blue robe`,`D) A yellow dress`] },
+            { q: `What did Harriet complain about?`, choices: [`A) She was hungry`,`B) She had a headache`,`C) She was scared`,`D) She couldn’t sleep`] },
+            { q: `What did Derek prepare for Harriet?`, choices: [`A) Warm milk`,`B) Coffee`,`C) Hot chocolate`,`D) Tea`] },
+            { q: `What interrupted Derek before the microwave pinged?`, choices: [`A) A knock at the door`,`B) The baby started crying`,`C) The music stopped`,`D) Rachel screamed`] },
+            { q: `Why couldn’t Rachel get the baby back to sleep?`, choices: [`A) The baby was hungry`,`B) The music was too loud`,`C) The lights were too bright`,`D) The baby was sick`] },
+            { q: `What did Rachel ask Derek to do?`, choices: [`A) Turn up the TV`,`B) Put the kids to bed`,`C) Go talk to the neighbours`,`D) Call the police`] },
+            { q: `What problem did Derek face when he knocked on the neighbour’s door?`, choices: [`A) The door was locked`,`B) Nobody answered for a long time`,`C) The neighbours shouted at him`,`D) He knocked on the wrong door`] },
+            { q: `Who eventually answered the door?`, choices: [`A) An old man`,`B) The baby’s mother`,`C) A teenager wearing sunglasses`,`D) A police officer`] }
+          ],
+          key: []
+        },
+        '7': {
+          title: `Hide and Seek`,
+          questions: [
+            { q: `Who is the main character of the story?`, choices: [`A) Batuhan M.`,`B) Oscar`,`C) The narrator`,`D) The white statue`] },
+            { q: `What is the narrator doing at the beginning of the story?`, choices: [`A) Playing hide-and-seek`,`B) Running and observing nature`,`C) Looking for headphones`,`D) Sleeping`] },
+            { q: `What does Oscar frantically search for?`, choices: [`A) A book`,`B) Headphones`,`C) The narrator`,`D) A phone`] },
+            { q: `How does the narrator describe the headphones?`, choices: [`A) Loud and annoying`,`B) Hiding from Oscar`,`C) Broken`,`D) New and shiny`] },
+            { q: `What natural elements does the narrator notice during the run?`, choices: [`A) Trees, leaves, and lake`,`B) Mountains and clouds only`,`C) Buildings and streets`,`D) Animals only`] },
+            { q: `What unusual figure appears during the narrator’s run?`, choices: [`A) A tall man in black`,`B) A plain white statue with pale eyes`,`C) A wolf`,`D) A magician`] },
+            { q: `How does the narrator feel when the white statue appears?`, choices: [`A) Curious`,`B) Calm`,`C) Terrified`,`D) Excited`] },
+            { q: `What happens to the narrator’s phone?`, choices: [`A) It rings constantly`,`B) It dies, leaving them isolated`,`C) It gets stolen`,`D) It guides them safely`] },
+            { q: `Which of these best describes the story’s tone?`, choices: [`A) Calm and relaxing`,`B) Humorous`,`C) Suspenseful and frightening`,`D) Romantic`] },
+            { q: `What theme is suggested by the narrator being chased?`, choices: [`A) Adventure and fun`,`B) Fear and survival`,`C) Friendship`,`D) Magic and fantasy`] },
+            { q: `How is “hide-and-seek” used in the story?`, choices: [`A) As a literal children’s game only`,`B) As a metaphor for being hunted or pursued`,`C) As a way to find treasure`,`D) As a dance competition`] },
+            { q: `Why does the story create tension using nature?`, choices: [`A) Because it hides clues about the game`,`B) Because it contrasts calm surroundings with danger`,`C) Because animals attack the narrator`,`D) Because it makes the narrator sleepy`] },
+            { q: `What does the white statue symbolize?`, choices: [`A) Peace and safety`,`B) Danger and the unknown`,`C) Knowledge`,`D) Friendship`] },
+            { q: `What feeling is emphasized when the narrator is isolated?`, choices: [`A) Freedom`,`B) Fear and vulnerability`,`C) Happiness`,`D) Excitement`] },
+            { q: `Which best describes the narrator’s role in the story?`, choices: [`A) An observer only`,`B) A player in a dangerous game`,`C) A hero saving others`,`D) A teacher`] }
+          ],
+          key: []
+        },
+        '8': {
+          title: `Endings by Murphy C.`,
+          questions: [
+            { q: `Who is the main character in the story?`, choices: [`A) A young person facing a challenge`,`B) A teacher`,`C) A parent`,`D) A stranger`] },
+            { q: `What is the central theme of the story?`, choices: [`A) Life, choices, and consequences`,`B) Adventure and magic`,`C) Wealth and power`,`D) Humor and fun`] },
+            { q: `What event marks the turning point of the story?`, choices: [`A) A critical decision or action by the main character`,`B) A sudden party`,`C) A journey to another city`,`D) A random accident`] },
+            { q: `How does the main character feel about endings?`, choices: [`A) Conflicted or reflective`,`B) Indifferent`,`C) Excited`,`D) Angry`] },
+            { q: `Which character influences the protagonist’s decisions?`, choices: [`A) A mentor or friend`,`B) A stranger`,`C) An enemy`,`D) A pet`] },
+            { q: `How does the story portray the consequences of choices?`, choices: [`A) Every choice has an impact, shaping outcomes`,`B) Choices don’t matter`,`C) Only good choices are rewarded`,`D) Only bad choices matter`] },
+            { q: `How does the protagonist deal with challenges?`, choices: [`A) Through reflection, courage, or careful decision-making`,`B) By ignoring them`,`C) By blaming others`,`D) By running away`] },
+            { q: `Which literary device is prominently used in the story?`, choices: [`A) Foreshadowing to hint at endings`,`B) Onomatopoeia`,`C) Pun`,`D) Flashback only`] },
+            { q: `How does the story end?`, choices: [`A) With a lesson learned about choices and consequences`,`B) With the main character ignoring life`,`C) With a cliffhanger`,`D) With chaos and confusion`] },
+            { q: `What does the story suggest about life’s unpredictability?`, choices: [`A) Life is full of unexpected outcomes and endings`,`B) Life is predictable`,`C) Life is easy`,`D) Life is always fair`] },
+            { q: `What emotion is most explored in the story?`, choices: [`A) Reflection and contemplation`,`B) Humor`,`C) Anger`,`D) Indifference`] },
+            { q: `How do minor characters affect the story?`, choices: [`A) They influence the protagonist’s choices or understanding`,`B) They are irrelevant`,`C) They only add humor`,`D) They create chaos`] },
+            { q: `How can readers relate to the story?`, choices: [`A) Everyone experiences decisions and consequences in life`,`B) Only adults face endings`,`C) Only children face choices`,`D) Life has no choices`] },
+            { q: `What is the main conflict in the story?`, choices: [`A) Facing life’s choices and their consequences`,`B) Fighting an enemy`,`C) Searching for treasure`,`D) Solving a mystery`] },
+            { q: `What moral can be derived from “Endings”?`, choices: [`A) Thoughtful decisions help navigate life’s unpredictable endings`,`B) Choices are meaningless`,`C) Only luck determines outcomes`,`D) Life is always easy`] }
+          ],
+          key: []
+        },
+        '9': {
+          title: `The Nightmare of Reality`,
+          questions: [
+            { q: `Who is the main character in the story?`, choices: [`A) A dreamer or protagonist experiencing a nightmare`,`B) A teacher`,`C) A parent`,`D) A stranger`] },
+            { q: `What causes the main character to experience the nightmare?`, choices: [`A) Fear, anxiety, or a troubling event`,`B) Magic`,`C) Sleepwalking`,`D) A story they read`] },
+            { q: `How does the nightmare affect the character’s perception of reality?`, choices: [`A) Makes reality seem confusing or frightening`,`B) Makes them very happy`,`C) Makes them ignore reality`,`D) Changes nothing`] },
+            { q: `What kind of events happen in the nightmare?`, choices: [`A) Scary, surreal, or exaggerated versions of real-life fears`,`B) Fun adventures`,`C) Ordinary daily routines`,`D) Magical happy events`] },
+            { q: `How does the character react to the nightmare?`, choices: [`A) With fear and anxiety`,`B) With excitement`,`C) With humor`,`D) With indifference`] },
+            { q: `What lesson does the story teach about facing fears?`, choices: [`A) Facing fears helps overcome anxiety and uncertainty`,`B) Fear should be ignored`,`C) Nightmares are meaningless`,`D) Running away is best`] },
+            { q: `How does the story blur the line between dream and reality?`, choices: [`A) By making nightmare events feel real`,`B) By describing only happy events`,`C) By ignoring dreams`,`D) By showing magic`] },
+            { q: `Which character traits are highlighted in the protagonist?`, choices: [`A) Courage, resilience, and self-reflection`,`B) Laziness`,`C) Anger`,`D) Carelessness`] },
+            { q: `How does the protagonist cope with the nightmare?`, choices: [`A) By facing their fears or learning from the experience`,`B) By running away`,`C) By ignoring it`,`D) By blaming others`] },
+            { q: `What does the story suggest about the nature of reality?`, choices: [`A) Reality can be frightening but manageable with courage`,`B) Reality is always easy`,`C) Reality is unimportant`,`D) Reality is magical`] },
+            { q: `How does the nightmare impact the protagonist’s daily life?`, choices: [`A) Makes them cautious, thoughtful, or reflective`,`B) Makes them lazy`,`C) Makes them reckless`,`D) Has no effect`] },
+            { q: `Which literary device is heavily used in the story?`, choices: [`A) Imagery and symbolism to represent fears`,`B) Pun`,`C) Onomatopoeia`,`D) Flashback only`] },
+            { q: `How does the story end?`, choices: [`A) The protagonist wakes up and learns a lesson about facing fears`,`B) The nightmare continues forever`,`C) The protagonist ignores the nightmare`,`D) The protagonist leaves home`] },
+            { q: `How can readers relate to the story?`, choices: [`A) Everyone experiences fears, worries, or moments of anxiety`,`B) Only children have nightmares`,`C) Only adults face fear`,`D) Nightmares are rare`] },
+            { q: `What is the main moral lesson of “The Nightmare of Reality”?`, choices: [`A) Courage and self-awareness help overcome fears`,`B) Nightmares are meaningless`,`C) Reality should be avoided`,`D) Fear is always harmful`] }
+          ],
+          key: []
+        },
+        '10': {
+          title: `The Big Secret`,
+          questions: [
+            { q: `Who is the main character of the story?`, choices: [`A) A child or a young protagonist`,`B) A teacher`,`C) A parent`,`D) A stranger`] },
+            { q: `What is the “big secret” in the story?`, choices: [`A) Something the main character discovers or keeps hidden`,`B) A treasure`,`C) A magic spell`,`D) A hidden map`] },
+            { q: `Why does the main character keep the secret?`, choices: [`A) Out of fear`,`B) Out of curiosity or responsibility`,`C) To play a prank`,`D) To share it with everyone immediately`] },
+            { q: `Who finds out about the secret eventually?`, choices: [`A) A friend or family member`,`B) The teacher`,`C) Nobody`,`D) A stranger`] },
+            { q: `How does keeping the secret affect the main character?`, choices: [`A) It causes stress or worry`,`B) It makes them happy`,`C) It has no effect`,`D) It makes them lazy`] },
+            { q: `What lesson does the story teach about secrets?`, choices: [`A) Keeping secrets can be hard, and honesty is important`,`B) Secrets should always be kept`,`C) Secrets are unimportant`,`D) Secrets are fun to tell immediately`] },
+            { q: `How does the main character feel about revealing the secret?`, choices: [
