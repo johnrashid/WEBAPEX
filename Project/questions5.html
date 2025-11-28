@@ -1,0 +1,343 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<title>Questions - Level 5</title>
+	<link rel="stylesheet" href="reading.css">
+	<link rel="stylesheet" href="questions.css">
+	</head>
+<body>
+
+	<button type="button" class="back-btn" aria-label="Go back" onclick="goBack()">
+		<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+			<path d="M20 11H7.83l5.58-5.59L12 4 4 12l8 8 1.41-1.41L7.83 13H20v-2z" fill="#fff"/>
+		</svg>
+	</button>
+
+	<h1 class="questions-header" id="questionsHeader">Questions</h1>
+
+	<main class="questions-container" id="questionsContainer" tabindex="0">
+		<!-- Questions will be injected here -->
+	</main>
+
+	<script>
+		// Read URL params; default level to 5, story to 1
+		const params = new URLSearchParams(location.search);
+		const level = params.get('level') || '5';
+		const story = params.get('story') || '1';
+
+		function goBack(){
+			// Return to the story page for this level and story
+			window.location.href = `story.html?level=${level}&story=${story}`;
+		}
+
+		// Questions organized by level -> story
+		const questionsByLevel = {
+			'5': {
+				'1': {
+					title: 'A Conversation From the Third Floor',
+					questions: [
+						{ q: '1. Where does the woman visit for the second time?', choices: ['A) A school','B) A prison','C) A market','D) A hospital'] },
+						{ q: '2. What is the policeman doing when she approaches?', choices: ['A) Walking','B) Sitting on a bench','C) Standing on the road','D) Sitting on a horse'] },
+						{ q: '3. What color is the wall mentioned in the story?', choices: ['A) Red','B) Blue','C) Yellow','D) White'] },
+						{ q: '4. How many stories does the building inside the wall have?', choices: ['A) Two','B) Three','C) Four','D) Five'] },
+						{ q: '5. What does the woman carry with her?', choices: ['A) A bag','B) A child','C) A letter','D) Flowers'] },
+						{ q: '6. What is hanging from the prisoners\' windows?', choices: ['A) Clothes','B) Washing','C) Flags','D) Lights'] },
+						{ q: '7. What action does the woman do with the child?', choices: ['A) She feeds him','B) She lifts him above her head','C) She puts him down','D) She runs with him'] },
+						{ q: '8. Who withdraws inside the tower?', choices: ['A) The policeman','B) The soldier','C) The woman','D) The child'] },
+						{ q: '9. What does the man ask about the date palms?', choices: ['A) If they were watered','B) If they were pruned','C) If they were planted','D) If they were harvested'] },
+						{ q: '10. How does the man react when the woman lifts the child?', choices: ['A) He cries','B) He laughs','C) He shouts angrily','D) He remains silent'] },
+						{ q: '11. Why is the man being transferred?', choices: ['A) He requested a transfer','B) The prison is being pulled down','C) He is retiring','D) He is being promoted'] },
+						{ q: '12. What does the man tell the woman about visiting again?', choices: ['A) She should come every day','B) She should never come again','C) He will let her know when he is transferred','D) She should bring gifts'] },
+						{ q: '13. What does the woman notice on the policeman\'s forehead?', choices: ['A) Dirt','B) Two thin lines of sweat','C) A scar','D) A tattoo'] },
+						{ q: '14. What is the overall mood during the interaction?', choices: ['A) Happy and joyful','B) Tense but caring','C) Angry and violent','D) Sad and hopeless'] },
+						{ q: '15. How is the issue finally resolved?', choices: ['A) She leaves after the conversation','B) The man is taken away','C) The child falls asleep','D) The policeman arrests her'] }
+					],
+					key: []
+				},
+				'2': {
+					title: 'A Gentleman\'s C',
+					questions: [
+						{ q: '1. What class did the narrator teach that his father enrolled in?', choices:['A. History','B. Mathematics','C. English','D. Science'] },
+						{ q: '2. How old was the narrator’s father when he tried to graduate from college?', choices:['A. 55','B. 60','C. 62','D. 65'] },
+						{ q: '3. How did the narrator grade his father?', choices:['A. A','B. B','C. Low C','D. F'] },
+						{ q: '4. Why did the narrator grade his father more strictly?', choices:['A. He wanted to be fair','B. The father had been tougher on him growing up','C. He disliked him','D. The class rules required it'] },
+						{ q: '5. Where did the narrator and his mother go during the father’s final exams?', choices:['A. Vacation','B. Family funeral','C. Grocery shopping','D. College campus'] },
+						{ q: '6. What news did the narrator and his mother learn upon returning?', choices:['A. Father graduated','B. Father failed to graduate','C. Father was promoted','D. Father received an award'] },
+						{ q: '7. Where was the father when he read the news about his grades?', choices:['A. Bedroom','B. Kitchen','C. Front door sofa','D. College classroom'] },
+						{ q: '8. What happened to the father after learning his grades?', choices:['A. He celebrated','B. He argued','C. He had a heart attack','D. He left town'] },
+						{ q: '9. What term describes the narrator’s initial belief about his reaction to his father’s death?', choices:['A. Fearful','B. Indifferent','C. Overjoyed','D. Confused'] },
+						{ q: '10. What was the father trying to achieve by attending college?', choices:['A. Earn more money','B. Graduate','C. Meet old friends','D. Learn English'] },
+						{ q: '11. How did the narrator feel about giving his father a low grade?', choices:['A. Guilty and honest','B. Angry and unfair','C. Careless','D. Happy'] },
+						{ q: '12. What type of relationship is explored in the story?', choices:['A. Father and child','B. Teacher and student','C. Siblings','D. Neighbors'] },
+						{ q: '13. What is one main theme of the story?', choices:['A. Adventure and excitement','B. Parental expectations and legacy','C. Friendship and betrayal','D. Humor and satire'] },
+						{ q: '14. How does the narrator describe the impact of his father’s death?', choices:['A. He was unaffected','B. He was deeply affected','C. He was relieved','D. He was amused'] },
+						{ q: '15. What does the low grade symbolize in the story?', choices:['A. Academic failure','B. Life lessons and parental tension','C. Punishment','D. Success'] }
+					],
+					key: []
+				},
+				'3': {
+					title: 'Cemetery Path',
+					questions: [
+						{ q: '1. What nickname did the villagers give Ivan?', choices:['A) Ivan the Brave','B) Pigeon','C) Ivan the Wise','D) Little Sparrow'] },
+						{ q: '2. Why did Ivan never cross the cemetery?', choices:['A) He was lazy','B) He was afraid','C) He didn’t know the way','D) It was forbidden'] },
+						{ q: '3. Who challenged Ivan to cross the cemetery?', choices:['A) His father','B) The village mayor','C) A young Cossack lieutenant','D) His brother'] },
+						{ q: '4. What reward was offered to Ivan for crossing the cemetery?', choices:['A) Ten rubles','B) A medal','C) Five gold rubles','D) A loaf of bread'] },
+						{ q: '5. What did the lieutenant ask Ivan to do at the center of the cemetery?', choices:['A) Light a candle','B) Sit and wait','C) Stick a saber in the ground','D) Take a stone'] },
+						{ q: '6. How did Ivan feel as he entered the cemetery?', choices:['A) Excited','B) Confident','C) Fearful','D) Angry'] },
+						{ q: '7. What season is it during the story?', choices:['A) Summer','B) Winter','C) Spring','D) Autumn'] },
+						{ q: '8. What covered the cemetery paths?', choices:['A) Snow and wind','B) Flowers','C) Sand','D) Ice'] },
+						{ q: '9. How did Ivan attempt to calm himself while crossing the cemetery?', choices:['A) He sang a song','B) He repeated “earth, just earth”','C) He closed his eyes','D) He held the lieutenant’s hand'] },
+						{ q: '10. What did Ivan use to complete the challenge?', choices:['A) A stick','B) A sword','C) A saber','D) A shovel'] },
+						{ q: '11. What happened to Ivan after he planted the saber?', choices:['A) He ran home safely','B) He was frozen by the cold','C) Something invisible held him and killed him','D) He shouted for help'] },
+						{ q: '12. Where was Ivan found the next morning?', choices:['A) In his house','B) In front of the central tomb','C) At the tavern','D) At the village square'] },
+						{ q: '13. What is the main theme of the story?', choices:['A) Courage and adventure','B) Fear and the unknown','C) Friendship','D) Magic and fantasy'] },
+						{ q: '14. What did Ivan’s death reveal to the villagers?', choices:['A) That he was weak','B) The danger of the cemetery','C) The power of fear and mystery','D) That the lieutenant was cruel'] },
+						{ q: '15. How did the villagers react to Ivan’s challenge?', choices:['A) They helped him','B) They mocked and cheered him','C) They stopped him','D) They were afraid too'] }
+					],
+					key: []
+				},
+				'4': {
+					title: 'Harrison Bergeron',
+					questions: [
+						{ q: '1. What year does the story take place?', choices:['A) 2021','B) 2081','C) 2121','D) 2001'] },
+						{ q: '2. Why is everyone “equal” in the story?', choices:['A) They all have the same jobs','B) Because of amendments to the Constitution and government control','C) Everyone receives the same education','D) Society agreed to be equal voluntarily'] },
+						{ q: '3. What is the purpose of George Bergeron’s mental handicap radio?', choices:['A) To play music','B) To alert him to danger','C) To prevent him from thinking too deeply','D) To help him sleep'] },
+						{ q: '4. How does Hazel’s intelligence compare to others?', choices:['A) Above average','B) Below average','C) Perfectly average','D) Extraordinary'] },
+						{ q: '5. How old is Harrison Bergeron?', choices:['A) 12','B) 14','C) 16','D) 18'] },
+						{ q: '6. What is Harrison’s physical appearance described as?', choices:['A) Weak and frail','B) Ordinary in height and strength','C) Seven feet tall and extremely strong','D) Small but intelligent'] },
+						{ q: '7. What does Harrison do when he appears on television?', choices:['A) Sits quietly','B) Demands people obey him and removes his handicaps','C) Escapes without notice','D) Reports the news'] },
+						{ q: '8. Who is Diana Moon Glampers?', choices:['A) Harrison’s teacher','B) The Handicapper General','C) George’s coworker','D) A ballerina'] },
+						{ q: '9. What happens to Harrison and the ballerina at the end of the story?', choices:['A) They escape successfully','B) They are captured and jailed again','C) They are killed by Diana Moon Glampers','D) They negotiate freedom for all'] },
+						{ q: '10. How are the ballerinas handicapped?', choices:['A) With heavy weights and masks','B) By being made to dance slower','C) They are not handicapped','D) They must dance barefoot only'] },
+						{ q: '11. What does George say would happen if people tried to cheat on the law?', choices:['A) Society would fall apart','B) They would be celebrated','C) Nothing would happen','D) The government would ignore it'] },
+						{ q: '12. How does the story portray television?', choices:['A) As a harmless distraction','B) As a tool for government propaganda','C) As purely educational','D) As entertaining and accurate'] },
+						{ q: '13. How does Hazel react to Harrison’s death?', choices:['A) She cries uncontrollably','B) She is enraged and protests','C) She forgets and moves on quickly','D) She reports it to authorities'] },
+						{ q: '14. What is the main theme of the story?', choices:['A) Importance of technology','B) The dangers of enforced equality','C) Love conquers all','D) Government efficiency'] },
+						{ q: '15. Why is George constantly disturbed during the story?', choices:['A) He’s tired from work','B) His mental handicap radio interrupts his thoughts every 20 seconds','C) He worries about Harrison’s jail','D) He is afraid of the ballerinas'] }
+					],
+					key: []
+				},
+				'5': {
+					title: 'Identities',
+					questions: [
+						{ q: '1. What draws the man out of his study on a Saturday?', choices:['A. A phone call from a friend','B. The smell of burning leaves','C. An urgent errand','D. A letter in the mailbox'] },
+						{ q: '2. What memories are triggered by the smell of burning leaves?', choices:['A. Summer vacations at the beach','B. Childhood car rides and neighborhood streets','C. Trips to the city','D. School days'] },
+						{ q: '3. How does the man feel about the symmetry of the suburban houses?', choices:['A. Comforted','B. Uneasy','C. Excited','D. Indifferent'] },
+						{ q: '4. What is unusual about the houses he observes?', choices:['A. They are all painted blue','B. They are squat and partially sunken','C. They are all surrounded by water','D. They are abandoned'] },
+						{ q: '5. How does he navigate the streets?', choices:['A. Following a map','B. Driving cautiously and aimlessly','C. On foot at a brisk pace','D. Riding a bicycle'] },
+						{ q: '6. What is the man worried about as he drives?', choices:['A. Running out of gas','B. Being accosted by local youths','C. Getting lost','D. Parking fines'] },
+						{ q: '7. What precautions does he take against potential danger?', choices:['A. He carries a stick','B. He prepares excuses and shows money','C. He hides in alleyways','D. He calls the police beforehand'] },
+						{ q: '8. Who are the young people he observes along the way?', choices:['A. Schoolchildren walking home','B. Gangs of young men and a girl','C. Elderly neighbors in their yards','D. Tourists'] },
+						{ q: '9. How does the man dress for his outing?', choices:['A. In a suit and tie','B. In pajamas','C. In blue jeans with a jacket, day-old beard','D. In casual shorts and a T-shirt'] },
+						{ q: '10. What type of car does the man drive?', choices:['A. A red sports car','B. A grey Mercedes Benz','C. A family minivan','D. A pickup truck'] },
+						{ q: '11. Why does the man feel uneasy about the neighborhood?', choices:['A. It is too dark and deserted','B. He is unfamiliar with the streets','C. The area seems unpredictable despite being orderly','D. The street lights are broken'] },
+						{ q: '12. What does the man instinctively do when the police officer confronts him?', choices:['A. Runs away','B. Reaches for his wallet to show identification','C. Shouts for help','D. Hides in the car'] },
+						{ q: '13. How does the story explore the theme of identity?', choices:['A. By showing his reflection in mirrors','B. By illustrating how his appearance and behavior are judged','C. By showing his job at work','D. By describing his family life'] },
+						{ q: '14. What role do small imperfections in the neighborhood play in the story?', choices:['A. They amuse the man','B. They create a sense of disorder and unease','C. They are irrelevant','D. They indicate danger'] },
+						{ q: '15. What is the overall tone of the story?', choices:['A. Humorous and light-hearted','B. Tense, reflective, and suspenseful','C. Romantic and poetic','D. Aggressive and angry'] }
+					],
+					key: []
+				},
+				'6': {
+					title: 'Important Things',
+					questions: [
+						{ q: '1. Who are the main characters in the story?', choices:['A. A teacher and students','B. A parent and children','C. Two friends','D. Siblings'] },
+						{ q: '2. What do the children demand from the parent?', choices:['A. To buy them a gift','B. To tell them The Important Things','C. To go on a trip','D. To teach them how to cook'] },
+						{ q: '3. Why had the parent delayed telling the children?', choices:['A. The parent forgot','B. The children were too young','C. The parent was too busy','D. The children were not listening'] },
+						{ q: '4. How do the children react when they finally hear the explanations?', choices:['A. They are satisfied','B. They laugh at the parent','C. They challenge and question the parent','D. They leave the room'] },
+						{ q: '5. What kind of lessons does the parent try to teach?', choices:['A. Geography and history','B. Life, morality, good and evil','C. Math and science','D. Sports and games'] },
+						{ q: '6. How do the children respond to advice about truth and behavior?', choices:['A. They ignore it','B. They agree completely','C. They say the parent is crazy','D. They cry'] },
+						{ q: '7. What story does the parent tell about a soldier?', choices:['A. A soldier who won a battle','B. A soldier whose lost arm grew back','C. A soldier who became king','D. A soldier who ran away'] },
+						{ q: '8. How does the parent describe the world’s balance of good and evil?', choices:['A. Evil is stronger than good','B. Good exists without evil','C. Evil allows the satisfaction of choosing good','D. Good is easier to find than evil'] },
+						{ q: '9. What is the parent’s ultimate truth revealed to the children?', choices:['A. Life is unfair','B. Everyone will die someday','C. They will always be happy','D. There is no evil in the world'] },
+						{ q: '10. How do the children react to the truth about death?', choices:['A. They are shocked','B. They already knew','C. They cry loudly','D. They faint'] },
+						{ q: '11. What food does the parent offer to make the children happy?', choices:['A. Chocolate ice cream','B. Fudge cake with chocolate frosting','C. Cookies','D. Bread and butter'] },
+						{ q: '12. What is implied about the children’s maturity?', choices:['A. They are still little','B. They have grown and are demanding','C. They are not very smart','D. They cannot understand anything'] },
+						{ q: '13. How does the story end regarding the promise?', choices:['A. The promise is fulfilled easily','B. The children force the parent to reveal the truth','C. The parent escapes','D. The children forget the promise'] },
+						{ q: '14. What theme is most evident in the story?', choices:['A. Adventure','B. Communication and truth','C. Fantasy and magic','D. Friendship'] },
+						{ q: '15. What feeling does the parent experience throughout the story?', choices:['A. Confidence','B. Helplessness and sorrow','C. Anger','D. Joy'] }
+					],
+					key: []
+				},
+				'7': {
+					title: 'Isaac Asimov\'s (adapted)',
+					questions: [
+						{ q: '1. Who are the main characters in the story?', choices:['A. Margie and her father','B. Margie and Tommy','C. Tommy and his grandfather','D. Margie and her mother'] },
+						{ q: '2. What is unusual about Margie’s school?', choices:['A. It has no books','B. It is taught by a mechanical teacher at home','C. It is very far away','D. It has no lessons'] },
+						{ q: '3. How does learning happen in Margie’s time?', choices:['A. Children go to large schools','B. Children learn from books','C. Lessons are shown on a screen and tailored to each student','D. Teachers visit the children’s homes'] },
+						{ q: '4. What does Margie find in her attic?', choices:['A. A mechanical teacher','B. A very old book about school','C. A toy','D. A photograph'] },
+						{ q: '5. How does Margie react to the old book?', choices:['A. She is angry','B. She is curious and amused','C. She ignores it','D. She is afraid'] },
+						{ q: '6. What does Tommy explain about old schools?', choices:['A. They had mechanical teachers','B. Children were taught at home','C. Children went to school together in buildings and had human teachers','D. Schools were online'] },
+						{ q: '7. How were lessons given in the old schools?', choices:['A. By mechanical teachers','B. By human teachers to many students at once','C. Through screens at home','D. Using telepathy'] },
+						{ q: '8. How did children in the old schools interact?', choices:['A. They never talked to each other','B. They helped each other and played together in schoolyards','C. They only communicated through machines','D. They wrote letters'] },
+						{ q: '9. What subject is Margie learning from her mechanical teacher in the story?', choices:['A. History','B. Geography','C. Arithmetic','D. Literature'] },
+						{ q: '10. How does Margie feel about her own lessons?', choices:['A. She enjoys them','B. She finds them boring and mechanical','C. She finds them exciting','D. She refuses to learn'] },
+						{ q: '11. What aspect of old schools fascinates Margie the most?', choices:['A. The large buildings','B. Learning together with other children and having a human teacher','C. The number of subjects taught','D. The uniforms children wore'] },
+						{ q: '12. Why does Margie compare the old school to her current learning?', choices:['A. She wants to be a teacher','B. She is curious about human interaction in education','C. She dislikes technology','D. She wants to read more books'] },
+						{ q: '13. How does the mechanical teacher correct Margie’s work?', choices:['A. It calls her parents','B. It calculates her marks automatically','C. It ignores mistakes','D. It asks Tommy for help'] },
+						{ q: '14. What does Margie imagine about the old schools?', choices:['A. That they were boring','B. That children loved going there and learning together','C. That they were easier than mechanical school','D. That they were very dangerous'] },
+						{ q: '15. What is the main theme of the story?', choices:['A. Technology makes learning more fun','B. Human interaction and shared experiences in school can be enjoyable and memorable','C. Schools should be abolished','D. Learning is unnecessary'] }
+					],
+					key: []
+				},
+				'8': {
+					title: 'Joy',
+					questions: [
+						{ q: '1. What time does Mitya arrive at his parents’ flat?', choices:['A. 10:00 PM','B. 11:00 PM','C. 12:00 AM','D. 1:00 AM'] },
+						{ q: '2. How does Mitya appear when he enters the flat?', choices:['A. Calm and tired','B. Excited with ruffled hair','C. Sad and worried','D. Angry and impatient'] },
+						{ q: '3. Who is finishing a novel when Mitya arrives?', choices:['A. His mother','B. His sister','C. His father','D. His schoolboy brothers'] },
+						{ q: '4. What news excites Mitya so much?', choices:['A. He passed his exams','B. His name is published in the paper','C. He received a promotion','D. He inherited money'] },
+						{ q: '5. How do Mitya’s parents react to his excitement?', choices:['A. They ignore him','B. They are amazed and confused','C. They scold him','D. They laugh'] },
+						{ q: '6. What is Mitya holding that he wants everyone to see?', choices:['A. A medal','B. A letter','C. A newspaper','D. A book'] },
+						{ q: '7. Who did Mitya want to show the newspaper to after his parents?', choices:['A. The neighbors','B. The Makarovs and Ivanitskys','C. His school friends','D. The police'] },
+						{ q: '8. What does the newspaper report about Kuldarov?', choices:['A. He won a prize','B. He got into a fight','C. He was accidentally run over but unharmed','D. He moved to a new city'] },
+						{ q: '9. How does Mitya react after reading the newspaper?', choices:['A. He cries','B. He laughs','C. He runs outside joyfully','D. He goes back to bed'] },
+						{ q: '10. How do Mitya’s brothers react to the news?', choices:['A. They stay asleep','B. They jump out of bed','C. They laugh at him','D. They ignore him'] },
+						{ q: '11. What is Mitya’s occupation?', choices:['A. Teacher','B. Clerk at registration office','C. Merchant','D. Student'] },
+						{ q: '12. How does Mitya describe the fame of his name being published?', choices:['A. As frightening','B. As exciting and amazing','C. As unimportant','D. As confusing'] },
+						{ q: '13. What do Mitya’s parents do when they first see him?', choices:['A. Ask where he has been','B. Go back to sleep','C. Scold him for being late','D. Give him a gift'] },
+						{ q: '14. What physical detail is mentioned about Mitya’s cap?', choices:['A. It has a feather','B. It has a cockade','C. It is red','D. It is oversized'] },
+						{ q: '15. What is Mitya’s main emotion throughout the story?', choices:['A. Fear','B. Sadness','C. Joy and excitement','D. Anger'] }
+					],
+					key: []
+				},
+				'9': {
+					title: 'Lather and Nothing Else',
+					questions: [
+						{ q: '1. What was the narrator doing when Captain Torres entered the shop?', choices:['A) Cleaning the shop','B) Stropping his best razor','C) Cutting another customer’s hair','D) Counting money'] },
+						{ q: '2. How did the narrator react when he recognized Torres?', choices:['A) He welcomed him warmly','B) He started to shake nervously','C) He immediately attacked him','D) He ignored him'] },
+						{ q: '3. What did Torres want when he came into the shop?', choices:['A) A haircut','B) A shave','C) Directions to the school','D) To make a deal'] },
+						{ q: '4. How long had Torres’ beard been growing?', choices:['A) One day','B) Two days','C) Four days','D) A week'] },
+						{ q: '5. What does the narrator reveal about his secret identity?', choices:['A) He is a loyal soldier','B) He is a revolutionary','C) He is a double agent','D) He is Torres’ cousin'] },
+						{ q: '6. Why does the narrator feel conflicted about killing Torres?', choices:['A) He is too scared to act','B) He is loyal to Torres','C) He does not want to stain his hands with blood','D) He does not have a weapon'] },
+						{ q: '7. How does the narrator describe his skill as a barber?', choices:['A) Mediocre and careless','B) Careful and conscientious','C) Quick but rough','D) Amateurish'] },
+						{ q: '8. What is the tone of the story during the shaving scene?', choices:['A) Calm and humorous','B) Tense and suspenseful','C) Romantic and lighthearted','D) Sad and reflective'] },
+						{ q: '9. What is Torres planning that worries the narrator?', choices:['A) A holiday celebration','B) A raid on rebels','C) A town meeting','D) Selling weapons'] },
+						{ q: '10. How does the narrator handle the shave?', choices:['A) He tries to harm Torres secretly','B) He shaves him carefully and professionally','C) He refuses to shave him','D) He pretends to shave but does nothing'] },
+						{ q: '11. What does Torres say on the threshold before leaving?', choices:['A) “I know you want to kill me, but you won’t.”','B) “I will return soon.”','C) “Thank you for your loyalty.”','D) “Be careful, barber.”'] },
+						{ q: '12. Which of these best describes the narrator’s inner thoughts?', choices:['A) Calm and focused','B) Confused and scared','C) Angry and vengeful','D) Excited and cheerful'] },
+						{ q: '13. Why does the narrator reflect on the “sea of blood”?', choices:['A) He imagines what might happen if he killed Torres','B) He saw a previous massacre','C) He read about it in a book','D) He is fantasizing about a dream'] },
+						{ q: '14. How does the narrator feel about Torres’ face after shaving him?', choices:['A) It looks older','B) It looks rejuvenated and smooth','C) It looks scarred','D) It looks strange and unrecognizable'] },
+						{ q: '15. What does the story suggest about the theme of duty?', choices:['A) People should always obey authority','B) Personal skill can outweigh moral choices','C) Each person has a role to play in life','D) Duty is meaningless in dangerous times'] }
+					],
+					key: []
+				},
+				'10': {
+					title: 'One Of These Days',
+					questions: [
+						{ q: '1. What is Aurelio Escovar’s profession?', choices:['A) Teacher','B) Dentist','C) Mayor','D) Carpenter'] },
+						{ q: '2. At what time does Aurelio open his office?', choices:['A) 8 a.m.','B) 6 a.m.','C) 7 a.m.','D) 9 a.m.'] },
+						{ q: '3. How does Aurelio appear physically?', choices:['A) Short and stout','B) Erect and skinny','C) Tall and muscular','D) Slouched and weak'] },
+						{ q: '4. What is unusual about Aurelio’s behavior while working?', choices:['A) He talks constantly','B) He works without thinking but steadily','C) He moves very slowly','D) He sleeps in his office'] },
+						{ q: '5. Who interrupts Aurelio while he is working?', choices:['A) His wife','B) His son','C) The Mayor','D) A patient'] },
+						{ q: '6. Why does the Mayor want to see Aurelio?', choices:['A) To discuss politics','B) To have a tooth pulled','C) To borrow money','D) To complain about the office'] },
+						{ q: '7. How does Aurelio respond when threatened by the Mayor?', choices:['A) He calls the police','B) He hides','C) He tells the Mayor to come and shoot him','D) He pulls the tooth immediately'] },
+						{ q: '8. What tool does Aurelio use to polish the false teeth?', choices:['A) A brush','B) A drill','C) A hammer','D) Tweezers'] },
+						{ q: '9. What kind of tooth is the Mayor’s problem?', choices:['A) A molar','B) A wisdom tooth','C) An incisor','D) A canine'] },
+						{ q: '10. How does Aurelio pull the tooth?', choices:['A) Slowly and carefully, without anesthesia','B) Quickly with anesthesia','C) He refuses to pull it','D) He uses a hammer'] },
+						{ q: '11. How does the Mayor feel during the extraction?', choices:['A) Calm and relaxed','B) Trembling and in pain','C) Angry and shouting','D) Laughing'] },
+						{ q: '12. Why does Aurelio say, “Now you’ll pay for our twenty dead men”?', choices:['A) He is joking','B) He is seeking revenge','C) He is telling a story','D) He is warning the Mayor'] },
+						{ q: '13. What does Aurelio give the Mayor to dry his tears?', choices:['A) A handkerchief from his pocket','B) A clean cloth','C) A towel from the wall','D) Nothing'] },
+						{ q: '14. How does the Mayor leave the office?', choices:['A) Running angrily','B) Slowly and carefully','C) Stretching his legs, without buttoning his tunic','D) Carried out by guards'] },
+						{ q: '15. Who pays for the dental service in the end?', choices:['A) The Mayor personally','B) The town','C) Aurelio forgives the payment','D) The story doesn’t specify'] }
+					],
+					key: []
+				}
+			}
+		};
+
+		// Select by level then story; fall back within level 5
+		const levelData = questionsByLevel[level] || questionsByLevel['5'];
+		const storyData = (levelData && levelData[story]) || (levelData && levelData['1']);
+		const questions = storyData.questions;
+		const header = document.getElementById('questionsHeader');
+		if (header) header.textContent = storyData.title;
+		document.title = `Questions - ${storyData.title}`;
+
+		const container = document.getElementById('questionsContainer');
+
+		function render(){
+			container.innerHTML = '';
+			questions.forEach((item, idx) => {
+				const qDiv = document.createElement('div');
+				qDiv.className = 'question';
+				const h = document.createElement('h2'); h.textContent = item.q;
+				qDiv.appendChild(h);
+				const ul = document.createElement('ul'); ul.className = 'choices';
+				item.choices.forEach((c, ci) => {
+					const li = document.createElement('li');
+					li.className = 'choice';
+					li.setAttribute('role','button');
+					li.setAttribute('tabindex','0');
+					li.dataset.q = idx;
+					li.dataset.choice = ci;
+					const letter = c.trim().charAt(0);
+					const text = c.replace(/^[A-Za-z]+\s*[\)\.\-]?\s*/, '').trim();
+					li.innerHTML = `<span class="letter">${letter}</span><span class="text">${text}</span>`;
+					li.addEventListener('click', onChoice);
+					li.addEventListener('keydown', (e)=>{ if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onChoice.call(li, e); }});
+					ul.appendChild(li);
+				});
+				qDiv.appendChild(ul);
+				container.appendChild(qDiv);
+			});
+
+			const footer = document.createElement('div');
+			footer.className = 'questions-footer';
+			footer.innerHTML = '<button id="submitBtn" class="btn-submit">Submit</button>';
+			container.appendChild(footer);
+		}
+
+		function onChoice(e){
+			const el = (this === undefined || this === window) ? e.currentTarget : this;
+			const q = el.dataset.q;
+			const choices = container.querySelectorAll(`.choice[data-q="${q}"]`);
+			choices.forEach(ch => ch.classList.remove('selected'));
+			el.classList.add('selected');
+		}
+
+		render();
+
+		function attachSubmit(){
+			const submit = document.getElementById('submitBtn');
+			if(!submit) return;
+			submit.addEventListener('click', ()=>{
+				const key = storyData.key || [];
+				const selected = container.querySelectorAll('.choice.selected');
+				const answers = Array(key.length).fill(null);
+				selected.forEach(s => { answers[Number(s.dataset.q)] = Number(s.dataset.choice); });
+				let score = 0;
+				for (let i=0;i<key.length;i++){
+					if (answers[i] !== null && answers[i] === key[i]) score++;
+				}
+
+				container.innerHTML = `
+					<div class="result">
+						<h2>You got ${score}/${key.length}</h2>
+						<p>Well done! Click below to continue.</p>
+						<div class="result-actions">
+							<button id="nextStoryBtn" class="btn-submit">${Number(story) === 25 ? 'Choose Level' : 'Next Story'}</button>
+						</div>
+					</div>
+				`;
+
+				const next = document.getElementById('nextStoryBtn');
+				if (next) {
+					if (Number(story) === 25) {
+						next.addEventListener('click', ()=>{ window.location.href = 'level.html'; });
+					} else {
+						next.addEventListener('click', ()=>{
+							const nextStory = Number(story) + 1;
+							window.location.href = `story.html?level=${level}&story=${nextStory}`;
+						});
+					}
+				}
+			});
+		}
+		attachSubmit();
+	</script>
+</body>
+</html>

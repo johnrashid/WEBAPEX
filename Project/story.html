@@ -9,7 +9,7 @@
 <body>
 
   <!-- Back button (fixed upper-left) -->
-  <button type="button" class="back-btn" aria-label="Go back" onclick="location.href='level.html'">
+  <button type="button" class="back-btn" id="back-btn" aria-label="Go back">
     <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
       <path d="M20 11H7.83l5.58-5.59L12 4 4 12l8 8 1.41-1.41L7.83 13H20v-2z" fill="#fff"/>
     </svg>
@@ -1654,8 +1654,15 @@ Ultimately, the narrative becomes a reflection on the difficulty of telling stor
           let page = 'questions.html';
           if (lv === '2') page = 'questions2.html';
           else if (lv === '3') page = 'questions3.html';
-          const target = `${page}?level=${level}&story=${story}`;
-          window.location.href = target;
+          else if (lv === '4') page = 'questions4.html';
+          else if (lv === '5') page = 'questions5.html';
+
+          // Level 5: send only story to questions5.html as requested
+          if (lv === '5') {
+            window.location.href = `${page}?story=${story}`;
+          } else {
+            window.location.href = `${page}?level=${level}&story=${story}`;
+          }
         });
       }
       // close modal with Escape key
