@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Grumbling — Texts Glossary</title>
+  <link rel="stylesheet" href="textsglossary.css">
+  <!-- Styles for the dictionary entry moved into textsglossary.css -->
+<body>
+
+  <!-- Back button removed: navigation handled via Next/Finish -->
+
+  <main class="canvas" role="main">
+    <article class="entry" id="entry">
+      <div class="word" id="word">Loading…</div>
+      <button id="skipBtn" class="skip-btn" aria-label="Skip this word">Skip</button>
+      
+
+      <!-- Puzzle for the first word (blanks + jumbled tiles) -->
+      <div id="puzzle" class="puzzle" aria-hidden="true" style="display:none">
+        <div id="blanks" class="blanks" aria-hidden="false"></div>
+        <div id="tiles" class="tiles" aria-hidden="false"></div>
+        <div class="hint">Tap letters to fill the blanks. Click a filled box to remove a letter.</div>
+      </div>
+
+      <div class="label">Meaning:</div>
+      <div class="meaning" id="meaning">&nbsp;</div>
+
+      <!-- Examples removed per request -->
+    </article>
+  </main>
+
+  <!-- Next button removed per request -->
+
+  <!-- End of list modal -->
+  <div id="endModal" class="end-modal" aria-hidden="true">
+    <div class="end-modal-content" role="dialog" aria-modal="true" aria-labelledby="endTitle">
+      <h2 id="endTitle">Congratulations!</h2>
+      <p>You reached the end.<br>I hope you learned something from me!</p>
+      <button id="chooseModeBtn" class="choose-btn">Choose Mode</button>
+    </div>
+  </div>
+
+  <!-- Correct-guess modal (shows word, pronunciation, example) -->
+  <div id="correctModal" class="end-modal" aria-hidden="true">
+    <div class="end-modal-content" role="dialog" aria-modal="true" aria-labelledby="correctTitle">
+      <h2 id="correctTitle">Correct!</h2>
+      <p><strong id="correctWord"></strong></p>
+      <p id="correctPronRow" class="correct-pron-row">
+        <span id="correctPron"></span>
+        <button id="correctSpeakerBtn" class="speaker-btn modal-speaker" aria-label="Play pronunciation of the correct word" title="Play pronunciation">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M5 9v6h4l5 5V4L9 9H5z" fill="currentColor"/>
+            <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v8.06c1.48-.74 2.5-2.26 2.5-4.03z" fill="currentColor"/>
+          </svg>
+        </button>
+      </p>
+
+      <p id="correctExample" class="correct-example" aria-live="polite"></p>
+      <div style="margin-top:14px"><button id="correctOkBtn" class="choose-btn">Next</button></div>
+    </div>
+  </div>
+
+  <!-- Skip confirmation modal -->
+  <div id="skipModal" class="end-modal" aria-hidden="true">
+    <div class="end-modal-content skip-modal" role="dialog" aria-modal="true" aria-labelledby="skipTitle">
+      <h2 id="skipTitle">You don't know the answer?</h2>
+      <p>Do you want to skip this word?</p>
+      <div style="margin-top:12px; display:flex; gap:10px; justify-content:center">
+        <button id="skipConfirmBtn" class="choose-btn">Skip</button>
+        <button id="skipCancelBtn" class="choose-btn" style="background:#ccc;color:#111">No</button>
+      </div>
+    </div>
+  </div>
+
+      <!-- Result modal showing final score -->
+      <div id="resultModal" class="end-modal" aria-hidden="true">
+        <div class="end-modal-content" role="dialog" aria-modal="true" aria-labelledby="resultTitle">
+          <h2 id="resultTitle">Congratulations!</h2>
+          <p>You Got <strong id="resultScore">0</strong></p>
+          <p>I hope you learned something from me!</p>
+          <div style="margin-top:12px"><button id="resultChooseBtn" class="choose-btn">Choose Mode</button></div>
+        </div>
+      </div>
+
+  <script>
+    // All glossary entries. Each has: word, pron (phonetic respelling), meaning, example.
+    const entries = [
+      {word: 'Grumbling', pron: '/ˈɡrʌm.bəl.ɪŋ/ (GRUM-buhl-ing)', meaning: 'Making low, complaining sounds because you are annoyed or unhappy. Expressing dissatisfaction in a quiet, muttering way.', example: 'She kept grumbling about the cold weather all morning.'},
+      {word: 'Grazing', pron: '/ˈɡreɪ.zɪŋ/ (GRAY-zing)', meaning: 'For animals: eating grass or plants by nibbling in an open area. For people: eating small amounts of food throughout the day instead of having big meals.', example: 'The sheep were grazing on the green hillside.'},
+      {word: 'Anxious', pron: '/ˈæŋk.ʃəs/ (ANGK-shuhs)', meaning: 'Feeling worried, nervous, or uneasy about something that might happen. Eager and impatient for something (less common).', example: 'He felt anxious about his upcoming exam.'},
+      {word: 'Wisdom', pron: '/ˈwɪz.dəm/ (WIZ-duhm)', meaning: 'The ability to make good decisions because you have experience, knowledge, and good judgment. Understanding what is true, right, or lasting.', example: 'Her wisdom helped the team avoid making a big mistake.'},
+      {word: 'Gratify', pron: '/ˈɡræt.ɪ.faɪ/ (GRAT-uh-fy)', meaning: 'To give someone pleasure or satisfaction. To fulfill a desire or need.', example: 'It gratified her to know that her efforts made a difference.'},
+      {word: 'Eloquence', pron: '/ˈɛl.ə.kwəns/ (EL-uh-kwens)', meaning: 'The skill of speaking or writing clearly, beautifully, and persuasively. Expressing ideas in a powerful and moving way.', example: 'The teacher admired the student’s eloquence during the debate.'},
+      {word: 'Voyage', pron: '/ˈvɔɪ.ɪdʒ/ (VOY-ij)', meaning: 'A long journey from one place to another, especially by sea, air, or space. A long and sometimes difficult trip or experience in life (figurative).', example: 'The explorers began their voyage across the ocean.'},
+      {word: 'Forbid', pron: '/fərˈbɪd/ (fur-BID)', meaning: 'To order someone not to do something. To make something not allowed by rule or law.', example: 'The school forbids students from running in the hallways.'},
+      {word: 'Disobeyed', pron: '/ˌdɪs.əˈbeɪd/ (dis-uh-BAYD)', meaning: 'Did not follow rules, instructions, or commands. Refused to obey.', example: 'She disobeyed the traffic signal and crossed the road.'},
+      {word: 'Glorious', pron: '/ˈɡlɔːr.i.əs/ (GLOR-ee-uhs)', meaning: 'Very beautiful or magnificent. Full of pride, success, or honor. Wonderful or delightful.', example: 'They enjoyed a glorious morning at the beach.'},
+      {word: 'Disguises', pron: '/dɪsˈɡaɪ.zɪz/ (dis-GUY-ziz)', meaning: 'Clothes or items used to hide a person’s identity. Ways of changing appearance to avoid recognition.', example: 'The actors wore disguises for the Halloween play.'},
+      {word: 'Wagon', pron: '/ˈwæɡ.ən/ (WAG-uhn)', meaning: 'A strong, four-wheeled vehicle for carrying goods or people. A small cart children can pull.', example: 'The kids pulled their toys in a red wagon.'},
+      {word: 'Rough', pron: '/rʌf/ (RUFF)', meaning: 'Not smooth; uneven surface. Harsh, difficult, or tough. Violent or not gentle.', example: 'The rough sand scratched his feet.'},
+      {word: 'Plague', pron: '/pleɪɡ/ (PLAYG)', meaning: 'A serious disease that spreads quickly. Something that causes constant trouble or stress. To annoy or bother repeatedly (verb).', example: 'Fear of the plague kept people indoors.'},
+      {word: 'Distinct', pron: '/dɪˈstɪŋkt/ (dis-TINKT)', meaning: 'Clearly different or separate. Easy to see, hear, or recognize. Definite and not vague.', example: 'There was a distinct sound of footsteps behind him.'},
+      {word: 'Shallow', pron: '/ˈʃæl.oʊ/ (SHAL-oh)', meaning: 'Not deep. Lacking deep thought or feeling; superficial.', example: 'The children played in the shallow water.'},
+      {word: 'Despair', pron: '/dɪˈspɛər/ (dis-PAIR)', meaning: 'A complete loss of hope. A feeling of great sadness and helplessness.', example: 'He cried out in despair when he lost the race.'},
+      {word: 'Ingenuity', pron: '/ˌɪn.dʒəˈnjuː.ə.ti/ (in-juh-NOO-i-tee)', meaning: 'Cleverness and creativity in solving problems. The ability to think in an original way.', example: 'Her ingenuity helped the team finish the project.'},
+      {word: 'Sailing', pron: '/ˈseɪ.lɪŋ/ (SAY-ling)', meaning: 'Traveling by boat using wind power. The sport or activity of controlling a sailboat.', example: 'We spent the afternoon sailing on the lake.'},
+      {word: 'Emphasize', pron: '/ˈɛmfəˌsaɪz/ (EM-fuh-size)', meaning: 'To stress or highlight something important. To give special attention to something.', example: 'The teacher emphasized the need to study daily.'},
+      {word: 'Vision', pron: '/ˈvɪʒ.ən/ (VIZH-un)', meaning: 'The ability to see. A dream or idea of the future. Something imagined or seen in the mind.', example: 'Her vision of a peaceful community inspired everyone.'},
+      {word: 'Boastful', pron: '/ˈboʊst.fəl/ (BOAST-full)', meaning: 'Full of bragging; showing too much pride. Talking proudly about oneself.', example: 'He became boastful after winning the game.'},
+      {word: 'Steadily', pron: '/ˈstɛd.ɪ.li/ (STED-uh-lee)', meaning: 'In a consistent or regular way. Without stopping or changing suddenly. Firmly or with balance.', example: 'The rain fell steadily throughout the evening.'},
+      {word: 'Monarchy', pron: '/ˈmɒn.ə.ki/ (MON-uh-kee)', meaning: 'A system of government ruled by a king, queen, or emperor. A country governed by a royal family. Rule passed down through family lines.', example: 'The small country remained a monarchy led by a beloved queen.'},
+      {word: 'Scaffold', pron: '/ˈskæf.əld/ (SKAF-uhld)', meaning: 'A temporary platform workers stand on during construction or repair. A platform used in the past for executions.', example: 'The painters climbed the scaffold to reach the roof.'},
+      {word: 'Eminence', pron: '/ˈɛm.ɪ.nəns/ (EM-ih-nens)', meaning: 'High rank, importance, or fame. A raised or high place.', example: 'The professor earned great eminence in the field of science.'},
+      {word: 'Indictment', pron: '/ɪnˈdaɪt.mənt/ (in-DY-t-muhnt)', meaning: 'A formal accusation that someone has committed a crime. Proof or sign that something is wrong (figurative).', example: 'The indictment was announced after months of investigation.'},
+      {word: 'Conviction', pron: '/kənˈvɪk.ʃən/ (kun-VIK-shun)', meaning: 'A legal decision declaring someone guilty of a crime. A strong belief or firm opinion.', example: 'She spoke with conviction during the debate.'},
+      {word: 'Strenuous', pron: '/ˈstrɛn.ju.əs/ (STREN-yoo-uhs)', meaning: 'Requiring a lot of effort, energy, or strength. Very active or intense.', example: 'Hiking the mountain trail was a strenuous task.'},
+      {word: 'Grueling', pron: '/ˈɡruː.əl.ɪŋ/ (GROO-uh-ling)', meaning: 'Extremely tiring and demanding. Requiring long, hard effort.', example: 'The army training was grueling but rewarding.'},
+      {word: 'Vowing', pron: '/ˈvaʊ.ɪŋ/ (VOW-ing)', meaning: 'Making a serious or strong promise. Committing firmly to do something.', example: 'He walked away vowing to change his life.'},
+      {word: 'Uncertainly', pron: '/ʌnˈsɜːr.tən.li/ (un-SUR-tuhn-lee)', meaning: 'In a way that shows doubt or hesitation. Without confidence or clarity.', example: 'She stepped uncertainly onto the icy walkway.'},
+      {word: 'Executed', pron: '/ˈɛk.sɪ.kjuː.tɪd/ (EK-si-kyoo-tid)', meaning: 'To carry out or complete a plan, order, or action. To kill someone legally as punishment.', example: 'The artist executed each stroke with precision.'},
+      {word: 'Wandering', pron: '/ˈwɒn.dər.ɪŋ/ (WON-der-ing)', meaning: 'Moving around without a fixed direction or purpose. Drifting in thought or attention.', example: 'We spent hours wandering through the old town.'},
+      {word: 'Confronted', pron: '/kənˈfrʌn.tɪd/ (kun-FRUN-tid)', meaning: 'Faced a difficult situation or challenge. Met someone directly, often in conflict.', example: 'He confronted his fears and spoke in front of the class.'},
+      {word: 'Ridiculous', pron: '/rɪˈdɪk.jʊ.ləs/ (ri-DIK-yoo-luhs)', meaning: 'Very silly, unreasonable, or absurd. Laughably foolish.', example: 'The rumor was so ridiculous that no one believed it.'},
+      {word: 'Tugging', pron: '/ˈtʌɡ.ɪŋ/ (TUG-ing)', meaning: 'Pulling something with force or repeated small jerks. Trying to move something by strong or persistent pulling.', example: 'The child kept tugging on her mother\'s sleeve.'},
+      {word: 'Excessive', pron: '/ɪkˈsɛs.ɪv/ (ik-SES-iv)', meaning: 'More than necessary; too much.', example: 'The noise outside was excessive for a quiet neighborhood.'},
+      {word: 'Conventional', pron: '/kənˈvɛn.ʃən.əl/ (kun-VEN-shuh-nuhl)', meaning: 'Traditional; following accepted customs.', example: 'She prefers a conventional style of clothing.'},
+      {word: 'Gunwales', pron: '/ˈɡʌn.wəlz/ (GUN-wuhlz)', meaning: 'The top edges of the sides of a boat.', example: 'Waves splashed over the gunwales as the boat rocked.'},
+      {word: 'Indistinguishable', pron: '/ˌɪn.dɪˈstɪŋ.ɡwɪ.ʃə.bəl/ (in-dis-TING-gwi-shuh-buhl)', meaning: 'Too similar to tell apart.', example: 'The two paintings were almost indistinguishable.'},
+      {word: 'Creek', pron: '/kriːk/ (KREEK)', meaning: 'A small stream of water.', example: 'They followed the creek through the woods.'},
+      {word: 'Wealthy', pron: '/ˈwɛl.θi/ (WEL-thee)', meaning: 'Very rich; having a lot of money or resources.', example: 'A wealthy family donated funds to the school.'},
+      {word: 'Etched', pron: '/ɛtʃt/ (ETCHT)', meaning: 'Carved or engraved; strongly fixed in memory.', example: 'Their names were etched into the stone.'},
+      {word: 'Deliberately', pron: '/dɪˈlɪb.ər.ət.li/ (di-LIB-er-it-lee)', meaning: 'On purpose; intentionally.', example: 'He deliberately took a longer route to avoid traffic.'},
+      {word: 'Peculiar', pron: '/pɪˈkjuː.li.ər/ (pi-KYOO-lee-er)', meaning: 'Strange or unusual.', example: 'There was a peculiar noise coming from the attic.'},
+      {word: 'Enraged', pron: '/ɪnˈreɪdʒd/ (in-RAYJD)', meaning: 'Extremely angry.', example: 'She was enraged when she discovered the lie.'},
+      {word: 'Plucked', pron: '/plʌkt/ (PLUCT)', meaning: 'Pulled off quickly; picked.', example: 'He plucked a feather from the ground.'},
+      {word: 'Quarreling', pron: '/ˈkwɒr.əl.ɪŋ/ (KWOR-uh-ling)', meaning: 'Arguing or fighting verbally.', example: 'The siblings were quarreling over the remote control.'},
+      {word: 'Cunningly', pron: '/ˈkʌn.ɪŋ.li/ (KUN-ing-lee)', meaning: 'Cleverly or deceitfully.', example: 'The mouse cunningly avoided the trap.'}
+    ];
+
+    // (Examples are preserved in the data so we can show them in the correct-word modal.)
+
+    // Current index (start at 0 = Grumbling)
+    let idx = 0;
+    // track correct guesses
+    let score = 0;
+
+    const wordEl = document.getElementById('word');
+    const meaningEl = document.getElementById('meaning');
+    let utterance = null;
+    const endModal = document.getElementById('endModal');
+    const chooseModeBtn = document.getElementById('chooseModeBtn');
+
+    function render(i){
+      const e = entries[i];
+      wordEl.textContent = e.word;
+      // no in-entry speaker: pronunciation is available in the correct-answer modal
+      meaningEl.textContent = e.meaning;
+      // Show the puzzle for every entry so the user guesses each word.
+      // Hide the large static word (we reveal it after a correct guess in the modal).
+      const puzzleEl = document.getElementById('puzzle');
+      if (puzzleEl) puzzleEl.style.display = 'flex';
+      if (wordEl) wordEl.style.display = 'none';
+      buildPuzzle(e.word);
+      // update document title
+      document.title = e.word + ' — Texts Glossary';
+    }
+
+    // Text-to-speech playback for the word (uses SpeechSynthesis)
+    function speakWord(text){
+      if (!window.speechSynthesis) {
+        alert('Speech synthesis not supported in this browser.');
+        return;
+      }
+      // cancel any existing utterance
+      window.speechSynthesis.cancel();
+      utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = 0.95;
+      utterance.pitch = 1.0;
+      window.speechSynthesis.speak(utterance);
+    }
+
+    // in-entry speaker removed; use modal speaker for playback when needed
+
+    // Next button removed; navigation handled elsewhere if needed
+
+    function showEndModal(){
+      endModal.style.display = 'flex';
+      endModal.setAttribute('aria-hidden','false');
+      chooseModeBtn.focus();
+    }
+
+    chooseModeBtn.addEventListener('click', ()=>{
+      // Go to main index (Choose Mode)
+      window.location.href = 'index.html';
+    });
+
+    // Correct-modal elements
+    const correctModal = document.getElementById('correctModal');
+    const correctWordEl = document.getElementById('correctWord');
+    const correctPronEl = document.getElementById('correctPron');
+    const correctExampleEl = document.getElementById('correctExample');
+    const correctOkBtn = document.getElementById('correctOkBtn');
+    const correctSpeakerBtn = document.getElementById('correctSpeakerBtn');
+    // Skip modal elements
+    const skipBtn = document.getElementById('skipBtn');
+    const skipModal = document.getElementById('skipModal');
+    const skipConfirmBtn = document.getElementById('skipConfirmBtn');
+    const skipCancelBtn = document.getElementById('skipCancelBtn');
+
+    // Puzzle logic for the first word
+    const puzzleEl = document.getElementById('puzzle');
+    const blanksEl = document.getElementById('blanks');
+    const tilesEl = document.getElementById('tiles');
+    let puzzleState = null;
+
+    function shuffle(arr){
+      for(let i=arr.length-1;i>0;i--){
+        const j = Math.floor(Math.random()*(i+1));
+        [arr[i],arr[j]] = [arr[j],arr[i]];
+      }
+      return arr;
+    }
+
+    function buildPuzzle(word){
+      if (!blanksEl || !tilesEl) return;
+      // target: letters only (keep case for display but compare uppercase)
+      const target = word.replace(/[^A-Za-z]/g, '');
+      const letters = target.split('');
+      puzzleState = { target: target, letters: letters, filled: Array(letters.length).fill(''), attempts: 0, hinted: false };
+
+      const hintEl = puzzleEl ? puzzleEl.querySelector('.hint') : null;
+
+      blanksEl.innerHTML = '';
+      tilesEl.innerHTML = '';
+
+      // create blanks
+        letters.forEach((ch, idx)=>{
+        const b = document.createElement('div');
+        b.className = 'blank';
+        b.dataset.index = idx;
+        b.tabIndex = 0;
+          b.addEventListener('click', ()=>{
+          // remove letter from this blank (if any) and restore the tile
+          const tileId = b.dataset.tileId;
+          if (tileId){
+            const tile = tilesEl.querySelector('[data-tid="'+tileId+'"]');
+            if (tile){ tile.classList.remove('disabled'); tile.removeAttribute('data-used'); }
+            b.textContent = '';
+            b.classList.remove('filled');
+              delete b.dataset.tileId;
+              puzzleState.filled[parseInt(b.dataset.index,10)] = '';
+            // reset incorrect visual state and attempts when user changes a blank
+            const allBlanks = blanksEl.querySelectorAll('.blank');
+            allBlanks.forEach(x=>x.classList.remove('incorrect'));
+            puzzleState.attempts = 0;
+            if (hintEl && puzzleState.hinted) { hintEl.textContent = 'Tap letters to fill the blanks. Click a filled box to remove a letter.'; }
+          }
+        });
+        b.addEventListener('keydown', (ev)=>{
+          if (ev.key === 'Enter' || ev.key === 'Backspace' || ev.key === 'Delete') b.click();
+        });
+        blanksEl.appendChild(b);
+      });
+
+      // create shuffled tiles (use index map to preserve duplicates)
+      const order = shuffle(letters.map((_,i)=>i));
+      order.forEach((origIndex, tIdx)=>{
+        const ch = letters[origIndex];
+        const tile = document.createElement('button');
+        tile.type = 'button';
+        tile.className = 'tile';
+        // show choices in uppercase
+        tile.textContent = ch.toUpperCase();
+        tile.dataset.tid = 't' + tIdx;
+        tile.dataset.letter = ch.toUpperCase();
+        tile.addEventListener('click', ()=>{
+          if (tile.classList.contains('disabled')) return;
+          // find first empty blank
+          const blanks = blanksEl.querySelectorAll('.blank');
+          let targetIdx = -1;
+          for(let i=0;i<blanks.length;i++){
+            if (!blanks[i].dataset.tileId){ targetIdx = i; break; }
+          }
+          if (targetIdx === -1) return;
+          // fill
+          const b = blanks[targetIdx];
+          b.textContent = tile.dataset.letter;
+          b.dataset.tileId = tile.dataset.tid;
+          b.classList.add('filled');
+          tile.classList.add('disabled');
+          tile.dataset.used = '1';
+          puzzleState.filled[targetIdx] = tile.dataset.letter;
+
+          // remove incorrect styling while user adjusts
+          const allBlanks = blanksEl.querySelectorAll('.blank');
+          allBlanks.forEach(x=>x.classList.remove('incorrect'));
+          // reset attempts while user is actively changing letters
+          puzzleState.attempts = Math.max(0, puzzleState.attempts-0);
+
+          // check complete
+          if (puzzleState.filled.every(x=>x !== '')){
+            const guess = puzzleState.filled.join('');
+            if (guess.toUpperCase() === puzzleState.target.toUpperCase()){
+              // increment score for a correct guess
+              score = (score || 0) + 1;
+              // correct: mark blanks as correct (green) and disable tiles
+              blanks.forEach(x=>{ x.classList.remove('incorrect'); x.classList.add('correct'); });
+              tilesEl.querySelectorAll('.tile').forEach(t=>t.classList.add('disabled'));
+              // show modal with word, pronunciation and example (if present)
+              const entry = entries[idx] || {};
+              if (correctWordEl) correctWordEl.textContent = entry.word || '';
+              if (correctPronEl) correctPronEl.textContent = entry.pron || '';
+              // show example under pronunciation; fall back to meaning when example is missing
+              if (correctExampleEl) correctExampleEl.textContent = entry.example || entry.meaning || '';
+              // if this is the last entry, change the Next button to Result
+              if (correctOkBtn) correctOkBtn.textContent = (idx === entries.length - 1) ? 'Result' : 'Next';
+              if (correctModal){ correctModal.style.display = 'flex'; correctModal.setAttribute('aria-hidden','false'); correctOkBtn.focus(); }
+            } else {
+              // incorrect: mark blanks red so user knows the guess is wrong
+              blanks.forEach(x=>x.classList.add('incorrect'));
+              // increment attempts and trigger shake animation
+              puzzleState.attempts = (puzzleState.attempts || 0) + 1;
+              if (blanksEl){
+                blanksEl.classList.add('shake');
+              }
+              // After the shake finishes, clear the blanks and re-enable all tiles so letters are clickable again.
+              setTimeout(()=>{
+                if (blanksEl) blanksEl.classList.remove('shake');
+                // clear incorrect visual state and blanks content
+                const blankNodes = Array.from(blanks);
+                blankNodes.forEach(bn=>{
+                  bn.classList.remove('incorrect');
+                  bn.classList.remove('filled');
+                  bn.textContent = '';
+                  delete bn.dataset.tileId;
+                });
+                // reset filled state
+                puzzleState.filled = Array(puzzleState.letters.length).fill('');
+                // re-enable all tiles
+                const allTiles = tilesEl.querySelectorAll('.tile');
+                allTiles.forEach(t=>{ t.classList.remove('disabled'); t.removeAttribute('data-used'); });
+
+                // after 3 incorrect attempts, reveal a hint (auto-fill one correct letter)
+                if (puzzleState.attempts >= 3 && !puzzleState.hinted){
+                  puzzleState.hinted = true;
+                  if (hintEl) hintEl.textContent = 'Hint: one letter has been revealed for you.';
+                  // reveal first empty correct letter (now blanks are cleared)
+                  const firstEmpty = puzzleState.filled.findIndex(x=>x === '');
+                  if (firstEmpty >= 0){
+                    const letterToReveal = puzzleState.target[firstEmpty];
+                    const tiles = Array.from(tilesEl.querySelectorAll('.tile'));
+                    const tileToUse = tiles.find(t=>t.dataset.letter === letterToReveal.toUpperCase() && !t.classList.contains('disabled')) || tiles.find(t=>t.dataset.letter === letterToReveal.toUpperCase());
+                    if (tileToUse) tileToUse.click();
+                  }
+                }
+              }, 620);
+            }
+          }
+        });
+        tilesEl.appendChild(tile);
+      });
+    }
+
+    // Back button removed from this page (no handler needed)
+
+    // Initialize
+    render(idx);
+
+    // NOTE: The detailed handler for `correctOkBtn` (which handles Next/Result)
+    // is defined later. Do not add a second click listener here to avoid
+    // advancing the index twice (which caused skipping the next word).
+
+    // Skip button opens confirmation modal. If this is the last entry, change
+    // the confirm button to 'Result' so the user can view their final score.
+    if (skipBtn) {
+      skipBtn.addEventListener('click', ()=>{
+        if (!skipModal) return;
+        // adjust the confirm button label depending on whether this is the last entry
+        if (skipConfirmBtn){
+          skipConfirmBtn.textContent = (idx === entries.length - 1) ? 'Result' : 'Skip';
+        }
+        skipModal.style.display = 'flex';
+        skipModal.setAttribute('aria-hidden','false');
+        if (skipConfirmBtn) skipConfirmBtn.focus();
+      });
+    }
+
+    // Cancel skip
+    if (skipCancelBtn) {
+      skipCancelBtn.addEventListener('click', ()=>{
+        if (skipModal){ skipModal.style.display = 'none'; skipModal.setAttribute('aria-hidden','true'); }
+        // return focus to the first blank for continued guessing
+        const firstBlank = blanksEl ? blanksEl.querySelector('.blank') : null;
+        if (firstBlank) firstBlank.focus();
+      });
+    }
+
+    // Confirm skip -> advance to next entry or show final result when at end
+    if (skipConfirmBtn) {
+      skipConfirmBtn.addEventListener('click', ()=>{
+        if (skipModal){ skipModal.style.display = 'none'; skipModal.setAttribute('aria-hidden','true'); }
+        const label = (skipConfirmBtn.textContent || '').trim().toLowerCase();
+        if (label === 'result'){
+          // show result modal with final score
+          if (resultScoreEl) resultScoreEl.textContent = String(score || 0);
+          if (resultModal){ resultModal.style.display = 'flex'; resultModal.setAttribute('aria-hidden','false'); resultChooseBtn.focus(); }
+          return;
+        }
+        // otherwise behave as Skip: advance to next entry
+        if (idx < entries.length - 1){ idx++; render(idx); window.scrollTo({top:0,behavior:'smooth'}); }
+        else { showEndModal(); }
+      });
+    }
+
+    // Result modal elements
+    const resultModal = document.getElementById('resultModal');
+    const resultScoreEl = document.getElementById('resultScore');
+    const resultChooseBtn = document.getElementById('resultChooseBtn');
+
+    // Correct modal OK/Next/Result button handling
+    if (correctOkBtn) {
+      // remove previous handler and set a new one to branch on label
+      correctOkBtn.addEventListener('click', ()=>{
+        const label = (correctOkBtn.textContent || '').trim().toLowerCase();
+        if (label === 'result'){
+          // show result modal with final score
+          if (correctModal){ correctModal.style.display = 'none'; correctModal.setAttribute('aria-hidden','true'); }
+          if (resultScoreEl) resultScoreEl.textContent = String(score || 0);
+          if (resultModal){ resultModal.style.display = 'flex'; resultModal.setAttribute('aria-hidden','false'); resultChooseBtn.focus(); }
+          return;
+        }
+        // otherwise behave as Next: close modal and advance
+        if (correctModal){ correctModal.style.display = 'none'; correctModal.setAttribute('aria-hidden','true'); }
+        if (idx < entries.length - 1){ idx++; render(idx); window.scrollTo({top:0,behavior:'smooth'}); }
+        else { showEndModal(); }
+      });
+    }
+
+    // Choose Mode from result modal -> index.html
+    if (resultChooseBtn){
+      resultChooseBtn.addEventListener('click', ()=>{
+        window.location.href = 'index.html';
+      });
+    }
+
+    // Play pronunciation from the correct-answer modal
+    if (correctSpeakerBtn) {
+      correctSpeakerBtn.addEventListener('click', ()=>{
+        const wordToSpeak = correctWordEl ? correctWordEl.textContent : (entries[idx] && entries[idx].word) || '';
+        if (wordToSpeak) speakWord(wordToSpeak);
+      });
+    }
+
+    // Allow typing letters to pick tiles and Backspace/Delete to remove last filled blank
+    document.addEventListener('keydown', (ev)=>{
+      // ignore repeated delivered keydown events when the user holds a key
+      if (ev.repeat) return;
+      // ignore when a modal is open (correct, skip, result, or end)
+      const modals = [correctModal, skipModal, resultModal, endModal];
+      for (const m of modals){ if (m && m.getAttribute && m.getAttribute('aria-hidden') === 'false') return; }
+
+      // Only handle single-letter keys A-Z
+      const k = ev.key;
+      if (k && k.length === 1 && /[a-zA-Z]/.test(k)){
+        const letter = k.toUpperCase();
+        if (!tilesEl) return;
+        // find first available tile matching the letter
+        const tile = tilesEl.querySelector('.tile[data-letter="'+letter+'"]:not(.disabled)');
+        if (tile){ tile.click(); ev.preventDefault(); }
+        return;
+      }
+
+      // Backspace / Delete: remove last filled blank (only one per key press)
+      if (ev.key === 'Backspace' || ev.key === 'Delete'){
+        if (!blanksEl) return;
+        const filled = Array.from(blanksEl.querySelectorAll('.blank.filled'));
+        if (filled.length){ const last = filled[filled.length-1]; last.click(); ev.preventDefault(); }
+      }
+    });
+  </script>
+</body>
+</html>

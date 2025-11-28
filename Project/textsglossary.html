@@ -1,0 +1,35 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<title>Texts Glossary</title>
+	<link rel="stylesheet" href="textsglossary.css">
+</head>
+<body>
+
+  <button type="button" class="back-btn" onclick="history.back()" aria-label="Go back">
+    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M20 11H7.83l5.58-5.59L12 4 4 12l8 8 1.41-1.41L7.83 13H20v-2z" fill="#fff"/>
+    </svg>
+  </button>
+
+
+	<main class="canvas" role="main">
+		<h1 class="title">Welcome to Texts Glossary Mode</h1>
+		<button id="learnBtn" class="learn-btn" aria-label="Open glossary entry">Learn</button>
+	</main>
+
+
+	<script>
+		const back = document.querySelector('.back-btn');
+		const learn = document.getElementById('learnBtn');
+		const next = document.getElementById('nextBtn');
+		back.addEventListener('click', ()=>{ location.href = 'index.html'; });
+		learn.addEventListener('click', ()=>{ window.location.href = 'textsglossary-learn.html'; });
+		// Default Next action — change target as needed
+		next.addEventListener('click', ()=>{ window.location.href = 'pretest.html'; });
+	</script>
+</body>
+</html>
