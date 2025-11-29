@@ -23,7 +23,7 @@
       </button>
 
       <div class="parts-card" id="partsCard">
-        <div id="choiceDisplay" class="choice-display">Loading…</div>
+        <button id="choiceDisplay" class="choice-display" type="button" aria-label="Selected part">Loading…</button>
       </div>
 
       <button id="nextBtn" class="pager-btn next" aria-label="Next" title="Next">
@@ -49,6 +49,29 @@
 
     prev.addEventListener('click', ()=>{ if (idx>0){ idx--; render(); } });
     next.addEventListener('click', ()=>{ if (idx<choices.length-1){ idx++; render(); } });
+
+    // Make the choice display itself clickable; for 'Noun' open the noun quiz
+    const choiceBtn = document.getElementById('choiceDisplay');
+    if (choiceBtn) {
+      choiceBtn.addEventListener('click', ()=>{
+        const selected = choices[idx];
+        switch(selected){
+          case 'Noun': window.location.href = 'grammartest-noun.html'; break;
+          case 'Pronoun': window.location.href = 'grammartest-pronoun.html'; break;
+          case 'Verb': window.location.href = 'grammartest-verb.html'; break;
+          case 'Adjective': window.location.href = 'grammartest-adjective.html'; break;
+          case 'Adverb': window.location.href = 'grammartest-adverb.html'; break;
+          case 'Preposition': window.location.href = 'grammartest-preposition.html'; break;
+          case 'Conjunction': window.location.href = 'grammartest-conjunction.html'; break;
+          case 'Interjection': window.location.href = 'grammartest-interjection.html'; break;
+          default: alert('Quiz for "' + selected + '" is not implemented yet.');
+        }
+      });
+      // make Enter/Space activate the button for keyboard users
+      choiceBtn.addEventListener('keydown', (e)=>{
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); choiceBtn.click(); }
+      });
+    }
 
     // keyboard support
     document.addEventListener('keydown', (e)=>{

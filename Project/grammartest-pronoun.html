@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Grammar Test - Pronouns</title>
+  <link rel="stylesheet" href="pretest.css">
+  <link rel="stylesheet" href="grammartest.css">
+</head>
+<body>
+
+  <button type="button" class="back-btn" onclick="history.back()" aria-label="Go back">
+    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M20 11H7.83l5.58-5.59L12 4 4 12l8 8 1.41-1.41L7.83 13H20v-2z" fill="#fff"/>
+    </svg>
+  </button>
+
+  <main class="canvas" role="main">
+    <section id="intro" class="intro" style="max-width:780px; text-align:center;">
+      <h1 class="title">Pronoun Quiz</h1>
+      <p class="subtitle">Identify pronouns and their correct use.</p>
+      <button id="start" class="next-btn">Start Quiz</button>
+    </section>
+
+    <div id="question-view" class="question" style="max-width:780px; text-align:center; display:none;">
+      <p id="q-text" class="q-text" style="font-size:24px; font-weight:800; color:#07101a; margin: 0 0 18px;"></p>
+      <div id="choices" class="levels" style="gap:12px;"></div>
+      <div id="feedback" class="feedback" aria-live="polite" style="margin-top:14px; font-weight:700;"></div>
+      <button id="next-btn" class="next-btn" style="margin-top:18px; display:none;">Next</button>
+    </div>
+
+    <section id="completion" class="intro" style="max-width:780px; text-align:center; display:none;">
+      <h2 class="title">Quiz Completed</h2>
+      <p id="score" class="subtitle" style="font-size:22px;"></p>
+    </section>
+  </main>
+
+  <script>
+    const questions = [
+      { q: '1. What is the main purpose of a pronoun in a sentence?', choices: ['a. To describe a noun by giving more details','b. To replace a noun and avoid repeating the same word','c. To show an action performed by a subject','d. To connect two ideas or clauses'], correct: 1 },
+      { q: '2. Which of the following words functions as a pronoun because it takes the place of a noun in a sentence?', choices: ['a. window','b. she','c. swimming','d. colorful'], correct: 1 },
+      { q: "3. Maria forgot her umbrella at home, so _ had to go back to get it.", choices: ['a. They','b. She','c. We','d. It'], correct: 1 },
+      { q: '4. My brother and I plan to finish our project today, but _ still need to buy some materials from the store.', choices: ['a. he','b. she','c. we','d. they'], correct: 2 },
+      { q: '5. Which of the following is a possessive pronoun that shows ownership or belonging?', choices: ['a. her','b. she','c. they','d. walk'], correct: 0 },
+      { q: '6. Identify the sentence that correctly uses a reflexive pronoun, which refers back to the subject of the sentence.', choices: ['a. He carried the box to the room.','b. She looked at herself in the mirror this morning.','c. They traveled to the city last week.','d. The dog barked loudly at the stranger.'], correct: 1 },
+      { q: '7. The group of students finished _ assignments before leaving the classroom.', choices: ['a. his','b. her','c. their','d. its'], correct: 2 },
+      { q: '8. What type of pronoun is the word “this” when used to point out a specific person, place, thing, or idea?', choices: ['a. Personal pronoun','b. Demonstrative pronoun','c. Possessive pronoun','d. Reflexive pronoun'], correct: 1 },
+      { q: '9. The teacher reminded _ to submit our projects before Friday.', choices: ['a. we','b. us','c. they','d. I'], correct: 1 },
+      { q: '10. Which of the following words is considered an indefinite pronoun because it refers to a person or thing in a general or non-specific way?', choices: ['a. someone','b. her','c. I','d. him'], correct: 0 }
+    ];
+
+    let index = 0;
+    let score = 0;
+
+    const intro = document.getElementById('intro');
+    const startBtn = document.getElementById('start');
+    const qView = document.getElementById('question-view');
+    const qText = document.getElementById('q-text');
+    const choicesEl = document.getElementById('choices');
+    const feedback = document.getElementById('feedback');
+    const nextBtn = document.getElementById('next-btn');
+    const completion = document.getElementById('completion');
+    const scoreEl = document.getElementById('score');
+
+    function render() {
+      const item = questions[index];
+      qText.textContent = item.q;
+      choicesEl.innerHTML = '';
+      feedback.textContent = '';
+      nextBtn.style.display = 'none';
+
+      item.choices.forEach((label,i)=>{
+        const btn = document.createElement('button');
+        btn.className = 'level-btn choice-btn';
+        btn.textContent = label;
+        btn.addEventListener('click', ()=>{
+          const all = choicesEl.querySelectorAll('button');
+          all.forEach(b=>b.disabled = true);
+          const correct = i === item.correct;
+          if (correct) {
+            feedback.textContent = 'Correct!';
+            feedback.style.color = '#0a8a0a';
+            score++;
+          } else {
+            feedback.textContent = 'Incorrect. The correct answer is ' + item.choices[item.correct] + '.';
+            feedback.style.color = '#c62828';
+          }
+          nextBtn.textContent = index < questions.length - 1 ? 'Next' : 'Finish';
+          nextBtn.style.display = 'inline-block';
+        });
+        choicesEl.appendChild(btn);
+      });
+    }
+
+    startBtn.addEventListener('click', ()=>{
+      intro.style.display = 'none';
+      qView.style.display = 'block';
+      render();
+    });
+
+    nextBtn.addEventListener('click', ()=>{
+      if (index < questions.length - 1) {
+        index++;
+        render();
+      } else {
+        qView.style.display = 'none';
+        completion.style.display = 'block';
+        scoreEl.textContent = 'You got ' + score + ' / ' + questions.length;
+        // reveal the answer key immediately on completion
+        const answerKey = document.getElementById('answerKey');
+        if (answerKey){
+          answerKey.style.display = 'block';
+        }
+      }
+    });
+  </script>
+</body>
+</html>

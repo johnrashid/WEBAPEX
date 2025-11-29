@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Grammar Test - Verbs</title>
+  <link rel="stylesheet" href="pretest.css">
+  <link rel="stylesheet" href="grammartest.css">
+</head>
+<body>
+  <button type="button" class="back-btn" onclick="history.back()" aria-label="Go back">
+    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M20 11H7.83l5.58-5.59L12 4 4 12l8 8 1.41-1.41L7.83 13H20v-2z" fill="#fff"/>
+    </svg>
+  </button>
+  <main class="canvas" role="main">
+    <section id="intro" class="intro" style="max-width:780px; text-align:center;">
+      <h1 class="title">Verb Quiz</h1>
+      <p class="subtitle">Identify the verb in each sentence.</p>
+      <button id="start" class="next-btn">Start Quiz</button>
+    </section>
+    <div id="question-view" class="question" style="max-width:780px; text-align:center; display:none;">
+      <p id="q-text" class="q-text" style="font-size:24px; font-weight:800; color:#07101a; margin: 0 0 18px;"></p>
+      <div id="choices" class="levels" style="gap:12px;"></div>
+      <div id="feedback" class="feedback" aria-live="polite" style="margin-top:14px; font-weight:700;"></div>
+      <button id="next-btn" class="next-btn" style="margin-top:18px; display:none;">Next</button>
+    </div>
+    <section id="completion" class="intro" style="max-width:780px; text-align:center; display:none;">
+      <h2 class="title">Quiz Completed</h2>
+      <p id="score" class="subtitle" style="font-size:22px;"></p>
+    </section>
+  </main>
+  <script>
+    const questions = [
+      { q: '1. Early this morning, the students quietly entered the classroom before the bell rang.', choices: ['A. students','B. quietly','C. entered','D. morning'], correct: 2 },
+      { q: '2. When the storm became stronger, the rescuers quickly moved the people to a safer location.', choices: ['A. rescuers','B. moved','C. location','D. stronger'], correct: 1 },
+      { q: '3. After waiting for almost an hour, the passengers finally boarded the bus that arrived late.', choices: ['A. boarded','B. hour','C. arrived','D. passengers'], correct: 0 },
+      { q: '4. Despite the noise in the hallway, the teacher continued explaining the lesson to the class.', choices: ['A. continued','B. noise','C. hallway','D. class'], correct: 0 },
+      { q: '5. While the children were playing outside, the wind suddenly blew away their papers.', choices: ['A. papers','B. suddenly','C. blew','D. children'], correct: 2 },
+      { q: '6. Because the weather was getting colder, the visitors wrapped themselves in thick blankets.', choices: ['A. colder','B. wrapped','C. visitors','D. blankets'], correct: 1 },
+      { q: '7. Before the ceremony started, the principal checked the program to ensure everything was ready.', choices: ['A. started','B. checked','C. program','D. ready'], correct: 1 },
+      { q: '8. As the train approached the station, people rushed to form a line near the entrance.', choices: ['A. people','B. rushed','C. entrance','D. line'], correct: 1 },
+      { q: '9. Although he felt tired, the athlete continued practicing to improve his performance.', choices: ['A. athlete','B. practicing','C. tired','D. performance'], correct: 1 },
+      { q: '10. During the celebration, the dancers performed gracefully while the crowd cheered loudly.', choices: ['A. celebration','B. performed','C. loudly','D. crowd'], correct: 1 }
+    ];
+    let index = 0; let score = 0;
+    const intro = document.getElementById('intro');
+    const startBtn = document.getElementById('start');
+    const qView = document.getElementById('question-view');
+    const qText = document.getElementById('q-text');
+    const choicesEl = document.getElementById('choices');
+    const feedback = document.getElementById('feedback');
+    const nextBtn = document.getElementById('next-btn');
+    const completion = document.getElementById('completion');
+    const scoreEl = document.getElementById('score');
+    function render(){ const item = questions[index]; qText.textContent = item.q; choicesEl.innerHTML=''; feedback.textContent=''; nextBtn.style.display='none'; item.choices.forEach((label,i)=>{ const btn=document.createElement('button'); btn.className='level-btn choice-btn'; btn.textContent=label; btn.addEventListener('click', ()=>{ const all=choicesEl.querySelectorAll('button'); all.forEach(b=>b.disabled=true); const correct = i===item.correct; if(correct){ feedback.textContent='Correct!'; feedback.style.color='#0a8a0a'; score++; } else { feedback.textContent='Incorrect. The correct answer is ' + item.choices[item.correct] + '.'; feedback.style.color='#c62828'; } nextBtn.textContent = index < questions.length-1 ? 'Next' : 'Finish'; nextBtn.style.display='inline-block'; }); choicesEl.appendChild(btn); }); }
+    startBtn.addEventListener('click', ()=>{ intro.style.display='none'; qView.style.display='block'; render(); });
+    nextBtn.addEventListener('click', ()=>{ if(index < questions.length-1){ index++; render(); } else { qView.style.display='none'; completion.style.display='block'; scoreEl.textContent = 'You got ' + score + ' / ' + questions.length; } });
+  </script>
+</body>
+</html>

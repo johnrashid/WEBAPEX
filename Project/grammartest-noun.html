@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Grammar Test - Nouns</title>
+  <link rel="stylesheet" href="pretest.css">
+  <link rel="stylesheet" href="grammartest.css">
+</head>
+<body>
+
+  <button type="button" class="back-btn" onclick="history.back()" aria-label="Go back">
+    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M20 11H7.83l5.58-5.59L12 4 4 12l8 8 1.41-1.41L7.83 13H20v-2z" fill="#fff"/>
+    </svg>
+  </button>
+
+  <main class="canvas" role="main">
+    <!-- Title removed so each question displays without a persistent page heading -->
+
+    <section id="intro" class="intro" style="max-width:780px; text-align:center;">
+      <h1 class="title">Noun Quiz</h1>
+      <p class="subtitle">Identify the noun in each sentence.</p>
+      <button id="start" class="next-btn">Start Quiz</button>
+    </section>
+
+    <div id="question-view" class="question" style="max-width:780px; text-align:center; display:none;">
+      <p id="q-text" class="q-text" style="font-size:24px; font-weight:800; color:#07101a; margin: 0 0 18px;"></p>
+      <div id="choices" class="levels" style="gap:12px;"></div>
+      <div id="feedback" class="feedback" aria-live="polite" style="margin-top:14px; font-weight:700;"></div>
+      <button id="next-btn" class="next-btn" style="margin-top:18px; display:none;">Next</button>
+    </div>
+
+    <section id="completion" class="intro" style="max-width:780px; text-align:center; display:none;">
+      <h2 class="title">Quiz Completed</h2>
+      <p id="score" class="subtitle" style="font-size:22px;"></p>
+    </section>
+  </main>
+
+  <script>
+    const questions = [
+      { q: "1. While walking to school early in the morning, the girl noticed a small puppy following her.", choices: ['A. noticed','B. following','C. girl','D. early'], correct: 2 },
+      { q: "2. During the heavy rainstorm, the neighbors helped each other carry the furniture inside the house.", choices: ['A. helped','B. neighbors','C. carry','D. heavy'], correct: 1 },
+      { q: "3. After finishing his homework, Daniel placed his notebook carefully on the wooden table.", choices: ['A. carefully','B. placed','C. notebook','D. wooden'], correct: 2 },
+      { q: "4. The excited children ran toward the playground when they heard the teacher blow the whistle.", choices: ['A. blew','B. toward','C. playground','D. excited'], correct: 2 },
+      { q: "5. While preparing the food for dinner, Mother asked me to wash the vegetables thoroughly.", choices: ['A. wash','B. vegetables','C. preparing','D. thoroughly'], correct: 1 },
+      { q: "6. As the sun began to set, the travelers looked for a safe place to rest for the evening.", choices: ['A. set','B. travelers','C. looked','D. evening'], correct: 1 },
+      { q: "7. The little boy hid behind the door because he wanted to surprise his older sister.", choices: ['A. wanted','B. surprise','C. boy','D. behind'], correct: 2 },
+      { q: "8. Before the meeting started, the manager reviewed all the reports submitted by the employees.", choices: ['A. reviewed','B. reports','C. before','D. started'], correct: 1 },
+      { q: "9. While cleaning the backyard, the family found an old photo buried under the soil.", choices: ['A. found','B. buried','C. soil','D. cleaning'], correct: 2 },
+      { q: "10. Although the movie was long, the audience stayed until the end because the story was interesting.", choices: ['A. audience','B. stayed','C. although','D. interesting'], correct: 0 }
+    ];
+
+    let index = 0;
+    let score = 0;
+
+    const intro = document.getElementById('intro');
+    const startBtn = document.getElementById('start');
+    const qView = document.getElementById('question-view');
+    const qText = document.getElementById('q-text');
+    const choicesEl = document.getElementById('choices');
+    const feedback = document.getElementById('feedback');
+    const nextBtn = document.getElementById('next-btn');
+    const completion = document.getElementById('completion');
+    const scoreEl = document.getElementById('score');
+
+    function render() {
+      const item = questions[index];
+      qText.textContent = item.q;
+      choicesEl.innerHTML = '';
+      feedback.textContent = '';
+      nextBtn.style.display = 'none';
+
+      item.choices.forEach((label,i)=>{
+        const btn = document.createElement('button');
+        btn.className = 'level-btn choice-btn';
+        btn.textContent = label;
+        btn.addEventListener('click', ()=>{
+          const all = choicesEl.querySelectorAll('button');
+          all.forEach(b=>b.disabled = true);
+          const correct = i === item.correct;
+          if (correct) {
+            feedback.textContent = 'Correct!';
+            feedback.style.color = '#0a8a0a';
+            score++;
+          } else {
+            feedback.textContent = 'Incorrect. The correct answer is ' + item.choices[item.correct] + '.';
+            feedback.style.color = '#c62828';
+          }
+          nextBtn.textContent = index < questions.length - 1 ? 'Next' : 'Finish';
+          nextBtn.style.display = 'inline-block';
+        });
+        choicesEl.appendChild(btn);
+      });
+    }
+
+    startBtn.addEventListener('click', ()=>{
+      intro.style.display = 'none';
+      qView.style.display = 'block';
+      render();
+    });
+
+    nextBtn.addEventListener('click', ()=>{
+      if (index < questions.length - 1) {
+        index++;
+        render();
+      } else {
+        qView.style.display = 'none';
+        completion.style.display = 'block';
+        scoreEl.textContent = 'You got ' + score + ' / ' + questions.length;
+      }
+    });
+  </script>
+</body>
+</html>
