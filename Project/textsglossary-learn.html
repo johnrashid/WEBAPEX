@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Grumbling — Texts Glossary</title>
+  <title> Texts Glossary</title>
   <link rel="stylesheet" href="textsglossary.css">
   <!-- Styles for the dictionary entry moved into textsglossary.css -->
 <body>
@@ -12,7 +12,7 @@
 
   <main class="canvas" role="main">
     <article class="entry" id="entry">
-      <div class="word" id="word">Loading…</div>
+      <div class="word" id="word" style="display:none" aria-hidden="true"></div>
       <button id="skipBtn" class="skip-btn" aria-label="Skip this word">Skip</button>
       
 
@@ -153,7 +153,9 @@
 
     function render(i){
       const e = entries[i];
-      wordEl.textContent = e.word;
+      // Do not reveal the answer in the entry view — keep the large word hidden
+      // until the user correctly solves the puzzle. The modal will show the word.
+      if (wordEl) wordEl.textContent = '';
       // no in-entry speaker: pronunciation is available in the correct-answer modal
       meaningEl.textContent = e.meaning;
       // Show the puzzle for every entry so the user guesses each word.
@@ -162,8 +164,9 @@
       if (puzzleEl) puzzleEl.style.display = 'flex';
       if (wordEl) wordEl.style.display = 'none';
       buildPuzzle(e.word);
-      // update document title
-      document.title = e.word + ' — Texts Glossary';
+      // update document title (do NOT include the answer word so it
+      // isn't revealed in the browser tab)
+      document.title = 'Texts Glossary — Learn';
     }
 
     // Text-to-speech playback for the word (uses SpeechSynthesis)

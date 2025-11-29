@@ -154,15 +154,6 @@ body {
 /* visible state */
 .audio-control.open .audio-panel{ display: flex; }
 
-/* slider */
-.audio-volume{
-  width: 160px;
-  -webkit-appearance: none;
-  height: 6px;
-  background: linear-gradient(90deg,#3ad6d6,#0c5fb0);
-  border-radius: 6px;
-  outline: none;
-}
 .audio-volume::-webkit-slider-thumb{
   -webkit-appearance: none;
   width: 16px;
