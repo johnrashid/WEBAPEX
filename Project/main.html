@@ -41,46 +41,7 @@
     </div>
   </div>
 
-  <script>
-(function(){
-  const audio = document.getElementById('bg-audio');
-  const toggle = document.getElementById('audio-toggle');
-  const icon = document.getElementById('audio-icon');
-  if (!audio || !toggle || !icon) return;
-
-  // Do not mute on load; let it play immediately
-  audio.muted = false;
-  audio.volume = 0.6;
-  audio.play().catch(()=>{}); // best effort
-
-  function updateButton() {
-    if (audio.muted) {
-      toggle.setAttribute('aria-pressed', 'true');
-      toggle.title = 'Unmute music';
-      icon.innerHTML = `
-        <path d="M3 10v4h4l5 5V5L7 10H3z" fill="currentColor"></path>
-        <line x1="20" y1="4" x2="4" y2="20" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line>
-      `;
-      toggle.style.opacity = '0.7';
-    } else {
-      toggle.setAttribute('aria-pressed', 'false');
-      toggle.title = 'Mute music';
-      icon.innerHTML = `
-        <path d="M3 10v4h4l5 5V5L7 10H3z" fill="currentColor"></path>
-        <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v8.06c1.48-.74 2.5-2.26 2.5-4.03z" fill="currentColor"></path>
-      `;
-      toggle.style.opacity = '1';
-    }
-  }
-
-  toggle.addEventListener('click', function(){
-    audio.muted = !audio.muted;
-    updateButton();
-  });
-
-  updateButton();
-})();
-</script>
+  <!-- audio.js controls playback and UI; removed duplicate inline controller to avoid conflicts -->
 
     <div class="canvas">
       <!-- top image / logo -->

@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Meaning Test</title>
+  <link rel="stylesheet" href="vocabularytest.css">
+  <link rel="stylesheet" href="pretest.css">
+</head>
+<body>
+  <button type="button" class="back-btn" onclick="history.back()" aria-label="Go back">
+    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11H7.83l5.58-5.59L12 4 4 12l8 8 1.41-1.41L7.83 13H20v-2z" fill="#fff"/></svg>
+  </button>
+
+  <main class="canvas" role="main">
+    <h1 class="title">Meaning Test</h1>
+
+    <section id="intro" class="intro">
+      <p class="subtitle">Answer the questions by choosing the correct meaning.</p>
+      <button id="startBtn" class="next-btn">Start Quiz</button>
+    </section>
+
+    <section id="questionView" class="question" style="display:none;">
+      <p id="q-text" class="q-text" style="font-size:20px;font-weight:700;margin-bottom:18px;"></p>
+      <div id="choices" class="levels"></div>
+      <div id="feedback" style="margin-top:14px;font-weight:700; min-height:22px"></div>
+      <button id="nextBtn" class="next-btn" style="margin-top:14px; display:none;">Next</button>
+    </section>
+
+    <section id="completion" class="intro" style="display:none;">
+      <h2 class="title">Quiz Completed</h2>
+      <p id="scoreText" class="subtitle" style="font-size:20px;"></p>
+      <div id="answerKey" style="margin-top:12px; text-align:left; max-width:720px; margin-left:auto; margin-right:auto;">
+        <h3 style="text-align:center;">Answer Key</h3>
+        <ol id="keyList"></ol>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const questions = [
+      {q:'1. Eminence', choices:['Unimportance','High rank or importance','Confusion','Weakness'], correct:1},
+      {q:'2. Indictment', choices:['An accusation or charge','A celebration','A contract','A rescue'], correct:0},
+      {q:'3. Conviction', choices:['A strong belief','A mistake','A prediction','A refusal'], correct:0},
+      {q:'4. Strenuous', choices:['Easy and gentle','Requiring great effort','Quiet and calm','Very short'], correct:1},
+      {q:'5. Grueling', choices:['Enjoyable','Light and simple','Exhausting and extremely difficult','Perfectly planned'], correct:2},
+      {q:'6. Forbid', choices:['To allow','To permit quietly','To forbid or prohibit','To forget'], correct:2},
+      {q:'7. Disobeyed', choices:['Followed the rules','Failed to follow rules or commands','Understood the command','Wrote instructions'], correct:1},
+      {q:'8. Glorious', choices:['Ordinary','Magnificent or splendid','Hidden','Confused'], correct:1},
+      {q:'9. Disguises', choices:['Reveals identity','Costumes or things that hide identity','Tools for cleaning','Food containers'], correct:1},
+      {q:'10. Wagon', choices:['A type of shelter','A wheeled vehicle for carrying things','A musical instrument','A long stick'], correct:1},
+      {q:'11. Excessive', choices:['Too little','About average','Too much; more than needed','Carefully planned'], correct:2},
+      {q:'12. Conventional', choices:['Traditional or common','Wild and unusual','Illegal','Poorly made'], correct:0},
+      {q:'13. Undistinguishable', choices:['Very clear','Hard to tell apart','Obviously different','Carefully organized'], correct:1},
+      {q:'14. Etched', choices:['Lightly erased','Deeply carved or engraved','Painted brightly','Broken apart'], correct:1},
+      {q:'15. Deliberately', choices:['By accident','Randomly','On purpose; intentionally','Without thinking'], correct:2},
+      {q:'16. Anxious', choices:['Calm and relaxed','Nervous or worried','Very angry','Not interested'], correct:1},
+      {q:'17. Wisdom', choices:['Lack of experience','Knowledge and good judgment','Playing tricks','An argument'], correct:1},
+      {q:'18. Gratify', choices:['To disappoint','To satisfy or please','To frighten','To ignore'], correct:1},
+      {q:'19. Eloquence', choices:['Fluent, impressive speaking','Total silence','Poor handwriting','Quick movement'], correct:0},
+      {q:'20. Voyage', choices:['A short nap','A long journey, especially by sea','A loud argument','A broken object'], correct:1}
+    ];
+
+    let index = 0, score = 0;
+    const titleEl = document.querySelector('.title');
+    const intro = document.getElementById('intro');
+    const startBtn = document.getElementById('startBtn');
+    const qView = document.getElementById('questionView');
+    const qText = document.getElementById('q-text');
+    const choicesEl = document.getElementById('choices');
+    const feedback = document.getElementById('feedback');
+    const nextBtn = document.getElementById('nextBtn');
+    const completion = document.getElementById('completion');
+    const scoreText = document.getElementById('scoreText');
+    const keyList = document.getElementById('keyList');
+
+    function render(){
+      const it = questions[index];
+      qText.textContent = it.q;
+      choicesEl.innerHTML = '';
+      feedback.textContent = '';
+      nextBtn.style.display = 'none';
+      it.choices.forEach((c,i)=>{
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'level-btn';
+        b.textContent = String.fromCharCode(65+i) + '. ' + c;
+        b.addEventListener('click', ()=>{
+          const all = choicesEl.querySelectorAll('button');
+          all.forEach(x=>x.disabled = true);
+          const correct = i === it.correct;
+          if (correct){ score++; feedback.textContent = 'Correct!'; feedback.style.color = '#0a8a0a'; }
+          else { feedback.textContent = 'Incorrect. The correct answer is ' + String.fromCharCode(65+it.correct) + '. ' + it.choices[it.correct]; feedback.style.color = '#c62828'; }
+          nextBtn.textContent = index < questions.length-1 ? 'Next' : 'Finish';
+          nextBtn.style.display = 'inline-block';
+        });
+        choicesEl.appendChild(b);
+      });
+    }
+
+    startBtn.addEventListener('click', ()=>{
+      // keep the title visible on the intro screen, but hide it for the question view
+      if (titleEl) titleEl.style.display = 'none';
+      intro.style.display='none'; qView.style.display='block'; render();
+    });
+
+    nextBtn.addEventListener('click', ()=>{
+      if (index < questions.length-1){ index++; render(); window.scrollTo({top:0,behavior:'smooth'}); }
+      else {
+        qView.style.display='none'; completion.style.display='block';
+        // restore the main title on completion screen
+        if (titleEl) titleEl.style.display = 'block';
+        scoreText.textContent = 'You got ' + score + ' / ' + questions.length;
+        // build answer key list
+        keyList.innerHTML = '';
+        questions.forEach((qq,i)=>{
+          const li = document.createElement('li');
+          const letter = String.fromCharCode(65+qq.correct);
+          li.textContent = (i+1) + '. ' + qq.q.replace(/^\d+\.\s*/, '') + ' — ' + letter + '. ' + qq.choices[qq.correct];
+          keyList.appendChild(li);
+        });
+      }
+    });
+  </script>
+</body>
+</html>
+

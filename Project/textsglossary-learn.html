@@ -6,12 +6,38 @@
   <title> Texts Glossary</title>
   <link rel="stylesheet" href="textsglossary.css">
   <!-- Styles for the dictionary entry moved into textsglossary.css -->
+  <style>
+    /* Thin progress indicator positioned inside the entry card near the top-left */
+    .progress-wrap{
+      position:absolute;
+      top:10px;
+      left:16px;
+      right:16px;
+      height:6px;
+      background:rgba(0,0,0,0.06);
+      border-radius:6px;
+      overflow:hidden;
+      z-index:6;
+      box-shadow:0 1px 0 rgba(255,255,255,0.4) inset;
+    }
+    .progress-fill{
+      height:100%;
+      width:0%;
+      background:#9ad39a;
+      transition:width 320ms ease, background-color 220ms ease;
+      border-radius:6px;
+    }
+    .progress-wrap.full .progress-fill{background:#28a745}
+  </style>
 <body>
 
   <!-- Back button removed: navigation handled via Next/Finish -->
 
   <main class="canvas" role="main">
-    <article class="entry" id="entry">
+    <article class="entry" id="entry" style="position:relative;padding-top:26px;max-width:780px;margin:8px auto 0;">
+      <div class="progress-wrap" id="progressWrap" aria-hidden="true">
+        <div class="progress-fill" id="progressFill" aria-hidden="true"></div>
+      </div>
       <div class="word" id="word" style="display:none" aria-hidden="true"></div>
       <button id="skipBtn" class="skip-btn" aria-label="Skip this word">Skip</button>
       
@@ -167,6 +193,18 @@
       // update document title (do NOT include the answer word so it
       // isn't revealed in the browser tab)
       document.title = 'Texts Glossary — Learn';
+
+      // Update progress indicator (fill only)
+      try{
+        const total = Math.max(1, entries.length);
+        const percent = Math.round((i / (total - 1)) * 100);
+        const fill = document.getElementById('progressFill');
+        const wrap = document.getElementById('progressWrap');
+        if (fill) fill.style.width = percent + '%';
+        if (wrap){
+          if (percent >= 95 || i === entries.length - 1) wrap.classList.add('full'); else wrap.classList.remove('full');
+        }
+      }catch(e){/* ignore if DOM not ready */}
     }
 
     // Text-to-speech playback for the word (uses SpeechSynthesis)

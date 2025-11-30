@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Choose Vocabulary Test</title>
+  <link rel="stylesheet" href="vocabularytest.css">
+</head>
+<body>
+
+  <button type="button" class="back-btn" onclick="history.back()" aria-label="Go back">
+    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M20 11H7.83l5.58-5.59L12 4 4 12l8 8 1.41-1.41L7.83 13H20v-2z" fill="#fff"/>
+    </svg>
+  </button>
+
+  <main class="canvas" role="main">
+    <h1 class="title">Choose what type of test you want to answer.</h1>
+
+    <div class="parts-container" aria-live="polite">
+      <button id="prevBtn" class="pager-btn prev" aria-label="Previous" title="Previous">
+        <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+      </button>
+
+      <div class="parts-card" id="partsCard">
+        <button id="choiceDisplay" class="choice-display" type="button" aria-label="Selected test">Loading…</button>
+      </div>
+
+      <button id="nextBtn" class="pager-btn next" aria-label="Next" title="Next">
+        <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+      </button>
+    </div>
+
+  </main>
+
+  <script>
+    const choices = ['Meaning Test','Missing Word','Synonyms','Antonyms'];
+    let idx = 0;
+
+    const choiceDisplay = document.getElementById('choiceDisplay');
+    const prev = document.getElementById('prevBtn');
+    const next = document.getElementById('nextBtn');
+
+    function render(){
+      choiceDisplay.textContent = choices[idx];
+      prev.disabled = idx === 0;
+      next.disabled = idx === choices.length - 1;
+    }
+
+    prev.addEventListener('click', ()=>{ if (idx>0){ idx--; render(); } });
+    next.addEventListener('click', ()=>{ if (idx<choices.length-1){ idx++; render(); } });
+
+    const choiceBtn = document.getElementById('choiceDisplay');
+    if (choiceBtn) {
+      choiceBtn.addEventListener('click', ()=>{
+        const selected = choices[idx];
+        switch(selected){
+          case 'Meaning Test': window.location.href = 'vocabulary-meaning.html'; break;
+          case 'Missing Word': window.location.href = 'vocabulary-missingword.html'; break;
+          case 'Synonyms': window.location.href = 'vocabulary-synonyms.html'; break;
+          case 'Antonyms': window.location.href = 'vocabulary-antonyms.html'; break;
+          default: alert('Selected: ' + selected);
+        }
+      });
+      choiceBtn.addEventListener('keydown', (e)=>{ if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); choiceBtn.click(); } });
+    }
+
+    document.addEventListener('keydown', (e)=>{
+      if (e.key === 'ArrowLeft') prev.click();
+      if (e.key === 'ArrowRight') next.click();
+    });
+
+    render();
+  </script>
+</body>
+</html>
