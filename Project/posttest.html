@@ -7,6 +7,7 @@
 
   <!-- Shared background (common to other screens) -->
     <link rel="stylesheet" href="posttest.css">
+    <link rel="stylesheet" href="design.css">
 </head>
 <body>
 
@@ -208,19 +209,29 @@
               btn.className = 'level-btn choice-btn';
               btn.textContent = label;
               btn.addEventListener('click', () => {
-                // disable all
+                const isCorrect = i === item.correct;
+                // mark selection visually
+                if (isCorrect) btn.classList.add('correct'); else btn.classList.add('wrong');
+                // disable all buttons immediately
                 const all = choicesEl.querySelectorAll('button');
                 all.forEach(b => b.disabled = true);
-                const isCorrect = i === item.correct;
+
                 if (isCorrect) {
                   feedback.textContent = 'Correct!';
                   feedback.style.color = '#0a8a0a';
                   score++; // Increment score for correct answer
+                  try { if (window && window.playPraiseShuffle) window.playPraiseShuffle({ count: 1, excludeKeys: ['correct'] }); }
+                  catch(e){}
                 } else {
                   const correctLabel = item.choices[item.correct];
                   feedback.textContent = 'Incorrect. The correct answer is ' + correctLabel + '.';
                   feedback.style.color = '#c62828';
+                  // highlight the correct choice as well
+                  const buttons = Array.from(choicesEl.querySelectorAll('button'));
+                  const correctBtn = buttons[item.correct];
+                  if (correctBtn) correctBtn.classList.add('correct');
                 }
+
                 nextBtn.textContent = index < quiz.length - 1 ? 'Next' : 'Finish';
                 nextBtn.style.display = 'inline-block';
               });
@@ -248,6 +259,16 @@
                 const completionView = document.getElementById('completion-view');
                 const scoreDisplay = document.getElementById('score-display');
                 scoreDisplay.textContent = 'You got ' + score + '/50';
+                // final-score praise
+                try{
+                  const total = 50;
+                  const pct = total ? (score / total) * 100 : 0;
+                  if (window && window.playPraiseKey) {
+                    if (pct >= 90) window.playPraiseKey('excellent');
+                    else if (pct >= 75) window.playPraiseKey('amazing');
+                    else if (pct >= 50) window.playPraiseKey('good job');
+                  }
+                }catch(e){}
                 completionView.style.display = 'block';
               }
             }
@@ -295,6 +316,7 @@
 
     </div>
   </div>
-
+</div>
+  <script src="audio.js" defer></script>
 </body>
 </html>

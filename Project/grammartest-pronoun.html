@@ -6,6 +6,7 @@
   <title>Grammar Test - Pronouns</title>
   <link rel="stylesheet" href="pretest.css">
   <link rel="stylesheet" href="grammartest.css">
+  <link rel="stylesheet" href="design.css">
 </head>
 <body>
 
@@ -69,36 +70,48 @@
       feedback.textContent = '';
       nextBtn.style.display = 'none';
 
-      item.choices.forEach((label,i)=>{
+      item.choices.forEach((label, i) => {
         const btn = document.createElement('button');
         btn.className = 'level-btn choice-btn';
         btn.textContent = label;
-        btn.addEventListener('click', ()=>{
+
+        btn.addEventListener('click', () => {
+          const isCorrect = i === item.correct;
+          // mark selection visually
+          if (isCorrect) btn.classList.add('correct'); else btn.classList.add('wrong');
+          // disable all buttons
           const all = choicesEl.querySelectorAll('button');
-          all.forEach(b=>b.disabled = true);
-          const correct = i === item.correct;
-          if (correct) {
+          all.forEach(b => b.disabled = true);
+
+          if (isCorrect) {
             feedback.textContent = 'Correct!';
             feedback.style.color = '#0a8a0a';
             score++;
+            try { if (window && window.playPraiseKey) window.playPraiseKey('correct'); } catch (e) {}
           } else {
+            // reveal correct button
+            const buttons = Array.from(choicesEl.querySelectorAll('button'));
+            const correctBtn = buttons[item.correct];
+            if (correctBtn) correctBtn.classList.add('correct');
             feedback.textContent = 'Incorrect. The correct answer is ' + item.choices[item.correct] + '.';
             feedback.style.color = '#c62828';
           }
+
           nextBtn.textContent = index < questions.length - 1 ? 'Next' : 'Finish';
           nextBtn.style.display = 'inline-block';
         });
+
         choicesEl.appendChild(btn);
       });
     }
 
-    startBtn.addEventListener('click', ()=>{
+    startBtn.addEventListener('click', () => {
       intro.style.display = 'none';
       qView.style.display = 'block';
       render();
     });
 
-    nextBtn.addEventListener('click', ()=>{
+    nextBtn.addEventListener('click', () => {
       if (index < questions.length - 1) {
         index++;
         render();
@@ -106,13 +119,22 @@
         qView.style.display = 'none';
         completion.style.display = 'block';
         scoreEl.textContent = 'You got ' + score + ' / ' + questions.length;
-        // reveal the answer key immediately on completion
+        // final-score praise
+        try {
+          const total = questions.length || 0;
+          const pct = total ? (score / total) * 100 : 0;
+          if (window && window.playPraiseKey) {
+            if (pct >= 90) window.playPraiseKey('excellent');
+            else if (pct >= 75) window.playPraiseKey('amazing');
+            else if (pct >= 50) window.playPraiseKey('good job');
+          }
+        } catch (e) {}
+        // reveal the answer key immediately on completion if present
         const answerKey = document.getElementById('answerKey');
-        if (answerKey){
-          answerKey.style.display = 'block';
-        }
+        if (answerKey) answerKey.style.display = 'block';
       }
     });
   </script>
+  <script src="audio.js" defer></script>
 </body>
 </html>

@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SVA - Compound</title>
+  <link rel="stylesheet" href="grammartest.css">
+  <link rel="stylesheet" href="design.css">
+</head>
+<body>
+  <button type="button" class="back-btn" onclick="history.back()" aria-label="Go back">◀</button>
+  <main class="canvas" role="main">
+    <h1 class="title">Compound Subjects & Agreement</h1>
+
+    <section id="questionView" class="question">
+      <p id="q-text" class="q-text" style="font-size:20px;font-weight:700;margin-bottom:18px;"></p>
+      <div id="choices" class="levels"></div>
+      <div id="feedback" style="margin-top:14px;font-weight:700; min-height:22px"></div>
+      <button id="nextBtn" class="next-btn" style="margin-top:14px; display:none;">Next</button>
+    </section>
+
+    <section id="completion" class="intro" style="display:none; text-align:center;">
+      <h2 class="title">Quiz Completed</h2>
+      <p id="scoreText" class="subtitle" style="font-size:20px;"></p>
+    </section>
+  </main>
+
+  <script>
+    const questions = [
+      {q:'1. Tom and Jerry ___ best friends.', choices:['A. is','B. are','C. was','D. be'], correct:1},
+      {q:'2. The teacher and the principal ___ meeting today.', choices:['A. is','B. was','C. are','D. be'], correct:2},
+      {q:'3. My mother and father ___ dinner together.', choices:['A. cooks','B. cook','C. cooking','D. cooked'], correct:1},
+      {q:'4. Either the boy or the girls ___ making noise.', choices:['A. is','B. are','C. was','D. be'], correct:1},
+      {q:'5. Either the girls or the boy ___ the answer.', choices:['A. know','B. knows','C. knowing','D. knowed'], correct:1},
+      {q:'6. Anna and her sister ___ late again.', choices:['A. is','B. are','C. was','D. be'], correct:1},
+      {q:'7. The dog and the cat ___ under the table.', choices:['A. hide','B. hides','C. hiding','D. hided'], correct:0},
+      {q:'8. Neither the teacher nor the student ___ prepared.', choices:['A. are','B. were','C. is','D. be'], correct:2},
+      {q:'9. Neither the students nor the teacher ___ ready to start.', choices:['A. is','B. are','C. be','D. was'], correct:0},
+      {q:'10. My cousins and my aunt ___ at the party.', choices:['A. is','B. are','C. was','D. be'], correct:1}
+    ];
+
+    let index = 0, score = 0;
+    const qText = document.getElementById('q-text');
+    const choicesEl = document.getElementById('choices');
+    const feedback = document.getElementById('feedback');
+    const nextBtn = document.getElementById('nextBtn');
+
+    function render(){
+      const it = questions[index];
+      qText.textContent = it.q;
+      choicesEl.innerHTML = '';
+      feedback.textContent = '';
+      nextBtn.style.display = 'none';
+
+      it.choices.forEach((c,i)=>{
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'level-btn choice-btn';
+        b.textContent = c;
+        b.addEventListener('click', ()=>{
+          const all = choicesEl.querySelectorAll('button');
+          const isCorrect = i === it.correct;
+          if (isCorrect) b.classList.add('correct'); else b.classList.add('wrong');
+          all.forEach(x=>x.disabled = true);
+          if (isCorrect){ score++; feedback.textContent = 'Correct!'; feedback.style.color = '#0a8a0a'; try{ if (window && window.playPraiseKey) window.playPraiseKey('correct'); }catch(e){} try{ if (window && window.playPraiseShuffle) window.playPraiseShuffle({ count: 1, excludeKeys: ['correct'] }); }catch(e){} }
+          else { const buttons = Array.from(all); const correctBtn = buttons[it.correct]; if (correctBtn) correctBtn.classList.add('correct'); feedback.textContent = 'Incorrect. The correct answer is ' + it.choices[it.correct]; feedback.style.color = '#c62828'; }
+          nextBtn.textContent = index < questions.length-1 ? 'Next' : 'Finish';
+          nextBtn.style.display = 'inline-block';
+        });
+        choicesEl.appendChild(b);
+      });
+    }
+
+    nextBtn.addEventListener('click', ()=>{
+      if (index < questions.length-1){ index++; render(); window.scrollTo({top:0,behavior:'smooth'}); }
+      else { document.getElementById('questionView').style.display='none'; document.getElementById('completion').style.display='block'; document.getElementById('scoreText').textContent = 'You got ' + score + ' / ' + questions.length;
+        try{
+          const total = questions.length || 0;
+          const pct = total ? (score / total) * 100 : 0;
+          if (window && window.playPraiseKey){
+            if (pct >= 90) window.playPraiseKey('excellent');
+            else if (pct >= 75) window.playPraiseKey('amazing');
+            else if (pct >= 50) window.playPraiseKey('good job');
+          }
+        }catch(e){}
+      }
+    });
+
+    render();
+  </script>
+  <script src="audio.js" defer></script>
+</body>
+</html>

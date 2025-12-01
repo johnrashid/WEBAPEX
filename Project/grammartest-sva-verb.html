@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SVA - Verb</title>
+  <link rel="stylesheet" href="grammartest.css">
+  <link rel="stylesheet" href="design.css">
+</head>
+<body>
+  <button type="button" class="back-btn" onclick="history.back()" aria-label="Go back">◀</button>
+  <main class="canvas" role="main">
+    <h1 class="title">Verb Identification</h1>
+
+    <section id="questionView" class="question">
+      <p id="q-text" class="q-text" style="font-size:20px;font-weight:700;margin-bottom:18px;"></p>
+      <div id="choices" class="levels"></div>
+      <div id="feedback" style="margin-top:14px;font-weight:700; min-height:22px"></div>
+      <button id="nextBtn" class="next-btn" style="margin-top:14px; display:none;">Next</button>
+    </section>
+
+    <section id="completion" class="intro" style="display:none; text-align:center;">
+      <h2 class="title">Quiz Completed</h2>
+      <p id="scoreText" class="subtitle" style="font-size:20px;"></p>
+    </section>
+  </main>
+
+  <script>
+    const questions = [
+      {q:'1. The children laughed loudly.', choices:['A. children','B. loudly','C. laughed','D. The'], correct:2},
+      {q:'2. The baby cried all night.', choices:['A. baby','B. cried','C. night','D. all'], correct:1},
+      {q:'3. My mother cooks delicious meals.', choices:['A. mother','B. meals','C. delicious','D. cooks'], correct:3},
+      {q:'4. The rain stopped suddenly.', choices:['A. rain','B. suddenly','C. The','D. stopped'], correct:3},
+      {q:'5. The athletes trained seriously.', choices:['A. athletes','B. trained','C. seriously','D. The'], correct:1},
+      {q:'6. The phone rang during class.', choices:['A. phone','B. class','C. rang','D. during'], correct:2},
+      {q:'7. The sun rises in the east.', choices:['A. sun','B. rises','C. east','D. in'], correct:1},
+      {q:'8. Karen wrote a letter to her friend.', choices:['A. letter','B. friend','C. wrote','D. Karen'], correct:2},
+      {q:'9. The car stopped at the red light.', choices:['A. car','B. red','C. stopped','D. light'], correct:2},
+      {q:'10. They watched a movie together.', choices:['A. they','B. watched','C. movie','D. together'], correct:1}
+    ];
+
+    let index = 0, score = 0;
+    const qText = document.getElementById('q-text');
+    const choicesEl = document.getElementById('choices');
+    const feedback = document.getElementById('feedback');
+    const nextBtn = document.getElementById('nextBtn');
+
+    function render(){
+      const it = questions[index];
+      qText.textContent = it.q;
+      choicesEl.innerHTML = '';
+      feedback.textContent = '';
+      nextBtn.style.display = 'none';
+
+      it.choices.forEach((c,i)=>{
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'level-btn choice-btn';
+        b.textContent = c;
+        b.addEventListener('click', ()=>{
+          const all = choicesEl.querySelectorAll('button');
+          const isCorrect = i === it.correct;
+          if (isCorrect) b.classList.add('correct'); else b.classList.add('wrong');
+          all.forEach(x=>x.disabled = true);
+          if (isCorrect){ score++; feedback.textContent = 'Correct!'; feedback.style.color = '#0a8a0a'; try{ if (window && window.playPraiseKey) window.playPraiseKey('correct'); }catch(e){} try{ if (window && window.playPraiseShuffle) window.playPraiseShuffle({ count: 1, excludeKeys: ['correct'] }); }catch(e){} }
+          else { const buttons = Array.from(all); const correctBtn = buttons[it.correct]; if (correctBtn) correctBtn.classList.add('correct'); feedback.textContent = 'Incorrect. The correct answer is ' + it.choices[it.correct]; feedback.style.color = '#c62828'; }
+          nextBtn.textContent = index < questions.length-1 ? 'Next' : 'Finish';
+          nextBtn.style.display = 'inline-block';
+        });
+        choicesEl.appendChild(b);
+      });
+    }
+
+    nextBtn.addEventListener('click', ()=>{
+      if (index < questions.length-1){ index++; render(); window.scrollTo({top:0,behavior:'smooth'}); }
+      else { document.getElementById('questionView').style.display='none'; document.getElementById('completion').style.display='block'; document.getElementById('scoreText').textContent = 'You got ' + score + ' / ' + questions.length;
+        try{
+          const total = questions.length || 0;
+          const pct = total ? (score / total) * 100 : 0;
+          if (window && window.playPraiseKey){
+            if (pct >= 90) window.playPraiseKey('excellent');
+            else if (pct >= 75) window.playPraiseKey('amazing');
+            else if (pct >= 50) window.playPraiseKey('good job');
+          }
+        }catch(e){}
+      }
+    });
+
+    render();
+  </script>
+  <script src="audio.js" defer></script>
+</body>
+</html>

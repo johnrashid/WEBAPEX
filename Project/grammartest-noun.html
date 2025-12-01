@@ -6,6 +6,7 @@
   <title>Grammar Test - Nouns</title>
   <link rel="stylesheet" href="pretest.css">
   <link rel="stylesheet" href="grammartest.css">
+  <link rel="stylesheet" href="design.css">
 </head>
 <body>
 
@@ -78,15 +79,25 @@
         btn.addEventListener('click', ()=>{
           const all = choicesEl.querySelectorAll('button');
           all.forEach(b=>b.disabled = true);
-          const correct = i === item.correct;
-          if (correct) {
+          const correctIndex = item.correct;
+          const isCorrect = i === correctIndex;
+
+          if (isCorrect) {
+            btn.classList.add('correct');
             feedback.textContent = 'Correct!';
             feedback.style.color = '#0a8a0a';
             score++;
+            if (window && window.playPraiseKey) try{ window.playPraiseKey('correct'); }catch(e){}
           } else {
+            // mark the clicked button as wrong and reveal the correct one
+            btn.classList.add('wrong');
+            const buttons = Array.from(choicesEl.querySelectorAll('button'));
+            const correctBtn = buttons[correctIndex];
+            if (correctBtn) correctBtn.classList.add('correct');
             feedback.textContent = 'Incorrect. The correct answer is ' + item.choices[item.correct] + '.';
             feedback.style.color = '#c62828';
           }
+
           nextBtn.textContent = index < questions.length - 1 ? 'Next' : 'Finish';
           nextBtn.style.display = 'inline-block';
         });
@@ -108,8 +119,10 @@
         qView.style.display = 'none';
         completion.style.display = 'block';
         scoreEl.textContent = 'You got ' + score + ' / ' + questions.length;
+        try{ const total = questions.length || 0; const pct = total ? (score/total)*100 : 0; if (window && window.playPraiseKey){ if (pct>=90) window.playPraiseKey('excellent'); else if (pct>=75) window.playPraiseKey('amazing'); else if (pct>=50) window.playPraiseKey('good job'); } }catch(e){}
       }
     });
   </script>
+  <script src="audio.js" defer></script>
 </body>
 </html>

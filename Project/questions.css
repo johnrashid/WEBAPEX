@@ -32,7 +32,7 @@
 /* Result panel styles moved from inline */
 .result {
   max-width: var(--q-max-width);
-  margin: 24px auto;
+  margin: 6vh auto;
   padding: 18px;
   background: #fff;
   border-radius: 10px;
@@ -55,6 +55,9 @@
 }
 
 .btn-submit {
+
+/* When results are shown in-place, prefer a single scrollbar on the questions container.
+   Ensure the inner result-list does not create its own scrollbar so users see only one. */
   padding: 10px 16px;
   border-radius: 8px;
   border: none;
@@ -117,3 +120,105 @@
 .choice .text {
   flex: 1 1 auto;
 }
+
+/* When results are open, hide the page scrollbar (applies to both html and body) */
+html.result-open, body.result-open {
+  overflow: hidden !important;
+  height: 100vh !important;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+/* hide webkit scrollbars when results are open */
+html.result-open::-webkit-scrollbar, body.result-open::-webkit-scrollbar {
+  display: none; width: 0; height: 0;
+}
+
+/* When results are open, stop the original questions container from scrolling
+   so the inner .result-list is the single active scrollbar. */
+html.result-open .questions-container,
+body.result-open .questions-container {
+  max-height: none !important;
+  overflow: hidden !important;
+}
+
+/* Two-column layout for result: list + side actions */
+.result-grid {
+  display: flex;
+  gap: 18px;
+  align-items: stretch;
+  max-width: calc(var(--q-max-width));
+  margin: 6vh auto;
+  padding: 0 12px;
+}
+
+/* When results are rendered in-place inside the questions container,
+   make the result grid fill the container so it matches question width/position. */
+.questions-container > .result-grid {
+  max-width: none;
+  width: 100%;
+  margin: 0; /* keep it in the same spot as the question list */
+  padding: 0; /* container already provides padding */
+  box-sizing: border-box;
+  align-items: stretch;
+  gap: 12px;
+}
+
+.questions-container > .result-grid .result-list {
+  /* keep the result list scrollable but constrained visually to the viewport */
+  max-height: 64vh;
+  overflow: auto;
+  padding: 12px;
+  background: transparent;
+}
+
+.result-list {
+  flex: 1 1 auto;
+  max-height: 64vh;
+  overflow: auto;
+  padding: 12px;
+  background: transparent;
+}
+
+.result-side {
+  width: 220px;
+  min-width: 160px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+  padding: 12px 6px;
+}
+
+.score-box {
+  padding: 12px;
+  border-radius: 8px;
+  background: linear-gradient(90deg,#f7f3ff,#eef7ff);
+  text-align: center;
+  font-weight: 700;
+}
+
+/* Use native scrollbar appearance for both questions and results so they match */
+.questions-container,
+.result-list {
+  scrollbar-width: auto; /* default/native width */
+  scrollbar-color: initial;
+}
+
+/* helper to hide original questions container */
+.hidden { display: none !important; }
+
+/* full-screen overlay to show results centered */
+.result-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(8,10,20,0.18);
+  z-index: 1200;
+  padding: 28px;
+}
+
+.result-overlay .result-grid { max-width: 980px; width: 100%; }
+

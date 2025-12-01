@@ -29,9 +29,27 @@ body {
 
 /* TITLE */
 .title {
-    font-size: 36px;
+    font-size: 44px;
     font-weight: 800;
-    margin-bottom: 30px;
+    margin-bottom: 28px;
+}
+
+/* Actions row: when multiple buttons are shown side-by-side */
+.actions-row{
+  display:inline-flex; /* shrink to fit buttons so it's perfectly centered */
+  gap:6px; /* bring buttons closer together */
+  align-items:center;
+  justify-content:center;
+  margin:18px auto 0;
+}
+
+/* Slightly smaller, tighter pill buttons when placed inside .actions-row */
+.actions-row .next-btn{
+  padding:8px 16px; /* slightly larger for better tap targets */
+  font-size:16px;
+  border-radius:18px;
+  margin-top:0; /* handled by row spacing */
+  box-shadow: 0 6px 12px rgba(0,0,0,0.10);
 }
 
 /* NEXT BUTTON */
@@ -81,8 +99,9 @@ body {
 /* small screens */
 @media (max-width:420px){
   .back-btn{ top: 10px; left: 10px; width:40px; height:36px; font-size:13px; border-radius:8px; }
-  .title{ font-size: 28px; padding: 0 12px }
+  .title{ font-size: 32px; padding: 0 12px }
   .next-btn{ padding: 10px 14px; margin-top:12px }
+  .actions-row{ gap:6px }
 }
 
 /* Parts-selection carousel (used by grammartest-parts.html) */
@@ -110,6 +129,51 @@ body {
 .pager-btn{ background:#402688;border:none;color:#fff;width:34px;height:34px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer }
 .pager-btn:disabled{ opacity:0.5; cursor:not-allowed }
 .pager-btn svg{ display:block }
+
+/* Choice button states for quizzes */
+.choice-btn{
+  transition: transform .12s ease, box-shadow .12s ease, background .12s ease, opacity .12s ease;
+}
+.choice-btn.correct{
+  background: #1bb85a !important;
+  color: #fff !important;
+  box-shadow: 0 8px 20px rgba(27,184,90,0.14);
+  transform: translateY(-2px);
+}
+.choice-btn.wrong{
+  background: #e06464 !important;
+  color: #fff !important;
+  opacity: 0.98;
+  box-shadow: 0 6px 14px rgba(224,100,100,0.10);
+}
+
+/* Choice grid (two-column pill buttons like posttest/vocabulary) */
+.levels{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 16px;
+  align-items: center;
+}
+.levels button{
+    width: 100%;
+    padding: 14px 22px;
+    border-radius: 999px;
+    border: 2px solid rgba(107,57,230,0.18);
+    background: #ffffff;
+    color: #472b86;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 6px 14px rgba(70,30,140,0.06);
+    transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
+    text-align: center;
+}
+.levels button:hover{
+    transform: translateY(-3px);
+    background: #fff;
+    box-shadow: 0 10px 20px rgba(70,30,140,0.08);
+}
+.levels button:disabled{ opacity: 0.9; cursor: default; transform: none; }
 
 @media (max-width:420px){
   .parts-card{ padding:12px 10px; min-width:180px; max-width:300px }

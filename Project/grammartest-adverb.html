@@ -6,6 +6,7 @@
   <title>Grammar Test - Adverbs</title>
   <link rel="stylesheet" href="pretest.css">
   <link rel="stylesheet" href="grammartest.css">
+  <link rel="stylesheet" href="design.css">
 </head>
 <body>
   <button type="button" class="back-btn" onclick="history.back()" aria-label="Go back">
@@ -53,9 +54,13 @@
     const nextBtn=document.getElementById('next-btn');
     const completion=document.getElementById('completion');
     const scoreEl=document.getElementById('score');
-    function render(){ const item=questions[index]; qText.textContent=item.q; choicesEl.innerHTML=''; feedback.textContent=''; nextBtn.style.display='none'; item.choices.forEach((label,i)=>{ const btn=document.createElement('button'); btn.className='level-btn choice-btn'; btn.textContent=label; btn.addEventListener('click', ()=>{ const all=choicesEl.querySelectorAll('button'); all.forEach(b=>b.disabled=true); const correct=i===item.correct; if(correct){ feedback.textContent='Correct!'; feedback.style.color='#0a8a0a'; score++; } else { feedback.textContent='Incorrect. The correct answer is '+item.choices[item.correct]+'.'; feedback.style.color='#c62828'; } nextBtn.textContent=index<questions.length-1?'Next':'Finish'; nextBtn.style.display='inline-block'; }); choicesEl.appendChild(btn); }); }
+    function render(){ const item = questions[index]; qText.textContent = item.q; choicesEl.innerHTML = ''; feedback.textContent = ''; nextBtn.style.display = 'none'; item.choices.forEach((label,i)=>{ const btn = document.createElement('button'); btn.className = 'level-btn choice-btn'; btn.textContent = label; btn.addEventListener('click', ()=>{ const all = choicesEl.querySelectorAll('button'); all.forEach(b=>b.disabled = true); const correctIndex = item.correct; const isCorrect = i === correctIndex; if (isCorrect) { btn.classList.add('correct'); feedback.textContent = 'Correct!'; feedback.style.color = '#0a8a0a'; score++; if (window && window.playPraiseKey) try{ window.playPraiseKey('correct'); }catch(e){} } else { btn.classList.add('wrong'); const buttons = Array.from(choicesEl.querySelectorAll('button')); const correctBtn = buttons[correctIndex]; if (correctBtn) correctBtn.classList.add('correct'); feedback.textContent = 'Incorrect. The correct answer is ' + item.choices[item.correct] + '.'; feedback.style.color = '#c62828'; } nextBtn.textContent = index < questions.length - 1 ? 'Next' : 'Finish'; nextBtn.style.display = 'inline-block'; }); choicesEl.appendChild(btn); }); }
     startBtn.addEventListener('click', ()=>{ intro.style.display='none'; qView.style.display='block'; render(); });
-    nextBtn.addEventListener('click', ()=>{ if(index<questions.length-1){ index++; render(); } else { qView.style.display='none'; completion.style.display='block'; scoreEl.textContent='You got '+score+' / '+questions.length; } });
+    nextBtn.addEventListener('click', ()=>{ if(index<questions.length-1){ index++; render(); } else { qView.style.display='none'; completion.style.display='block'; scoreEl.textContent='You got '+score+' / '+questions.length; try{ const total = questions.length || 0; const pct = total ? (score/total)*100 : 0; if (window && window.playPraiseKey){ if (pct>=90) window.playPraiseKey('excellent'); else if (pct>=75) window.playPraiseKey('amazing'); else if (pct>=50) window.playPraiseKey('good job'); } }catch(e){} } });
+  </script>
+  <script src="audio.js" defer></script>
+</body>
+</html>
   </script>
 </body>
 </html>

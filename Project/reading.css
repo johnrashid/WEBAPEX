@@ -52,6 +52,25 @@ body {
     line-height: 1.6;
 }
 
+/* Typography for story text: justify and indent paragraphs for readability */
+#story #story-content{
+    text-align: justify;
+    text-justify: inter-word;
+}
+#story #story-content p,
+#story #story-content div {
+    text-indent: 1.2em;
+    margin-bottom: 0.9em;
+}
+/* Headings inside story should not be indented and remain visually distinct */
+#story #story-content h2,
+#story #story-content h3 {
+    text-indent: 0;
+    margin-top: 0.6em;
+    margin-bottom: 0.5em;
+}
+
+
 /* Stories list: present story buttons as boxed cards and make list scrollable */
 #stories-list{
     display: flex;

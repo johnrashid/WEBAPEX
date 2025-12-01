@@ -6,6 +6,7 @@
   <title>Questions - The Adventure of Tom Sawyer</title>
   <link rel="stylesheet" href="reading.css">
   <link rel="stylesheet" href="questions.css">
+  <link rel="stylesheet" href="design.css">
 </head>
 <body>
 
@@ -217,27 +218,102 @@
         for (let i=0;i<key.length;i++){
           if (answers[i] !== null && answers[i] === key[i]) score++;
         }
+        // Build detailed breakdown: for each question, show correct answer and user's answer (if wrong)
+        function cleanChoiceLabel(choiceStr){
+          return choiceStr.replace(/^[A-Za-z]+\s*[\)\.\-]?\s*/, '').trim();
+        }
 
-        // Show result inside the scrollable container
+        let details = '';
+        for (let i = 0; i < key.length; i++){
+          const qItem = questions[i];
+          const correctIndex = key[i];
+          const correctRaw = (qItem && qItem.choices && qItem.choices[correctIndex]) || '';
+          const correctLabel = (correctRaw || '').trim().charAt(0);
+          const correctText = cleanChoiceLabel(correctRaw || '');
+
+          const userIndex = answers[i];
+          let userHtml = '';
+          if (userIndex === null || userIndex === undefined){
+            userHtml = '<em>Unanswered</em>';
+          } else {
+            const userRaw = (qItem && qItem.choices && qItem.choices[userIndex]) || '';
+            const userLabel = (userRaw || '').trim().charAt(0);
+            const userText = cleanChoiceLabel(userRaw || '');
+            if (userIndex === correctIndex){
+              userHtml = `<span style="color:green;font-weight:700">${userLabel}. ${userText} (correct)</span>`;
+            } else {
+              userHtml = `<span style="color:#c62828;font-weight:700">${userLabel}. ${userText} (your answer)</span>`;
+            }
+          }
+
+          // build the block for this question
+          details += `
+            <div class="q-result" style="margin-bottom:12px;padding:10px;border-radius:8px;background:rgba(255,255,255,0.75);box-shadow:0 6px 14px rgba(10,10,30,0.04)">
+              <div style="font-weight:800;margin-bottom:6px">${i+1}. ${qItem.q.replace(/^\d+\.\s*/, '')}</div>
+              <div><strong>Correct:</strong> <span style="color:green;font-weight:700">${correctLabel}. ${correctText}</span></div>
+              <div><strong>Your answer:</strong> ${userHtml}</div>
+            </div>
+          `;
+        }
+
+        // Hide the main page scrollbar and replace the questions content with results
+        try{
+          document.documentElement.classList.add('result-open');
+          document.body.classList.add('result-open');
+        }catch(e){}
+
+        // Render the results in-place inside the same container so position is preserved
         container.innerHTML = `
-          <div class="result">
-            <h2>You got ${score}/${key.length}</h2>
-            <p>Well done! Click below to continue.</p>
-            <div class="result-actions">
-              <button id="nextStoryBtn" class="btn-submit">${Number(story) === 5 ? 'Choose Level' : 'Next Story'}</button>
+          <div class="result-grid" role="region">
+            <div class="result-list">
+              <div style="text-align:center; margin-bottom:10px">
+                <h2 style="margin:0">You got ${score}/${key.length}</h2>
+                <p style="margin:6px 0 12px; color:#333">See the correct answers, your selections, and points per question below.</p>
+              </div>
+              ${details}
+              <div style="height:18px"></div>
+              <div class="result-actions" style="text-align:center; margin-top:8px">
+                <button id="nextStoryBtn" class="btn-submit">${Number(story) === 5 ? 'Choose Level' : 'Next Story'}</button>
+              </div>
             </div>
           </div>
         `;
 
+        // play final-score praise if available (thresholds)
+        try {
+          if (window && window.playPraiseKey) {
+            const pct = Math.round((score / key.length) * 100);
+            if (pct >= 90) window.playPraiseKey('excellent');
+            else if (pct >= 75) window.playPraiseKey('amazing');
+            else if (pct >= 50) window.playPraiseKey('good job');
+          }
+        } catch (e) {}
+
         // navigate when clicked: if this is story 5 go to level selection, else go to next story
         const next = document.getElementById('nextStoryBtn');
         if (next) {
+          // restore page scrolling, remove overlay, show container, then navigate
+          const restoreAndNavigate = (target) => {
+            try{
+              document.documentElement.classList.remove('result-open');
+              document.body.classList.remove('result-open');
+            }catch(e){}
+            // clean up result state and restore questions (in case navigation is prevented)
+              try{
+                document.documentElement.classList.remove('result-open');
+                document.body.classList.remove('result-open');
+              }catch(e){}
+              try{ render(); }catch(e){}
+              // navigate
+              window.location.href = target;
+          };
+
           if (Number(story) === 5) {
-            next.addEventListener('click', ()=>{ window.location.href = 'level.html'; });
+            next.addEventListener('click', ()=>{ restoreAndNavigate('level.html'); });
           } else {
             next.addEventListener('click', ()=>{
               const nextStory = Number(story) + 1;
-              window.location.href = `story.html?level=${level}&story=${nextStory}`;
+              restoreAndNavigate(`story.html?level=${level}&story=${nextStory}`);
             });
           }
         }
@@ -245,5 +321,6 @@
     }
     attachSubmit();
   </script>
+  <script src="audio.js" defer></script>
 </body>
 </html>

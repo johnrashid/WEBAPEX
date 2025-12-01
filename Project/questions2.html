@@ -6,6 +6,7 @@
 	<title>Questions - Level 2</title>
 	<link rel="stylesheet" href="reading.css">
 	<link rel="stylesheet" href="questions.css">
+	<link rel="stylesheet" href="design.css">
 </head>
 <body>
 
@@ -330,7 +331,17 @@
           </div>
         `;
 
-        // navigate when clicked: if this is story 5 go to level selection, else go to next story
+				// play final-score praise if available (thresholds)
+				try {
+					if (window && window.playPraiseKey) {
+						const pct = Math.round((score / key.length) * 100);
+						if (pct >= 90) window.playPraiseKey('excellent');
+						else if (pct >= 75) window.playPraiseKey('amazing');
+						else if (pct >= 50) window.playPraiseKey('good job');
+					}
+				} catch (e) {}
+
+				// navigate when clicked: if this is story 5 go to level selection, else go to next story
         const next = document.getElementById('nextStoryBtn');
         if (next) {
           if (Number(story) === 5) {
@@ -344,8 +355,9 @@
         }
       });
     }
-    attachSubmit();
-  </script>
+		attachSubmit();
+	</script>
+	<script src="audio.js" defer></script>
 </body>
 </html>
 

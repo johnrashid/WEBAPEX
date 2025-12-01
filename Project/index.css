@@ -184,11 +184,12 @@ body {
 
 /* decorative floating words layer (non-interactive) */
 .floating-words{
-  position: absolute;
+  position: fixed; /* cover the viewport so words fall across the whole page */
   inset: 0;
   pointer-events: none; /* won't block clicks */
   z-index: 0;           /* behind .container content (container has z-index:1) */
   overflow: visible;
+  will-change: transform;
 }
 
 /* word appearance (moderate visibility so it doesn't overpower UI) */

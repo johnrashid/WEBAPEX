@@ -35,7 +35,7 @@
   </main>
 
   <script>
-    const choices = ['Noun','Pronoun','Verb','Adjective','Adverb','Preposition','Conjunction','Interjection'];
+    const choices = ['Subject','Verb','Compound','Indefinite Pronouns','Expressions of Quantity'];
     let idx = 0;
 
     const choiceDisplay = document.getElementById('choiceDisplay');
@@ -56,17 +56,14 @@
     if (choiceBtn) {
       choiceBtn.addEventListener('click', ()=>{
         const selected = choices[idx];
-        switch(selected){
-          case 'Noun': window.location.href = 'grammartest-noun.html'; break;
-          case 'Pronoun': window.location.href = 'grammartest-pronoun.html'; break;
-          case 'Verb': window.location.href = 'grammartest-verb.html'; break;
-          case 'Adjective': window.location.href = 'grammartest-adjective.html'; break;
-          case 'Adverb': window.location.href = 'grammartest-adverb.html'; break;
-          case 'Preposition': window.location.href = 'grammartest-preposition.html'; break;
-          case 'Conjunction': window.location.href = 'grammartest-conjunction.html'; break;
-          case 'Interjection': window.location.href = 'grammartest-interjection.html'; break;
-          default: alert('Quiz for "' + selected + '" is not implemented yet.');
-        }
+          switch(selected){
+            case 'Subject': window.location.href = 'grammartest-sva-subject.html'; break;
+            case 'Verb': window.location.href = 'grammartest-sva-verb.html'; break;
+            case 'Compound': window.location.href = 'grammartest-sva-compound.html'; break;
+            case 'Indefinite Pronouns': window.location.href = 'grammartest-sva-indefinite-pronouns.html'; break;
+            case 'Expressions of Quantity': window.location.href = 'grammartest-sva-expressions.html'; break;
+            default: alert('Quiz for "' + selected + '" is not implemented yet.');
+          }
       });
       // make Enter/Space activate the button for keyboard users
       choiceBtn.addEventListener('keydown', (e)=>{

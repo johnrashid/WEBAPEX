@@ -1,15 +1,32 @@
 // Improved audio controller: muted autoplay fallback, robust checks, logs.
 
 (() => {
-  const audio = document.getElementById('bg-audio');
-  const controlRoot = document.querySelector('.audio-control');
-  const toggleBtn = document.getElementById('audio-toggle');
-  const panel = document.getElementById('audio-panel');
-  const volSlider = document.getElementById('audio-volume');
-  const muteBtn = document.getElementById('audio-mute');
+  // Try to use a page-provided background audio element if available.
+  // Use `let` so we can create a lightweight fallback when it's missing.
+  let audio = document.getElementById('bg-audio');
+  let controlRoot = document.querySelector('.audio-control');
+  let toggleBtn = document.getElementById('audio-toggle');
+  let panel = document.getElementById('audio-panel');
+  let volSlider = document.getElementById('audio-volume');
+  let muteBtn = document.getElementById('audio-mute');
 
-  // Basic existence check
-  if (!audio) { console.warn('audio.js: #bg-audio not found'); return; }
+  // If there is no background audio element on the page, create a minimal
+  // in-memory fallback so the rest of the controller can initialize and
+  // the praise API (`playPraise` / `playPraiseKey`) is always available.
+  if (!audio) {
+    console.warn('audio.js: #bg-audio not found — creating lightweight fallback audio');
+    audio = document.createElement('audio');
+    // keep it off-screen (do not append) and provide enough of the API
+    // so the controller code can interact with it without errors.
+    audio.id = 'bg-audio-fallback';
+    audio.muted = false;
+    audio.volume = 0.6;
+    audio.paused = true;
+    audio.play = () => Promise.resolve();
+    audio.pause = () => {};
+    audio.addEventListener = () => {};
+    audio.removeEventListener = () => {};
+  }
 
   // If UI pieces are missing, create a minimal control so user can start playback
   if (!controlRoot || !toggleBtn || !panel || !volSlider || !muteBtn) {
@@ -203,4 +220,206 @@
   audio.addEventListener('error', (ev) => {
     console.error('audio.js: audio error', ev);
   });
+
+  // Praise / feedback sound API
+  // Uses SpeechSynthesis when available; falls back to a short beep via WebAudio.
+  function _speakPhrase(text, opts){
+    try{
+      if ('speechSynthesis' in window){
+        const u = new SpeechSynthesisUtterance(text);
+        // happy/energetic defaults — can be overridden by opts
+        opts = opts || {};
+        u.lang = opts.lang || 'en-US';
+        // slightly faster and higher pitch for a cheerful tone
+        u.rate = (typeof opts.rate === 'number') ? opts.rate : 1.15;
+        u.pitch = (typeof opts.pitch === 'number') ? opts.pitch : 1.25;
+        u.volume = (typeof opts.volume === 'number') ? opts.volume : 1;
+
+        // Prefer a bright/energetic English voice when available
+        try {
+          const voices = window.speechSynthesis.getVoices() || [];
+          let preferred = null;
+          const namePriority = [/google/i, /zira/i, /samantha/i, /joanna/i, /emma/i, /olivia/i, /alloy/i, /female/i, /en-us/i];
+          for (const re of namePriority) {
+            preferred = voices.find(v => v && v.name && re.test(v.name));
+            if (preferred) break;
+          }
+          if (!preferred) preferred = voices.find(v => v && v.lang && String(v.lang).toLowerCase().startsWith('en')) || voices[0];
+          if (preferred) u.voice = preferred;
+        } catch (e) {
+          // non-fatal — voice selection best-effort
+        }
+
+        // cancel any previous short utterances so praises don't queue up
+        try{ window.speechSynthesis.cancel(); }catch(e){}
+        window.speechSynthesis.speak(u);
+        return;
+      }
+    }catch(e){
+      console.warn('audio.js: speechSynthesis failed', e);
+    }
+
+    // fallback: tiny beep
+    try{
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      if (!Ctx) return;
+      const ctx = new Ctx();
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      o.type = 'sine';
+      o.frequency.value = 880;
+      g.gain.value = 0.0001;
+      o.connect(g);
+      g.connect(ctx.destination);
+      o.start();
+      g.gain.exponentialRampToValueAtTime(0.18, ctx.currentTime + 0.01);
+      g.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.25);
+      setTimeout(()=>{ try{ o.stop(); ctx.close(); }catch(e){} }, 300);
+    }catch(e){}
+  }
+
+  // Public API: praise helpers.
+  // - `playPraise()`                : speak a random praise phrase
+  // - `playPraise(keyOrText)`       : if `keyOrText` matches a known key (e.g. 'amazing','correct','goodjob','excellent'), speak the mapped phrase; otherwise speak the provided text
+  // - `playPraiseKey(key)`          : speak a phrase for a known key (convenience)
+  // - `getPraiseKeys()`             : returns available keys
+  // All functions respect the site's mute setting (`audio.muted`).
+
+  const praiseKeyMap = {
+    amazing: 'Amazing! That was awesome!',
+    correct: 'Correct! Nice work!',
+    goodjob: 'Good job! Keep it up!',
+    excellent: 'Excellent! You\'re on fire!',
+    'well done': 'Well done! Fantastic!',
+    nicework: 'Nice work! Brilliant!',
+    'good': 'Good job! 👍',
+    brilliant: 'Brilliant! Amazing!',
+    fantastic: 'Fantastic! Wow!',
+    superb: 'Superb! Great effort!',
+    terrific: 'Terrific! Nice!',
+    outstanding: 'Outstanding! Excellent!',
+    fabulous: 'Fabulous! Well done!',
+    great: 'Great! Keep going!',
+    wonderful: 'Wonderful! You did it!'
+  };
+
+  // Shuffle-play state and API
+  // Usage: window.playPraiseShuffle({count: 5, interval: 700}) -> returns controller { stop(), phrases }
+  // Calls respect site mute; multiple calls stop prior shuffle.
+  const _praiseShuffleState = {
+    timers: [],
+    running: false,
+    lastShuffle: [],
+    stop() {
+      this.timers.forEach(id => clearTimeout(id));
+      this.timers.length = 0;
+      this.running = false;
+      this.lastShuffle.length = 0;
+      try{ if (window.speechSynthesis) window.speechSynthesis.cancel(); } catch(e){}
+    }
+  };
+
+  window.playPraiseShuffle = function(options){
+    try{
+      if (audio.muted) return;
+      options = options || {};
+      const interval = (typeof options.interval === 'number') ? options.interval : 700;
+      const count = (typeof options.count === 'number' && options.count > 0) ? options.count : null;
+      // stop any existing shuffle
+      if (_praiseShuffleState.running) _praiseShuffleState.stop();
+
+      // build phrases array and apply excludes (Fisher-Yates shuffle applied after filtering)
+      let phrases = Object.values(praiseKeyMap).slice();
+      // support exclude options: array of keys (`excludeKeys`) or phrase texts (`excludeValues`) or `exclude` (alias)
+      const excludeKeys = Array.isArray(options.excludeKeys) ? options.excludeKeys.map(s=>String(s).toLowerCase()) : [];
+      const excludeValues = Array.isArray(options.excludeValues) ? options.excludeValues.map(s=>String(s).toLowerCase()) : [];
+      const exclude = Array.isArray(options.exclude) ? options.exclude.map(s=>String(s).toLowerCase()) : [];
+      const allExcludes = excludeKeys.concat(excludeValues).concat(exclude);
+      if (allExcludes.length) {
+        // remove phrases that match mapped values for exclude keys, or match exclude texts
+        const mappedExcludes = new Set();
+        allExcludes.forEach(e => {
+          // if entry matches a key in praiseKeyMap, add mapped phrase
+          for (const k in praiseKeyMap) {
+            if (k.toLowerCase() === e) mappedExcludes.add(String(praiseKeyMap[k]).toLowerCase());
+          }
+          // also treat e as a phrase value to exclude
+          mappedExcludes.add(e);
+        });
+        phrases = phrases.filter(p => !mappedExcludes.has(String(p).toLowerCase()));
+      }
+
+      // if nothing left after filtering, fall back to full list
+      if (!phrases.length) phrases = Object.values(praiseKeyMap).slice();
+
+      // shuffle (Fisher-Yates)
+      for (let i = phrases.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const tmp = phrases[i]; phrases[i] = phrases[j]; phrases[j] = tmp;
+      }
+      for (let i = phrases.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const tmp = phrases[i]; phrases[i] = phrases[j]; phrases[j] = tmp;
+      }
+
+      const total = count ? Math.min(count, phrases.length) : phrases.length;
+      _praiseShuffleState.running = true;
+      _praiseShuffleState.lastShuffle = phrases.slice(0, total);
+
+      for (let i = 0; i < total; i++){
+        const text = _praiseShuffleState.lastShuffle[i];
+        const t = setTimeout(((txt) => () => { if (!audio.muted) _speakPhrase(txt); })(text), i * interval);
+        _praiseShuffleState.timers.push(t);
+      }
+
+      // cleanup timer to reset running flag after sequence
+      const cleanup = setTimeout(() => { _praiseShuffleState.running = false; _praiseShuffleState.timers.length = 0; }, total * interval + 100);
+      _praiseShuffleState.timers.push(cleanup);
+
+      return {
+        stop: () => { _praiseShuffleState.stop(); },
+        phrases: _praiseShuffleState.lastShuffle.slice()
+      };
+    }catch(e){ console.warn('audio.js: playPraiseShuffle failed', e); }
+  };
+
+  window.stopPraiseShuffle = function(){ try{ _praiseShuffleState.stop(); }catch(e){} };
+
+  window.getPraiseKeys = function(){
+    try{ return Object.keys(praiseKeyMap); }catch(e){ return []; }
+  };
+
+  window.playPraiseKey = function(key){
+    try{
+      if (audio.muted) return;
+      if (!key) return window.playPraise();
+      const k = String(key).toLowerCase().trim();
+      const resolved = praiseKeyMap[k] || praiseKeyMap[k.replace(/\s+/g,'')];
+      const text = resolved || String(key);
+      // Use a slightly faster, higher-pitched delivery for keyed praise
+      _speakPhrase(text, { rate: 1.35, pitch: 1.45, volume: 1 });
+    }catch(e){ console.warn('audio.js: playPraiseKey failed', e); }
+  };
+
+  window.playPraise = function(preferredPhraseOrKey){
+    try{
+      if (audio.muted) return; // respect user's mute
+      // no argument: random known praise
+      if (!preferredPhraseOrKey){
+        const phrases = Object.values(praiseKeyMap);
+        const text = phrases[Math.floor(Math.random()*phrases.length)];
+        _speakPhrase(text);
+        return;
+      }
+      // if argument matches a key, use mapped phrase
+      const maybe = String(preferredPhraseOrKey);
+      const key = maybe.toLowerCase().trim();
+      if (praiseKeyMap[key]) { _speakPhrase(praiseKeyMap[key]); return; }
+      if (praiseKeyMap[key.replace(/\s+/g,'')]) { _speakPhrase(praiseKeyMap[key.replace(/\s+/g,'')]); return; }
+      // otherwise speak provided text directly
+      _speakPhrase(maybe);
+    }catch(e){
+      console.warn('audio.js: playPraise failed', e);
+    }
+  };
 })();

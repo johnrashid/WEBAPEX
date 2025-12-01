@@ -6,6 +6,7 @@
 	<meta name="viewport" content="width=device-width,initial-scale=1" />
 	<title>Texts Glossary</title>
 	<link rel="stylesheet" href="grammartest.css">
+	<link rel="stylesheet" href="design.css">
 </head>
 <body>
 
@@ -17,24 +18,33 @@
 
 
 	<main class="canvas" role="main">
-		<h1 class="title">Welcome to Grammar Test Mode</h1>
-		<button id="nextBtn" class="next-btn" aria-label="Open parts selector">Next</button>
+				<h1 class="title">Welcome to Grammar Test Mode</h1>
+				<div class="actions-row">
+					<button id="partsBtn" class="next-btn" aria-label="Open Parts of Speech selector">Parts of Speech</button>
+					<button id="svaBtn" class="next-btn" aria-label="Open Subject-Verb Agreement tests">Subject‑Verb Agreement</button>
+				</div>
 	</main>
 
 
 	<script>
 		const back = document.querySelector('.back-btn');
 		const learn = document.getElementById('learnBtn');
-		const next = document.getElementById('nextBtn');
+		const parts = document.getElementById('partsBtn');
+		const sva = document.getElementById('svaBtn');
 		if (back) {
 			back.addEventListener('click', ()=>{ location.href = 'index.html'; });
 		}
 		if (learn) {
 			learn.addEventListener('click', ()=>{ window.location.href = 'textsglossary-learn.html'; });
 		}
-		// Default Next action — open the Parts of Speech selector page
-		if (next) {
-			next.addEventListener('click', ()=>{ window.location.href = 'grammartest-parts.html'; });
+		// Parts of Speech button — open the Parts selector page
+		if (parts) {
+			parts.addEventListener('click', ()=>{ window.location.href = 'grammartest-parts.html'; });
+		}
+
+		// Subject-Verb Agreement button — open SVA test page
+		if (sva) {
+			sva.addEventListener('click', ()=>{ window.location.href = 'grammartest-sva.html'; });
 		}
 	</script>
 </body>

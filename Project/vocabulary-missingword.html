@@ -6,6 +6,7 @@
   <title>Missing Word</title>
   <link rel="stylesheet" href="vocabularytest.css">
   <link rel="stylesheet" href="pretest.css">
+  <link rel="stylesheet" href="design.css">
 </head>
 <body>
   <button type="button" class="back-btn" onclick="history.back()" aria-label="Go back">
@@ -83,14 +84,20 @@
       it.choices.forEach((c,i)=>{
         const b = document.createElement('button');
         b.type = 'button';
-        b.className = 'level-btn';
+        b.className = 'level-btn choice-btn';
         b.textContent = String.fromCharCode(65+i) + '. ' + c;
         b.addEventListener('click', ()=>{
           const all = choicesEl.querySelectorAll('button');
+          const isCorrect = i === it.correct;
+          if (isCorrect) b.classList.add('correct'); else b.classList.add('wrong');
           all.forEach(x=>x.disabled = true);
-          const correct = i === it.correct;
-          if (correct){ score++; feedback.textContent = 'Correct!'; feedback.style.color = '#0a8a0a'; }
-          else { feedback.textContent = 'Incorrect. The correct answer is ' + String.fromCharCode(65+it.correct) + '. ' + it.choices[it.correct]; feedback.style.color = '#c62828'; }
+          if (isCorrect){ score++; feedback.textContent = 'Correct!'; feedback.style.color = '#0a8a0a'; if (window.playPraise) window.playPraise(); }
+          else {
+            const buttons = Array.from(choicesEl.querySelectorAll('button'));
+            const correctBtn = buttons[it.correct];
+            if (correctBtn) correctBtn.classList.add('correct');
+            feedback.textContent = 'Incorrect. The correct answer is ' + String.fromCharCode(65+it.correct) + '. ' + it.choices[it.correct]; feedback.style.color = '#c62828';
+          }
           nextBtn.textContent = index < questions.length-1 ? 'Next' : 'Finish';
           nextBtn.style.display = 'inline-block';
         });
@@ -109,6 +116,15 @@
         qView.style.display='none'; completion.style.display='block';
         if (titleEl) titleEl.style.display = 'block';
         scoreText.textContent = 'You got ' + score + ' / ' + questions.length;
+        try{
+          const total = questions.length || 0;
+          const pct = total ? (score / total) * 100 : 0;
+          if (window && window.playPraiseKey){
+            if (pct >= 90) window.playPraiseKey('excellent');
+            else if (pct >= 75) window.playPraiseKey('amazing');
+            else if (pct >= 50) window.playPraiseKey('good job');
+          }
+        }catch(e){}
         keyList.innerHTML = '';
         questions.forEach((qq,i)=>{
           const li = document.createElement('li');
@@ -119,6 +135,7 @@
       }
     });
   </script>
+  <script src="audio.js" defer></script>
 </body>
 </html>
 
