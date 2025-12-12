@@ -21,6 +21,19 @@
     </section>
 
     <section id="questionView" class="question" style="display:none;">
+      <div id="timer" style="position:relative; width:70px; height:70px; margin:0 auto 12px;">
+        <svg width="70" height="70" style="transform:rotate(-90deg);">
+          <circle cx="35" cy="35" r="30" fill="none" stroke="rgba(47,111,184,0.18)" stroke-width="4"/>
+          <circle id="timer-circle" cx="35" cy="35" r="30" fill="none" stroke="url(#gradient)" stroke-width="4" stroke-dasharray="188.496" stroke-dashoffset="0" style="transition:stroke-dashoffset 1s linear;"/>
+          <defs>
+            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#2f6fb8;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#6a3fc0;stop-opacity:1" />
+            </linearGradient>
+          </defs>
+        </svg>
+        <div id="timer-text" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:18px; font-weight:900; background:linear-gradient(135deg, #2f6fb8 0%, #6a3fc0 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">1:00</div>
+      </div>
       <p id="q-text" class="q-text" style="font-size:20px;font-weight:700;margin-bottom:18px;"></p>
       <div id="choices" class="levels"></div>
       <div id="feedback" style="margin-top:14px;font-weight:700; min-height:22px"></div>
@@ -61,7 +74,7 @@
       {q:'20. Budge', choices:['Move','Shift','Stay still','Twist'], correct:2}
     ];
 
-    let index = 0, score = 0;
+    let index = 0, score = 0; let intenseAudio = null; let timeLeft = 60; let timerInterval = null;
     const titleEl = document.querySelector('.title');
     const intro = document.getElementById('intro');
     const startBtn = document.getElementById('startBtn');
@@ -70,22 +83,33 @@
     const choicesEl = document.getElementById('choices');
     const feedback = document.getElementById('feedback');
     const nextBtn = document.getElementById('nextBtn');
+    const timerEl = document.getElementById('timer');
+    const timerText = document.getElementById('timer-text');
+    const timerCircle = document.getElementById('timer-circle');
+    const totalTime = 60;
+    const circumference = 2 * Math.PI * 30;
     const completion = document.getElementById('completion');
     const scoreText = document.getElementById('scoreText');
     const keyList = document.getElementById('keyList');
 
+    function startTimer(){ timeLeft = 60; timerText.textContent = '1:00'; timerCircle.style.strokeDashoffset = '0'; if (timerInterval) clearInterval(timerInterval); timerInterval = setInterval(() => { timeLeft--; const mins = Math.floor(timeLeft / 60); const secs = timeLeft % 60; timerText.textContent = mins + ':' + (secs < 10 ? '0' : '') + secs; const progress = (totalTime - timeLeft) / totalTime; timerCircle.style.strokeDashoffset = circumference * progress; if (timeLeft <= 0) { clearInterval(timerInterval); handleTimeout(); } }, 1000); }
+    function handleTimeout(){ try { if (intenseAudio) { intenseAudio.pause(); intenseAudio.currentTime = 0; } } catch(e){} try { const buzzer = new Audio('wrong.mp3'); buzzer.play(); } catch(e){} const it = questions[index]; const all = choicesEl.querySelectorAll('button'); all.forEach(b => b.disabled = true); const buttons = Array.from(all); const correctBtn = buttons[it.correct]; if (correctBtn) correctBtn.classList.add('correct'); feedback.textContent = 'Time\'s up! The correct answer is ' + String.fromCharCode(65+it.correct) + '. ' + it.choices[it.correct]; feedback.style.color = '#c62828'; nextBtn.style.display = 'inline-block'; }
     function render(){
       const it = questions[index];
       qText.textContent = it.q;
       choicesEl.innerHTML = '';
       feedback.textContent = '';
       nextBtn.style.display = 'none';
+      try { intenseAudio = new Audio('intense.mp3'); intenseAudio.loop = true; intenseAudio.play(); } catch(e){}
+      startTimer();
       it.choices.forEach((c,i)=>{
         const b = document.createElement('button');
         b.type = 'button';
         b.className = 'level-btn choice-btn';
         b.textContent = String.fromCharCode(65+i) + '. ' + c;
         b.addEventListener('click', ()=>{
+          if (timerInterval) clearInterval(timerInterval);
+          try { if (intenseAudio) { intenseAudio.pause(); intenseAudio.currentTime = 0; } } catch(e){}
           const all = choicesEl.querySelectorAll('button');
           const isCorrect = i === it.correct;
           if (isCorrect) b.classList.add('correct'); else b.classList.add('wrong');
@@ -96,6 +120,7 @@
             const correctBtn = buttons[it.correct];
             if (correctBtn) correctBtn.classList.add('correct');
             feedback.textContent = 'Incorrect. The correct answer is ' + String.fromCharCode(65+it.correct) + '. ' + it.choices[it.correct]; feedback.style.color = '#c62828';
+            try { const wrongAudio = new Audio('wrong.mp3'); wrongAudio.play(); } catch(e){}
           }
           nextBtn.textContent = index < questions.length-1 ? 'Next' : 'Finish';
           nextBtn.style.display = 'inline-block';
@@ -110,6 +135,7 @@
     });
 
     nextBtn.addEventListener('click', ()=>{
+      if (timerInterval) clearInterval(timerInterval);
       if (index < questions.length-1){ index++; render(); window.scrollTo({top:0,behavior:'smooth'}); }
       else {
         qView.style.display='none'; completion.style.display='block';

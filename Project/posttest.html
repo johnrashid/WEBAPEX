@@ -37,6 +37,19 @@
 
       <!-- Question view (dynamic) -->
       <div id="question-view" class="question" style="max-width:780px; text-align:center; display:none;">
+        <div id="timer" style="position:relative; width:70px; height:70px; margin:0 auto 12px;">
+          <svg width="70" height="70" style="transform:rotate(-90deg);">
+            <circle cx="35" cy="35" r="30" fill="none" stroke="rgba(47,111,184,0.18)" stroke-width="4"/>
+            <circle id="timer-circle" cx="35" cy="35" r="30" fill="none" stroke="url(#gradient)" stroke-width="4" stroke-dasharray="188.496" stroke-dashoffset="0" style="transition:stroke-dashoffset 1s linear;"/>
+            <defs>
+              <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#2f6fb8;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#6a3fc0;stop-opacity:1" />
+              </linearGradient>
+            </defs>
+          </svg>
+          <div id="timer-text" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:18px; font-weight:900; background:linear-gradient(135deg, #2f6fb8 0%, #6a3fc0 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">1:00</div>
+        </div>
         <p id="q-text" class="q-text" style="font-size:24px; font-weight:800; color:#07101a; margin: 0 0 18px;"></p>
         <div id="choices" class="levels" style="gap:16px;"></div>
         <div id="feedback" class="feedback" aria-live="polite" style="margin-top:14px; font-weight:700;"></div>
@@ -106,80 +119,72 @@
 
           // Given an array of question objects {q, choices, correct},
           // return a shuffled copy where question order is randomized
-          // and choices for each question are also shuffled with the
-          // correct index updated accordingly.
+          // but choices remain in their original A, B, C, D order
           function shuffleQuestions(src){
             // deep copy questions
             const copied = src.map(item => ({ q: item.q, choices: item.choices.slice(), correct: item.correct }));
-            // shuffle question order
+            // shuffle question order only
             const shuffled = shuffleArray(copied);
-            // for each question, shuffle choices and update correct index
-            shuffled.forEach(item => {
-              const originalChoices = item.choices.slice();
-              const correctLabel = originalChoices[item.correct];
-              const newChoices = shuffleArray(originalChoices);
-              item.choices = newChoices;
-              item.correct = newChoices.findIndex(c => c === correctLabel);
-            });
+            // choices are NOT shuffled - they stay in A, B, C, D order
             return shuffled;
           }
           const synonyms = [
-            { q: '1. The teacher gave a BRIEF explanation.', choices: ['a. long','b. short','c. confusing','d. repeated'], correct: 1 },
-            { q: '2. The students were EAGER to learn.', choices: ['a. bored','b. unwilling','c. excited','d. silent'], correct: 2 },
-            { q: '3. The room was IMMENSE.', choices: ['a. tiny','b. loud','c. huge','d. crowded'], correct: 2 },
-            { q: '4. She ADMIRED by her mother.', choices: ['a. disliked','b. respected','c. ignored','d. helped'], correct: 1 },
-            { q: '5. The movie was very HUMOROUS.', choices: ['a. sad','b. funny','c. dull','d. plain'], correct: 1 },
-            { q: '6. The FRAGILE vase broke easily.', choices: ['a. strong','b. cheap','c. delicate','d. colorful'], correct: 2 },
-            { q: '7. He COMPLETED his homework early.', choices: ['a. started','b. skipped','c. erased','d. finished'], correct: 3 },
-            { q: '8. The scenery was MAGNIFICENT.', choices: ['a. ugly','b. ordinary','c. beautiful','d. dark'], correct: 2 },
-            { q: '9. She felt WEARY after walking all day.', choices: ['a. rested','b. tired','c. excited','d. angry'], correct: 1 },
-            { q: '10. The child had a VIVID imagination.', choices: ['a. dull','b. lively','c. weak','d. short'], correct: 1 },
-            { q: '11. The jungle was DENCE.', choices: ['a. thin','b. thick','c. wet','d. high'], correct: 1 },
-            { q: '12. He spoke in a TIMID voice.', choices: ['a. loud','b. shy','c. happy','d. angry'], correct: 1 },
-            { q: '13. She made a CRUCIAL decision.', choices: ['a. unimportant','b. risky','c. central','d. delayed'], correct: 2 },
-            { q: '14. The air was FRIGID this morning.', choices: ['a. cold','b. warm','c. clear','d. polluted'], correct: 0 },
-            { q: '15. They gave GENEROUS donations.', choices: ['a. large','b. selfish','c. few','d. secret'], correct: 0 },
-            { q: '16. The message was URGENT.', choices: ['a. slow','b. unimportant','c. immediate','d. late'], correct: 2 },
-            { q: '17. She wore a GLORIOUS dress.', choices: ['a. ordinary','b. bright','c. splendid','d. simple'], correct: 2 },
-            { q: '18. The boy was OBEDIENT.', choices: ['a. helpful','b. careful','c. respectful','d. compliant'], correct: 3 },
-            { q: '19. They lived in a TRANQUIL place.', choices: ['a. noisy','b. peaceful','c. crowded','d. far'], correct: 1 },
-            { q: '20. The old man looked FRAIL.', choices: ['a. strong','b. weak','c. sick','d. tall'], correct: 1 }
+            { q: '1. The teacher gave a BRIEF explanation.', choices: ['A. long','B. short','C. confusing','D. repeated'], correct: 1 },
+            { q: '2. The students were EAGER to learn.', choices: ['A. bored','B. unwilling','C. excited','D. silent'], correct: 2 },
+            { q: '3. The room was IMMENSE.', choices: ['A. tiny','B. loud','C. huge','D. crowded'], correct: 2 },
+            { q: '4. She ADMIRED by her mother.', choices: ['A. disliked','B. respected','C. ignored','D. helped'], correct: 1 },
+            { q: '5. The movie was very HUMOROUS.', choices: ['A. sad','B. funny','C. dull','D. plain'], correct: 1 },
+            { q: '6. The FRAGILE vase broke easily.', choices: ['A. strong','B. cheap','C. delicate','D. colorful'], correct: 2 },
+            { q: '7. He COMPLETED his homework early.', choices: ['A. skipped','B. started','C. finished','D. erased'], correct: 2 },
+            { q: '8. The scenery was MAGNIFICENT.', choices: ['A. ugly','B. ordinary','C. beautiful','D. dark'], correct: 2 },
+            { q: '9. She felt WEARY after walking all day.', choices: ['A. rested','B. tired','C. excited','D. angry'], correct: 1 },
+            { q: '10. The child had a VIVID imagination.', choices: ['A. dull','B. lively','C. weak','D. short'], correct: 1 },
+            { q: '11. The jungle was DENCE.', choices: ['A. thin','B. thick','C. wet','D. high'], correct: 1 },
+            { q: '12. He spoke in a TIMID voice.', choices: ['A. loud','B. shy','C. happy','D. angry'], correct: 1 },
+            { q: '13. She made a CRUCIAL decision.', choices: ['A. unimportant','B. risky','C. central','D. delayed'], correct: 2 },
+            { q: '14. The air was FRIGID this morning.', choices: ['A. cold','B. warm','C. clear','D. polluted'], correct: 0 },
+            { q: '15. They gave GENEROUS donations.', choices: ['A. large','B. selfish','C. few','D. secret'], correct: 0 },
+            { q: '16. The message was URGENT.', choices: ['A. slow','B. unimportant','C. immediate','D. late'], correct: 2 },
+            { q: '17. She wore a GLORIOUS dress.', choices: ['A. ordinary','B. bright','C. splendid','D. simple'], correct: 2 },
+            { q: '18. The boy was OBEDIENT.', choices: ['A. helpful','B. careful','C. respectful','D. compliant'], correct: 3 },
+            { q: '19. They lived in a TRANQUIL place.', choices: ['A. noisy','B. peaceful','C. crowded','D. far'], correct: 1 },
+            { q: '20. The old man looked FRAIL.', choices: ['A. strong','B. weak','C. sick','D. tall'], correct: 1 }
           ];
 
           const antonyms = [
-            { q: '21. The girl was POLITE.', choices: ['a. rude','b. sweet','c. quiet','d. shy'], correct: 0 },
-            { q: '22. The lake was SHALLOW.', choices: ['a. wide','b. deep','c. clear','d. narrow'], correct: 1 },
-            { q: '23. It was a GLOOMY day.', choices: ['a. sad','b. bright','c. cold','d. long'], correct: 1 },
-            { q: '24. He gave a TRUTHFUL answer.', choices: ['a. honest','b. complete','c. polite','d. dishonest'], correct: 3 },
-            { q: '25. The dog was HOSTILE.', choices: ['a. friendly','b. big','c. playful','d. fast'], correct: 0 },
-            { q: '26. The results were ACCURATE.', choices: ['a. wrong','b. old','c. fast','d. late'], correct: 0 },
-            { q: '27. She wore CASUAL clothes.', choices: ['a. fancy','b. dirty','c. new','d. comfortable'], correct: 0 },
-            { q: '28. He is very BRAVE.', choices: ['a. strong','b. cowardly','c. quick','d. noisy'], correct: 1 },
-            { q: '29. That was a COMMON mistake.', choices: ['a. unusual','b. easy','c. frequent','d. correct'], correct: 0 },
-            { q: '30. The boy seemed ARROGANT.', choices: ['a. proud','b. shy','c. humble','d. angry'], correct: 2 },
-            { q: '31. The worker was DILIGENT.', choices: ['a. lazy','b. helpful','c. slow','d. happy'], correct: 0 },
-            { q: '32. The river flowed RAPIDLY.', choices: ['a. quickly','b. slowly','c. quietly','d. steadily'], correct: 1 },
-            { q: '33. She gave a VAGUE answer.', choices: ['a. unclear','b. long','c. complete','d. clear'], correct: 3 },
-            { q: '34. The soup is BLAND.', choices: ['a. tasteless','b. spicy','c. warm','d. old'], correct: 1 },
-            { q: '35. He felt CONFIDENT before the test.', choices: ['a. nervous','b. ready','c. energetic','d. proud'], correct: 0 }
+            { q: '21. The girl was POLITE.', choices: ['A. rude','B. sweet','C. quiet','D. shy'], correct: 0 },
+            { q: '22. The lake was SHALLOW.', choices: ['A. wide','B. deep','C. clear','D. narrow'], correct: 1 },
+            { q: '23. It was a GLOOMY day.', choices: ['A. sad','B. bright','C. cold','D. long'], correct: 1 },
+            { q: '24. He gave a TRUTHFUL answer.', choices: ['A. honest','B. complete','C. polite','D. dishonest'], correct: 3 },
+            { q: '25. The dog was HOSTILE.', choices: ['A. friendly','B. big','C. playful','D. fast'], correct: 0 },
+            { q: '26. The results were ACCURATE.', choices: ['A. wrong','B. old','C. fast','D. late'], correct: 0 },
+            { q: '27. She wore CASUAL clothes.', choices: ['A. fancy','B. dirty','C. new','D. comfortable'], correct: 0 },
+            { q: '28. He is very BRAVE.', choices: ['A. strong','B. cowardly','C. quick','D. noisy'], correct: 1 },
+            { q: '29. That was a COMMON mistake.', choices: ['A. unusual','B. easy','C. frequent','D. correct'], correct: 0 },
+            { q: '30. The boy seemed ARROGANT.', choices: ['A. proud','B. shy','C. humble','D. angry'], correct: 2 },
+            { q: '31. The worker was DILIGENT.', choices: ['A. lazy','B. helpful','C. slow','D. happy'], correct: 0 },
+            { q: '32. The river flowed RAPIDLY.', choices: ['A. quickly','B. slowly','C. quietly','D. steadily'], correct: 1 },
+            { q: '33. She gave a VAGUE answer.', choices: ['A. unclear','B. long','C. complete','D. clear'], correct: 3 },
+            { q: '34. The soup is BLAND.', choices: ['A. tasteless','B. spicy','C. warm','D. old'], correct: 1 },
+            { q: '35. He felt CONFIDENT before the test.', choices: ['A. nervous','B. ready','C. energetic','D. proud'], correct: 0 }
           ];
 
           const partsOfSpeech = [
-            { q: '36. The CAT slept on the couch.', choices: ['a. noun','b. verb','c. adjective','d. adverb'], correct: 0 },
-            { q: '37. She sings BEAUTIFULLY.', choices: ['a. noun','b. adverb','c. adjective','d. verb'], correct: 1 },
-            { q: '38. The BLUE ribbon was shiny.', choices: ['a. adjective','b. noun','c. verb','d. pronoun'], correct: 0 },
-            { q: '39. They RUN every morning.', choices: ['a. verb','b. noun','c. adverb','d. adjective'], correct: 0 },
-            { q: '40. WOW! That was amazing.', choices: ['a. conjunction','b. interjection','c. verb','d. noun'], correct: 1 },
-            { q: '41. The cat hid UNDER the bed.', choices: ['a. preposition','b. adverb','c. pronoun','d. noun'], correct: 0 },
-            { q: '42. SHE is my best friend.', choices: ['a. pronoun','b. noun','c. verb','d. adverb'], correct: 0 },
-            { q: '43. The QUICK fox jumped over the fence.', choices: ['a. adjective','b. adverb','c. pronoun','d. verb'], correct: 0 },
-            { q: '44. They walked SLOWLY.', choices: ['a. verb','b. noun','c. adverb','d. adjective'], correct: 2 },
-            { q: '45. The children PLAYED in the park.', choices: ['a. noun','b. adverb','c. adjective','d. verb'], correct: 3 },
-            { q: '46. I bought a NEW notebook.', choices: ['a. adjective','b. noun','c. verb','d. adverb'], correct: 0 },
-            { q: '47. The teacher wrote on the board AND explained the lesson.', choices: ['a. conjunction','b. verb','c. adverb','d. noun'], correct: 0 },
-            { q: '48. Please close the door QUIETLY.', choices: ['a. adjective','b. pronoun','c. adverb','d. noun'], correct: 2 },
-            { q: '49. The TEAM won the game.', choices: ['a. verb','b. adjective','c. noun','d. pronoun'], correct: 2 },
-            { q: '50. We saw a bird BEHIND the tree.', choices: ['a. adverb','b. verb','c. preposition','d. adjective'], correct: 2 }
+            { q: '36. The CAT slept on the couch.', choices: ['A. noun','B. verb','C. adjective','D. adverb'], correct: 0 },
+            { q: '37. She sings BEAUTIFULLY.', choices: ['A. noun','B. adverb','C. adjective','D. verb'], correct: 1 },
+            { q: '38. The BLUE ribbon was shiny.', choices: ['A. adjective','B. noun','C. verb','D. pronoun'], correct: 0 },
+            { q: '39. They RUN every morning.', choices: ['A. verb','B. noun','C. adverb','D. adjective'], correct: 0 },
+            { q: '40. WOW! That was amazing.', choices: ['A. conjunction','B. interjection','C. verb','D. noun'], correct: 1 },
+            { q: '41. The cat hid UNDER the bed.', choices: ['A. preposition','B. adverb','C. pronoun','D. noun'], correct: 0 },
+            { q: '42. SHE is my best friend.', choices: ['A. pronoun','B. noun','C. verb','D. adverb'], correct: 0 },
+            { q: '43. The QUICK fox jumped over the fence.', choices: ['A. adjective','B. adverb','C. pronoun','D. verb'], correct: 0 },
+            { q: '44. They walked SLOWLY.', choices: ['A. verb','B. noun','C. adverb','D. adjective'], correct: 2 },
+            { q: '45. The children PLAYED in the park.', choices: ['A. noun','B. adverb','C. adjective','D. verb'], correct: 3 },
+            { q: '46. I bought a NEW notebook.', choices: ['A. adjective','B. noun','C. verb','D. adverb'], correct: 0 },
+            { q: '47. The teacher wrote on the board AND explained the lesson.', choices: ['A. conjunction','B. verb','C. adverb','D. noun'], correct: 0 },
+            { q: '48. Please close the door QUIETLY.', choices: ['A. adjective','B. pronoun','C. adverb','D. noun'], correct: 2 },
+            { q: '49. The TEAM won the game.', choices: ['A. verb','B. adjective','C. noun','D. pronoun'], correct: 2 },
+            { q: '50. We saw a bird BEHIND the tree.', choices: ['A. adverb','B. verb','C. preposition','D. adjective'], correct: 2 }
           ];
 
           // start with shuffled synonyms so opening the page shows randomized questions
@@ -192,6 +197,47 @@
           const choicesEl = document.getElementById('choices');
           const feedback = document.getElementById('feedback');
           const nextBtn = document.getElementById('next-btn');
+          const timerEl = document.getElementById('timer');
+          const timerText = document.getElementById('timer-text');
+          const timerCircle = document.getElementById('timer-circle');
+          let intenseAudio = null;
+          let timeLeft = 60;
+          let timerInterval = null;
+          const totalTime = 60;
+          const circumference = 2 * Math.PI * 30;
+
+          function startTimer() {
+            timeLeft = 60;
+            timerText.textContent = '1:00';
+            timerCircle.style.strokeDashoffset = '0';
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+              timeLeft--;
+              const mins = Math.floor(timeLeft / 60);
+              const secs = timeLeft % 60;
+              timerText.textContent = mins + ':' + (secs < 10 ? '0' : '') + secs;
+              const progress = (totalTime - timeLeft) / totalTime;
+              timerCircle.style.strokeDashoffset = circumference * progress;
+              if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                handleTimeout();
+              }
+            }, 1000);
+          }
+
+          function handleTimeout() {
+            try { if (intenseAudio) { intenseAudio.pause(); intenseAudio.currentTime = 0; } } catch(e){}
+            try { const buzzer = new Audio('wrong.mp3'); buzzer.play(); } catch(e){}
+            const item = quiz[index];
+            const all = choicesEl.querySelectorAll('button');
+            all.forEach(b => b.disabled = true);
+            const buttons = Array.from(all);
+            const correctBtn = buttons[item.correct];
+            if (correctBtn) correctBtn.classList.add('correct');
+            feedback.textContent = 'Time\'s up! The correct answer is ' + item.choices[item.correct] + '.';
+            feedback.style.color = '#c62828';
+            nextBtn.style.display = 'inline-block';
+          }
 
           function render() {
             const item = quiz[index];
@@ -203,12 +249,16 @@
             choicesEl.innerHTML = '';
             feedback.textContent = '';
             nextBtn.style.display = 'none';
+            try { intenseAudio = new Audio('intense.mp3'); intenseAudio.loop = true; intenseAudio.play(); } catch(e){}
+            startTimer();
 
             item.choices.forEach((label, i) => {
               const btn = document.createElement('button');
               btn.className = 'level-btn choice-btn';
               btn.textContent = label;
               btn.addEventListener('click', () => {
+                if (timerInterval) clearInterval(timerInterval);
+                try { if (intenseAudio) { intenseAudio.pause(); intenseAudio.currentTime = 0; } } catch(e){}
                 const isCorrect = i === item.correct;
                 // mark selection visually
                 if (isCorrect) btn.classList.add('correct'); else btn.classList.add('wrong');
@@ -226,6 +276,7 @@
                   const correctLabel = item.choices[item.correct];
                   feedback.textContent = 'Incorrect. The correct answer is ' + correctLabel + '.';
                   feedback.style.color = '#c62828';
+                  try { const wrongAudio = new Audio('wrong.mp3'); wrongAudio.play(); } catch(e){}
                   // highlight the correct choice as well
                   const buttons = Array.from(choicesEl.querySelectorAll('button'));
                   const correctBtn = buttons[item.correct];
@@ -240,6 +291,7 @@
           }
 
           nextBtn.addEventListener('click', () => {
+            if (timerInterval) clearInterval(timerInterval);
             if (index < quiz.length - 1) {
               index++;
               render();
