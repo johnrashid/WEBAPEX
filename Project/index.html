@@ -34,12 +34,23 @@
       </svg>
     </button>
 
-    <h1 class="title">WEB APEX</h1>
+    <!-- about button (placed below logout) -->
+    <button class="about-btn" id="about-btn" type="button" title="About" aria-label="About">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+      </svg>
+    </button>
+
+    <!-- title (about removed from here) -->
+    <div class="title-container">
+      <h1 class="title">WEB APEX</h1>
+    </div>
 
     <div class="menu">
         <button onclick="window.location.href='pretest.html'">PRE TEST</button>
         <button onclick="window.location.href='reading.html'">READING COMPREHENSION</button>
         <button onclick="window.location.href='textsglossary.html'">TEXTS GLOSSARY</button>
+        <button onclick="window.location.href='grammartest-parts.html'">PARTS OF SPEECH</button>
         <button onclick="window.location.href='grammartest.html'">GRAMMAR TEST</button>
         <button onclick="window.location.href='vocabularytest.html'">VOCABULARY TEST</button>
         <button onclick="window.location.href='posttest.html'">POST TEST</button>
@@ -75,6 +86,19 @@
       <div class="confirm-actions">
         <button class="cancel" id="logout-cancel">Cancel</button>
         <button class="logout" id="logout-confirm">Quit</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- About modal -->
+  <div class="about-overlay" id="about-modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="about-box" role="document">
+      <h3>About Web Apex</h3>
+      <p class="about-text">
+        Web Apex is a friendly and easy-to-use learning website made to help students feel more confident in English. Here, you can practice reading comprehension, learn new words through our glossary, understand parts of speech, and master subject–verb agreement with clear and simple lessons. You can also try meaning tests and explore many synonyms and antonyms to grow your vocabulary. Web Apex is designed to guide you step by step, give you helpful examples, and make learning English easier and more enjoyable. Whether you want to study for school or just improve your skills, Web Apex is here to support you every day.
+      </p>
+      <div class="about-actions">
+        <button class="about-ok" id="about-ok">OK</button>
       </div>
     </div>
   </div>
@@ -130,6 +154,42 @@
       document.addEventListener('keydown', function(e){
         if (e.key === 'Escape' && modal.classList.contains('open')) hideModal();
       });
+
+      // --- About modal handlers ---
+      const aboutBtn = document.getElementById('about-btn');
+      const aboutModal = document.getElementById('about-modal');
+      const aboutOk = document.getElementById('about-ok');
+
+      function showAbout(){
+        if (!aboutModal) return;
+        aboutModal.classList.add('open');
+        aboutModal.setAttribute('aria-hidden','false');
+        aboutOk.focus();
+      }
+      function hideAbout(){
+        if (!aboutModal) return;
+        aboutModal.classList.remove('open');
+        aboutModal.setAttribute('aria-hidden','true');
+        if (aboutBtn) aboutBtn.focus();
+      }
+
+      if (aboutBtn){
+        aboutBtn.addEventListener('click', function(e){
+          e.preventDefault();
+          showAbout();
+        });
+      }
+      if (aboutOk){ aboutOk.addEventListener('click', hideAbout); }
+      if (aboutModal){
+        aboutModal.addEventListener('click', function(e){
+          if (e.target === aboutModal) hideAbout();
+        });
+      }
+      // Escape closes about modal
+      document.addEventListener('keydown', function(e){
+        if (e.key === 'Escape' && aboutModal && aboutModal.classList.contains('open')) hideAbout();
+      });
+
     })();
   </script>
 </body>

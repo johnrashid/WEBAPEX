@@ -3,81 +3,175 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Choose Part of Speech</title>
-  <link rel="stylesheet" href="grammartest.css">
+  <title>Missing Word</title>
+  <link rel="stylesheet" href="vocabularytest.css">
+  <link rel="stylesheet" href="pretest.css">
   <link rel="stylesheet" href="design.css">
 </head>
 <body>
-
   <button type="button" class="back-btn" onclick="history.back()" aria-label="Go back">
-    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-      <path d="M20 11H7.83l5.58-5.59L12 4 4 12l8 8 1.41-1.41L7.83 13H20v-2z" fill="#fff"/>
-    </svg>
+    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11H7.83l5.58-5.59L12 4 4 12l8 8 1.41-1.41L7.83 13H20v-2z" fill="#fff"/></svg>
   </button>
 
   <main class="canvas" role="main">
-    <h1 class="title">Choose what Part of Speech you want to answer.</h1>
+    <h1 class="title">Subject-Verb Agreement</h1>
 
-    <div class="parts-container" aria-live="polite">
-      <button id="prevBtn" class="pager-btn prev" aria-label="Previous" title="Previous">
-        <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
-      </button>
+    <section id="intro" class="intro">
+      <p class="subtitle">Fill in the missing word by choosing the correct option.</p>
+      <button id="startBtn" class="next-btn">Start Quiz</button>
+    </section>
 
-      <div class="parts-card" id="partsCard">
-        <button id="choiceDisplay" class="choice-display" type="button" aria-label="Selected part">Loading…</button>
+    <section id="questionView" class="question" style="display:none;">
+      <div id="timer" style="position:relative; width:70px; height:70px; margin:0 auto 12px;">
+        <svg width="70" height="70" style="transform:rotate(-90deg);">
+          <circle cx="35" cy="35" r="30" fill="none" stroke="rgba(47,111,184,0.18)" stroke-width="4"/>
+          <circle id="timer-circle" cx="35" cy="35" r="30" fill="none" stroke="url(#gradient)" stroke-width="4" stroke-dasharray="188.496" stroke-dashoffset="0" style="transition:stroke-dashoffset 1s linear;"/>
+          <defs>
+            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#2f6fb8;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#6a3fc0;stop-opacity:1" />
+            </linearGradient>
+          </defs>
+        </svg>
+        <div id="timer-text" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:18px; font-weight:900; background:linear-gradient(135deg, #2f6fb8 0%, #6a3fc0 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">1:00</div>
       </div>
+      <p id="q-text" class="q-text" style="font-size:20px;font-weight:700;margin-bottom:18px;"></p>
+      <div id="choices" class="levels"></div>
+      <div id="feedback" style="margin-top:14px;font-weight:700; min-height:22px"></div>
+      <button id="nextBtn" class="next-btn" style="margin-top:14px; display:none;">Next</button>
+    </section>
 
-      <button id="nextBtn" class="pager-btn next" aria-label="Next" title="Next">
-        <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
-      </button>
-    </div>
-
+    <section id="completion" class="intro" style="display:none;">
+      <h2 class="title">Quiz Completed</h2>
+      <p id="scoreText" class="subtitle" style="font-size:20px;"></p>
+      <div id="answerKey" style="margin-top:12px; text-align:left; max-width:720px; margin-left:auto; margin-right:auto;">
+        <h3 style="text-align:center;">Answer Key</h3>
+        <ol id="keyList"></ol>
+      </div>
+    </section>
   </main>
 
   <script>
-    const choices = ['Subject','Verb','Compound','Indefinite Pronouns','Expressions of Quantity'];
-    let idx = 0;
+    const questions = [
+      {q:'The cat (runs / run) across the yard.', choices:['runs','run'], correct:0},
+      {q:'The students (studies / study) for the exam.', choices:['studies','study'], correct:1},
+      {q:'My sister (likes / like) chocolate.', choices:['likes','like'], correct:0},
+      {q:'The flowers (blooms / bloom) in the summer.', choices:['blooms','bloom'], correct:1},
+      {q:'This book (is / are) very interesting.', choices:['is','are'], correct:0},
+      {q:'These apples (looks / look) fresh.', choices:['looks','look'], correct:1},
+      {q:'The car (needs / need) new tires.', choices:['needs','need'], correct:0},
+      {q:'The babies (cries / cry) loudly.', choices:['cries','cry'], correct:1},
+      {q:'The athlete (trains / train) every day.', choices:['trains','train'], correct:0},
+      {q:'The chairs (was / were) placed neatly.', choices:['was','were'], correct:1},
+      {q:'Everyone (was / were) excited for the trip.', choices:['was','were'], correct:0},
+      {q:'Each student (has / have) a folder.', choices:['has','have'], correct:0},
+      {q:'Neither answer (seems / seem) correct.', choices:['seems','seem'], correct:0},
+      {q:'Anybody (is / are) welcome to join.', choices:['is','are'], correct:0},
+      {q:'Somebody (was / were) knocking on the door.', choices:['was','were'], correct:0},
+      {q:'Either option (works / work) for me.', choices:['works','work'], correct:0},
+      {q:'Nobody (wants / want) to fail the test.', choices:['wants','want'], correct:0},
+      {q:'Each of the bags (was / were) checked.', choices:['was','were'], correct:0},
+      {q:'Anyone (is / are) allowed to participate.', choices:['is','are'], correct:0},
+      {q:'Neither of them (needs / need) help.', choices:['needs','need'], correct:0},
+      {q:'The color of the fish and birds (serves / serve) as a protection.', choices:['serves','serve'], correct:0},
+      {q:'One of those students (was / were) late again.', choices:['was','were'], correct:0},
+      {q:'The teacher, as well as the students, (was / were) praised.', choices:['was','were'], correct:0},
+      {q:"A happy smile or a friendly hello (doesn't / don't) hurt anyone.", choices:["doesn't","don't"], correct:0},
+      {q:'Neither one of our neighbors (has / have) any children.', choices:['has','have'], correct:0},
+      {q:'The student, together with his teachers, (was / were) in the room.', choices:['was','were'], correct:0},
+      {q:'The coach and his assistant (teaches / teach) us patiently.', choices:['teaches','teach'], correct:1},
+      {q:'The coach or his assistant (teaches / teach) us patiently.', choices:['teaches','teach'], correct:0},
+      {q:'Either Jane or Joe (was / were) at the games.', choices:['was','were'], correct:0},
+      {q:'Either Jane or her sisters (was / were) at the games.', choices:['was','were'], correct:1}
+    ];
 
-    const choiceDisplay = document.getElementById('choiceDisplay');
-    const prev = document.getElementById('prevBtn');
-    const next = document.getElementById('nextBtn');
+    let index = 0, score = 0; let intenseAudio = null; let timeLeft = 60; let timerInterval = null;
+    const titleEl = document.querySelector('.title');
+    const intro = document.getElementById('intro');
+    const startBtn = document.getElementById('startBtn');
+    const qView = document.getElementById('questionView');
+    const qText = document.getElementById('q-text');
+    const choicesEl = document.getElementById('choices');
+    const feedback = document.getElementById('feedback');
+    const nextBtn = document.getElementById('nextBtn');
+    const timerEl = document.getElementById('timer');
+    const timerText = document.getElementById('timer-text');
+    const timerCircle = document.getElementById('timer-circle');
+    const totalTime = 60;
+    const circumference = 2 * Math.PI * 30;
+    const completion = document.getElementById('completion');
+    const scoreText = document.getElementById('scoreText');
+    const keyList = document.getElementById('keyList');
 
+    function startTimer(){ timeLeft = 60; timerText.textContent = '1:00'; timerCircle.style.strokeDashoffset = '0'; if (timerInterval) clearInterval(timerInterval); timerInterval = setInterval(() => { timeLeft--; const mins = Math.floor(timeLeft / 60); const secs = timeLeft % 60; timerText.textContent = mins + ':' + (secs < 10 ? '0' : '') + secs; const progress = (totalTime - timeLeft) / totalTime; timerCircle.style.strokeDashoffset = circumference * progress; if (timeLeft <= 0) { clearInterval(timerInterval); handleTimeout(); } }, 1000); }
+    function handleTimeout(){ try { if (intenseAudio) { intenseAudio.pause(); intenseAudio.currentTime = 0; } } catch(e){} try { const buzzer = new Audio('wrong.mp3'); buzzer.play(); } catch(e){} const it = questions[index]; const all = choicesEl.querySelectorAll('button'); all.forEach(b => b.disabled = true); const buttons = Array.from(all); const correctBtn = buttons[it.correct]; if (correctBtn) correctBtn.classList.add('correct'); feedback.textContent = 'Time\'s up! The correct answer is ' + String.fromCharCode(65+it.correct) + '. ' + it.choices[it.correct]; feedback.style.color = '#c62828'; nextBtn.style.display = 'inline-block'; }
     function render(){
-      choiceDisplay.textContent = choices[idx];
-      prev.disabled = idx === 0;
-      next.disabled = idx === choices.length - 1;
-    }
-
-    prev.addEventListener('click', ()=>{ if (idx>0){ idx--; render(); } });
-    next.addEventListener('click', ()=>{ if (idx<choices.length-1){ idx++; render(); } });
-
-    // Make the choice display itself clickable; for 'Noun' open the noun quiz
-    const choiceBtn = document.getElementById('choiceDisplay');
-    if (choiceBtn) {
-      choiceBtn.addEventListener('click', ()=>{
-        const selected = choices[idx];
-          switch(selected){
-            case 'Subject': window.location.href = 'grammartest-sva-subject.html'; break;
-            case 'Verb': window.location.href = 'grammartest-sva-verb.html'; break;
-            case 'Compound': window.location.href = 'grammartest-sva-compound.html'; break;
-            case 'Indefinite Pronouns': window.location.href = 'grammartest-sva-indefinite-pronouns.html'; break;
-            case 'Expressions of Quantity': window.location.href = 'grammartest-sva-expressions.html'; break;
-            default: alert('Quiz for "' + selected + '" is not implemented yet.');
+      const it = questions[index];
+      qText.textContent = it.q;
+      choicesEl.innerHTML = '';
+      feedback.textContent = '';
+      nextBtn.style.display = 'none';
+      try { intenseAudio = new Audio('intense.mp3'); intenseAudio.loop = true; intenseAudio.play(); } catch(e){}
+      startTimer();
+      it.choices.forEach((c,i)=>{
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'level-btn choice-btn';
+        b.textContent = String.fromCharCode(65+i) + '. ' + c;
+        b.addEventListener('click', ()=>{
+          if (timerInterval) clearInterval(timerInterval);
+          try { if (intenseAudio) { intenseAudio.pause(); intenseAudio.currentTime = 0; } } catch(e){}
+          const all = choicesEl.querySelectorAll('button');
+          const isCorrect = i === it.correct;
+          if (isCorrect) b.classList.add('correct'); else b.classList.add('wrong');
+          all.forEach(x=>x.disabled = true);
+          if (isCorrect){ score++; feedback.textContent = 'Correct!'; feedback.style.color = '#0a8a0a'; if (window.playPraise) window.playPraise(); }
+          else {
+            const buttons = Array.from(choicesEl.querySelectorAll('button'));
+            const correctBtn = buttons[it.correct];
+            if (correctBtn) correctBtn.classList.add('correct');
+            feedback.textContent = 'Incorrect. The correct answer is ' + String.fromCharCode(65+it.correct) + '. ' + it.choices[it.correct]; feedback.style.color = '#c62828';
+            try { const wrongAudio = new Audio('wrong.mp3'); wrongAudio.play(); } catch(e){}
           }
-      });
-      // make Enter/Space activate the button for keyboard users
-      choiceBtn.addEventListener('keydown', (e)=>{
-        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); choiceBtn.click(); }
+          nextBtn.textContent = index < questions.length-1 ? 'Next' : 'Finish';
+          nextBtn.style.display = 'inline-block';
+        });
+        choicesEl.appendChild(b);
       });
     }
 
-    // keyboard support
-    document.addEventListener('keydown', (e)=>{
-      if (e.key === 'ArrowLeft') prev.click();
-      if (e.key === 'ArrowRight') next.click();
+    startBtn.addEventListener('click', ()=>{
+      if (titleEl) titleEl.style.display = 'none';
+      intro.style.display='none'; qView.style.display='block'; render();
     });
 
-    render();
+    nextBtn.addEventListener('click', ()=>{
+      if (timerInterval) clearInterval(timerInterval);
+      if (index < questions.length-1){ index++; render(); window.scrollTo({top:0,behavior:'smooth'}); }
+      else {
+        qView.style.display='none'; completion.style.display='block';
+        if (titleEl) titleEl.style.display = 'block';
+        scoreText.textContent = 'You got ' + score + ' / ' + questions.length;
+        try{
+          const total = questions.length || 0;
+          const pct = total ? (score / total) * 100 : 0;
+          if (window && window.playPraiseKey){
+            if (pct >= 90) window.playPraiseKey('excellent');
+            else if (pct >= 75) window.playPraiseKey('amazing');
+            else if (pct >= 50) window.playPraiseKey('good job');
+          }
+        }catch(e){}
+        keyList.innerHTML = '';
+        questions.forEach((qq,i)=>{
+          const li = document.createElement('li');
+          const letter = String.fromCharCode(65+qq.correct);
+          li.textContent = (i+1) + '. ' + qq.q.replace(/^\d+\.\s*/, '') + ' — ' + letter + '. ' + qq.choices[qq.correct];
+          keyList.appendChild(li);
+        });
+      }
+    });
   </script>
+  <script src="audio.js" defer></script>
 </body>
 </html>
+
