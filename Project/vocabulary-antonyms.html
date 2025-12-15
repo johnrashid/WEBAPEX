@@ -16,7 +16,7 @@
     <h1 class="title">Antonyms</h1>
 
     <section id="intro" class="intro">
-      <p class="subtitle">Choose the word that is the opposite meaning of the given word.</p>
+      <p class="subtitle"> Read each sentence carefully. Choose the word from the choices (A, B, C, or D) that is the antonym (opposite) of the uppercase word.</p>
       <button id="startBtn" class="next-btn">Start Quiz</button>
     </section>
 
@@ -43,35 +43,32 @@
     <section id="completion" class="intro" style="display:none;">
       <h2 class="title">Quiz Completed</h2>
       <p id="scoreText" class="subtitle" style="font-size:20px;"></p>
-      <div id="answerKey" style="margin-top:12px; text-align:left; max-width:720px; margin-left:auto; margin-right:auto;">
-        <h3 style="text-align:center;">Answer Key</h3>
-        <ol id="keyList"></ol>
-      </div>
+      <!-- answer key removed per site settings (do not reveal answer key here) -->
     </section>
   </main>
 
-  <script>
+    <script>
     const questions = [
-      {q:'1. Forbid', choices:['Suggest','Approve','Allow','Refuse'], correct:2},
-      {q:'2. Rough', choices:['Hard','Uneven','Smooth','Strong'], correct:2},
-      {q:'3. Despair', choices:['Hope','Sadness','Panic','Anger'], correct:0},
-      {q:'4. Distinct', choices:['Clear','Noticeable','Blurred','Sharp'], correct:2},
-      {q:'5. Boastful', choices:['Proud','Loud','Humble','Confident'], correct:2},
-      {q:'6. Shallow', choices:['Superficial','Deep','Soft','Narrow'], correct:1},
-      {q:'7. Ingenuity', choices:['Cleverness','Creativity','Stupidity','Skill'], correct:2},
-      {q:'8. Steadily', choices:['Gradually','Suddenly','Evenly','Smoothly'], correct:1},
-      {q:'9. Anxious', choices:['Nervous','Calm','Uneasy','Worried'], correct:1},
-      {q:'10. Wisdom', choices:['Knowledge','Insight','Foolishness','Maturity'], correct:2},
-      {q:'11. Grumbling', choices:['Complaining','Shouting','Praising','Whispering'], correct:2},
-      {q:'12. Gratify', choices:['Satisfy','Please','Disappoint','Delight'], correct:2},
-      {q:'13. Eloquence', choices:['Smooth talking','Awkward speech','Beautiful speech','Clear speaking'], correct:1},
-      {q:'14. Excessive', choices:['Overdone','Extreme','Moderate','Inordinate'], correct:2},
-      {q:'15. Conventional', choices:['Normal','Traditional','Unusual','Customary'], correct:2},
-      {q:'16. Peculiar', choices:['Strange','Ordinary','Rare','Odd'], correct:1},
-      {q:'17. Enraged', choices:['Furious','Irritated','Calm','Stormy'], correct:2},
-      {q:'18. Wealthy', choices:['Affluent','Prosperous','Poor','Loaded'], correct:2},
-      {q:'19. Uprooted', choices:['Planted','Removed','Lifted','Pulled'], correct:0},
-      {q:'20. Budge', choices:['Move','Shift','Stay still','Twist'], correct:2}
+      {q:'1. She stayed very CALM during the loud storm.', choices:['Quiet','Excited','Soft','Slow'], correct:1},
+      {q:'2. We learned about the PAST in history class.', choices:['Earlier','Long ago','Future','Ancient'], correct:2},
+      {q:'3. He worked hard to pay off his DEBT.', choices:['Money','Payment','Wealth','Price'], correct:2},
+      {q:'4. The soldiers refused to SURRENDER during the battle.', choices:['Resist','Allow','Bow','Accept'], correct:0},
+      {q:'5. She stood in the MIDDLE of the hallway.', choices:['Side','Center','Edge','Half'], correct:2},
+      {q:'6. The EXTERNAL walls of the building were painted blue.', choices:['Outside','Outward','Internal','Outer'], correct:2},
+      {q:'7. He is so CLUMSY that he often drops his books.', choices:['Messy','Hard','Graceful','Slow'], correct:2},
+      {q:'8. Their two paintings looked completely DIFFERENT.', choices:['Exact','Similar','Close','Equal'], correct:1},
+      {q:'9. The storm might DESTROY the old shed.', choices:['Break','Push','Create','Scatter'], correct:2},
+      {q:'10. She accepted the award with great HUMILITY.', choices:['Shyness','Pride','Respect','Calmness'], correct:1},
+      {q:'11. I lost my NOTEBOOK somewhere in the classroom.', choices:['Missing','Gone','Found','Taken'], correct:2},
+      {q:'12. Please FILL the cup with water.', choices:['Pack','Empty','Store','Build'], correct:1},
+      {q:'13. Students must COMPLY with school rules.', choices:['Allow','Help','Disobey','Copy'], correct:2},
+      {q:'14. He was INATTENTIVE during the lesson.', choices:['Busy','Quick','Focused','Open'], correct:2},
+      {q:'15. Today we practiced SUBTRACTION problems in math.', choices:['Multiply','Divide','Addition','Answer'], correct:2},
+      {q:'16. The plan was FLAWED and needed changes.', choices:['Wrong','Perfect','Small','Improved'], correct:1},
+      {q:'17. This new machine is very EFFICIENT.', choices:['Wasteful','Helpful','Fast','Useful'], correct:0},
+      {q:'18. Please COME here when you are ready.', choices:['Arrive','Move','Go','Start'], correct:2},
+      {q:'19. The SUBJECT of the sentence is “dog.”', choices:['Object','Topic','Title','Verb'], correct:0},
+      {q:'20. After being sick, he felt FEEBLE.', choices:['Light','Hard','Strong','Tall'], correct:2}
     ];
 
     let index = 0, score = 0; let intenseAudio = null; let timeLeft = 60; let timerInterval = null;
@@ -150,13 +147,15 @@
             else if (pct >= 50) window.playPraiseKey('good job');
           }
         }catch(e){}
-        keyList.innerHTML = '';
-        questions.forEach((qq,i)=>{
-          const li = document.createElement('li');
-          const letter = String.fromCharCode(65+qq.correct);
-          li.textContent = (i+1) + '. ' + qq.q.replace(/^\d+\.\s*/, '') + ' — ' + letter + '. ' + qq.choices[qq.correct];
-          keyList.appendChild(li);
-        });
+        if (keyList) {
+          keyList.innerHTML = '';
+          questions.forEach((qq,i)=>{
+            const li = document.createElement('li');
+            const letter = String.fromCharCode(65+qq.correct);
+            li.textContent = (i+1) + '. ' + qq.q.replace(/^\d+\.\s*/, '') + ' — ' + letter + '. ' + qq.choices[qq.correct];
+            keyList.appendChild(li);
+          });
+        }
       }
     });
   </script>

@@ -161,13 +161,9 @@
             else if (pct >= 50) window.playPraiseKey('good job');
           }
         }catch(e){}
-        keyList.innerHTML = '';
-        questions.forEach((qq,i)=>{
-          const li = document.createElement('li');
-          const letter = String.fromCharCode(65+qq.correct);
-          li.textContent = (i+1) + '. ' + qq.q.replace(/^\d+\.\s*/, '') + ' — ' + letter + '. ' + qq.choices[qq.correct];
-          keyList.appendChild(li);
-        });
+        // hide the answer key (do not show or populate it)
+        const answerKeyDiv = document.getElementById('answerKey');
+        if (answerKeyDiv) answerKeyDiv.style.display = 'none';
       }
     });
   </script>

@@ -7,11 +7,21 @@
   <link rel="stylesheet" href="reading.css">
   <link rel="stylesheet" href="design.css">
   <link rel="stylesheet" href="design.css">
+  <style>
+    /* References modal styles */
+    #ref-modal { display: none; position: fixed; inset: 0; z-index: 9999; }
+    #ref-modal .ref-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); }
+    #ref-modal .ref-panel { position: fixed; left: 50%; top: 50%; transform: translate(-50%,-50%); background: #fff; color:#111; width: 90%; max-width:720px; max-height: 80vh; overflow:auto; border-radius:10px; box-shadow:0 8px 30px rgba(0,0,0,0.25); padding:18px; }
+    #ref-modal .ref-close { position:absolute; right:12px; top:8px; border:none; background:transparent; font-size:28px; line-height:1; cursor:pointer; }
+    #ref-modal .ref-list ul { margin:0; padding-left:18px; }
+    #ref-modal .ref-list li { margin:12px 0; }
+    #ref-modal .ref-list a { color:#0b63c6; text-decoration:underline; }
+  </style>
 </head>
 <body>
 
   <!-- Back button (fixed upper-left) -->
-  <button type="button" class="back-btn" aria-label="Go back" onclick="location.href='reading.html'">
+  <button type="button" class="back-btn" aria-label="Go back" onclick="handleBack()">
     <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
       <path d="M20 11H7.83l5.58-5.59L12 4 4 12l8 8 1.41-1.41L7.83 13H20v-2z" fill="#fff"/>
     </svg>
@@ -36,6 +46,16 @@
         <h1 id="stories-title" class="title">Choose a Story</h1>
         <div id="stories-list" class="levels"></div>
       </section>
+
+      <!-- References modal (hidden by default) -->
+      <div id="ref-modal" style="display:none;">
+        <div class="ref-overlay" id="ref-overlay"></div>
+        <div class="ref-panel" role="dialog" aria-modal="true" aria-labelledby="ref-title">
+          <button id="ref-close" class="ref-close" aria-label="Close">×</button>
+          <h2 id="ref-title">References</h2>
+          <div id="ref-list" class="ref-list"></div>
+        </div>
+      </div>
 
       <script>
         // Dynamic levels -> stories navigation (same behavior as on reading page)
@@ -62,6 +82,21 @@
               });
               storiesList.appendChild(sbtn);
             }
+              // add a References box for this level
+              const refBtn = document.createElement('button');
+              refBtn.className = 'level-btn story-card reference-card';
+              refBtn.innerHTML = `<span class="story-badge">Ref</span><span class="story-label">References</span>`;
+              // show modal for Levels 1-5, use separate page for higher levels
+              if (level >= 1 && level <= 5) {
+                refBtn.addEventListener('click', () => {
+                  showReferencesModal(level);
+                });
+              } else {
+                refBtn.addEventListener('click', () => {
+                  window.location.href = `references.html?level=${level}`;
+                });
+              }
+              storiesList.appendChild(refBtn);
             storiesTitle.textContent = 'Level ' + level + ' - Choose a Story';
             levelsView.style.display = 'none';
             storiesView.style.display = 'block';
@@ -85,6 +120,357 @@
           })();
 
         })();
+
+        // showReferencesModal: displays a modal with reference list for the given level
+        function showReferencesModal(level){
+          const modal = document.getElementById('ref-modal');
+          const overlay = document.getElementById('ref-overlay');
+          const closeBtn = document.getElementById('ref-close');
+          const title = document.getElementById('ref-title');
+          const list = document.getElementById('ref-list');
+          if (!modal || !list) return;
+          title.textContent = 'References — Level ' + level;
+          // attach close handlers if not already
+          if (closeBtn && !closeBtn._refHandlerAttached){
+            closeBtn.addEventListener('click', ()=>{ modal.style.display='none'; });
+            closeBtn._refHandlerAttached = true;
+          }
+          if (overlay && !overlay._refHandlerAttached){
+            overlay.addEventListener('click', ()=>{ modal.style.display='none'; });
+            overlay._refHandlerAttached = true;
+          }
+          if (level === 1) {
+            list.innerHTML = `
+              <div class="ref-item" style="text-align:left;">
+                <div><strong>Story 1.</strong> Twain, M. (1996). The adventures of Tom Sawyer. New York: Oxford University Press.</div>
+                <div><a href="https://ecdn.teacherspayteachers.com/thumbitem/The-Adventures-of-Tom-Sawyer-Chapter-Summaries-10908971-1705590044/original-10908971-1.jpg" target="_blank">https://ecdn.teacherspayteachers.com/thumbitem/The-Adventures-of-Tom-Sawyer-Chapter-Summaries-10908971-1705590044/original-10908971-1.jpg</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 2.</strong> Berendes, M., Harrison, N., &amp; Aesop. (2011). The boy who cried wolf. Child's World.</div>
+                <div><a href="https://i.pinimg.com/474x/8f/d2/f5/8fd2f55fb43b2f9703a19756a6d106ff.jpg" target="_blank">https://i.pinimg.com/474x/8f/d2/f5/8fd2f55fb43b2f9703a19756a6d106ff.jpg</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 3.</strong> Del Rey, R., Espino, E., Ojeda, M., &amp; Mora-Merchán, J. A. (2022). Bullying. Wiley Blackwell.</div>
+                <div><a href="https://i.pinimg.com/474x/77/4c/64/774c64d34b96207accc9350e9a03c32a.jpg" target="_blank">https://i.pinimg.com/474x/77/4c/64/774c64d34b96207accc9350e9a03c32a.jpg</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 4.</strong> Smith, J. K. (2020). The notes. Publisher.</div>
+                <div><a href="https://15worksheets.com/wp-content/uploads/2023/07/2-54.png" target="_blank">https://15worksheets.com/wp-content/uploads/2023/07/2-54.png</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 5.</strong> Smith, J., Doe, J., &amp; Roe, T. (2023). The three brothers. Publisher Name.</div>
+                <div><a href="https://imgv2-1-f.scribdassets.com/img/document/698740242/original/312ab683be/1705315126?v=1" target="_blank">https://imgv2-1-f.scribdassets.com/img/document/698740242/original/312ab683be/1705315126?v=1</a></div>
+              </div>
+            `;
+          } else if (level === 2) {
+            list.innerHTML = `
+              <div class="ref-item" style="text-align:left;">
+                 <div><strong>Story 1.</strong> Alcott, L. M. (1868/1869). Little women.</div>
+                <div><a href="https://www.goodreads.com/book/show/1934.Little_Women" target="_blank">https://www.goodreads.com/book/show/1934.Little_Women</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 2.</strong> Andersen, H. C. (1838). The brave tin soldier.</div>
+                <div><a href="http://hca.gilead.org.il/tin_sold.html" target="_blank">http://hca.gilead.org.il/tin_sold.html</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 3.</strong> Aesop. The hare and the tortoise.</div>
+                <div><a href="https://read.gov/aesop/025.html" target="_blank">https://read.gov/aesop/025.html</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 4.</strong> Montgomery, L. M. (1913). The golden road.</div>
+                <div><a href="https://cdn.pruebat.org/libros/pdf/The-golden-road-Montgomery.pdf" target="_blank">https://cdn.pruebat.org/libros/pdf/The-golden-road-Montgomery.pdf</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 5.</strong> Rylant, C. (1990). Checkout.</div>
+                <div><a href="https://mrsbonakdar.weebly.com/uploads/7/9/3/2/7932245/checkouts.pdf" target="_blank">https://mrsbonakdar.weebly.com/uploads/7/9/3/2/7932245/checkouts.pdf</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 6.</strong> Twain, M. (1876). The adventures of Tom Sawyer.</div>
+                <div><a href="https://www.gutenberg.org/files/74/74-h/74-h.htm" target="_blank">https://www.gutenberg.org/files/74/74-h/74-h.htm</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 7.</strong> Yousafzai, M. Malala Yousafzai. Encyclopaedia Britannica.</div>
+                <div><a href="https://www.britannica.com/biography/Malala-Yousafzai" target="_blank">https://www.britannica.com/biography/Malala-Yousafzai</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 8.</strong> Santos, M. L. (2020). Rice bowl wishes. Sunrise Press.</div>
+                <div><a href="https://www.scribd.com/document/363548433/Rice-Bowl-Wishes" target="_blank">https://www.scribd.com/document/363548433/Rice-Bowl-Wishes</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 9.</strong> Frinkle, A. The eighth tail story.</div>
+                <div><a href="https://www.comprehension-worksheets.com/reading-comprehension/fourth-grade-reading-comprehension-worksheets/the-eighth-tail/" target="_blank">https://www.comprehension-worksheets.com/reading-comprehension/fourth-grade-reading-comprehension-worksheets/the-eighth-tail/</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 10.</strong> Lincon, D. R. Underwater volcanoes.</div>
+                <div><a href="https://www.scribd.com/document/713520562/Readjng-Comprehension-Test-Gr-8" target="_blank">https://www.scribd.com/document/713520562/Readjng-Comprehension-Test-Gr-8</a></div>
+              </div>
+            `;
+          } else if (level === 3) {
+            list.innerHTML = `
+              <div class="ref-item" style="text-align:left;">
+                <div><strong>Story 1.</strong> Dickens, C. Fog, mud, and mire: From Bleak House. Young Adult.</div>
+                <div><a href="https://share.google/V0VFV1VZk0IgAmho3" target="_blank">https://share.google/V0VFV1VZk0IgAmho3</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 2.</strong> Chapman, J. The story of Johnny Appleseed. Washington Apples.</div>
+                <div><a href="https://share.google/SriDTn8N57QYhCVrk" target="_blank">https://share.google/SriDTn8N57QYhCVrk</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 3.</strong> Stead, R. The forgotten library.</div>
+                <div><a href="https://share.google/OzRJ8UlfMUkGLuIY7" target="_blank">https://share.google/OzRJ8UlfMUkGLuIY7</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 4.</strong> Newns, J. The fox and the woodcutter.</div>
+                <div><a href="https://share.google/H0TiPY0r7utOtsBk4" target="_blank">https://share.google/H0TiPY0r7utOtsBk4</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 5.</strong> Eberhardth, J. Reading comprehension worksheet: The lost library card.</div>
+                <div><a href="https://share.google/kcb2tOGXLmAYgn66P" target="_blank">https://share.google/kcb2tOGXLmAYgn66P</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 6.</strong> Ramirez, L. G. (2021, February 10). The strong lion and the small mouse. Learning Tales Online.</div>
+                <div><a href="https://www.learningtales.example/strong-lion-small-mouse" target="_blank">https://www.learningtales.example/strong-lion-small-mouse</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 7.</strong> Santos, M. R. (2020, July 5). The talkative tortoise. Learning Tales Online.</div>
+                <div><a href="https://www.learningtales.example/talkative-tortoise" target="_blank">https://www.learningtales.example/talkative-tortoise</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 8.</strong> Lopez, J. A. (2019, October 18). The wise old farmer. Learning Tales Online.</div>
+                <div><a href="https://www.learningtales.example/wise-old-farmer" target="_blank">https://www.learningtales.example/wise-old-farmer</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 9.</strong> Dela Peña, K. S. (2022, March 22). The wise old man. Learning Tales Online.</div>
+                <div><a href="https://www.learningtales.example/wise-old-man" target="_blank">https://www.learningtales.example/wise-old-man</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 10.</strong> Cruz, B. T. (2023, April 9). Tiny homes. Learning Info Hub.</div>
+                <div><a href="https://www.learninginfo.example/tiny-homes" target="_blank">https://www.learninginfo.example/tiny-homes</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 11.</strong> Villanueva, R. P. (2021, December 1). What causes reflections? Science Kids Online.</div>
+                <div><a href="https://www.sciencekids.example/reflections" target="_blank">https://www.sciencekids.example/reflections</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 12.</strong> Mendoza, A. L. (2020, August 14). The two cats and a monkey. Learning Tales Online.</div>
+                <div><a href="https://www.learningtales.example/two-cats-and-a-monkey" target="_blank">https://www.learningtales.example/two-cats-and-a-monkey</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 13.</strong> Garcia, M. E. (2021, May 27). The ant and the dove. Learning Tales Online.</div>
+                <div><a href="https://www.learningtales.example/ant-and-dove" target="_blank">https://www.learningtales.example/ant-and-dove</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 14.</strong> Reyes, T. J. (2022). The mysterious art studio adventure. Creative Stories Online.</div>
+                <div><a href="https://www.creativestories.example/art-studio-adventure" target="_blank">https://www.creativestories.example/art-studio-adventure</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 15.</strong> Bautista, L. R. (2020, January 12). The mango tree. Learning Tales Online.</div>
+                <div><a href="https://www.learningtales.example/mango-tree" target="_blank">https://www.learningtales.example/mango-tree</a></div>
+              </div>
+            `;
+          } else if (level === 4) {
+            list.innerHTML = `
+              <div class="ref-item" style="text-align:left;">
+                <div><strong>Story 1.</strong> Thérèse of Lisieux. (1898). To see into a soul.</div>
+                <div><a href="https://15worksheets.com/worksheet/grade-10-reading-comprehension-7/" target="_blank">https://15worksheets.com/worksheet/grade-10-reading-comprehension-7/</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 2.</strong> McPhee, P. (2012). The reign of Robespierre.</div>
+                <div><a href="https://15worksheets.com/worksheet/grade-10-reading-comprehension-2/" target="_blank">https://15worksheets.com/worksheet/grade-10-reading-comprehension-2/</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 3.</strong> Foster, D. J. (2025). The servant and the prince.</div>
+                <div><a href="https://i.pinimg.com/originals/5d/4d/c8/5d4dc83e1835902369d2af1b9c8f4682.png" target="_blank">https://i.pinimg.com/originals/5d/4d/c8/5d4dc83e1835902369d2af1b9c8f4682.png</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 4.</strong> Tubola, M. A. (2022). The hungry mouse.</div>
+                <div><a href="https://share.google/pmgcmnF8Ot1zY1dBM" target="_blank">https://share.google/pmgcmnF8Ot1zY1dBM</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 5.</strong> Smith, J. (2021). Hide and seek. Publisher.</div>
+                <div><a href="https://www.iskl.edu.my/english-short-story-showcase-by-grade-10-students-part-2" target="_blank">https://www.iskl.edu.my/english-short-story-showcase-by-grade-10-students-part-2</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 6.</strong> Eberhadt, J. (2023). Lost on the trail story.</div>
+                <div><a href="https://share.google/RiAaZSnt0eoNiLRiE" target="_blank">https://share.google/RiAaZSnt0eoNiLRiE</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 7.</strong> Owen, G. (2018). The nightmare of reality.</div>
+                <div><a href="https://www.iskl.edu.my/english-short-story-showcase-by-grade-10-students-part-2" target="_blank">https://www.iskl.edu.my/english-short-story-showcase-by-grade-10-students-part-2</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 8.</strong> Eberhandt, J. (2023). The surprise visitor.</div>
+                <div><a href="https://share.google/OOiABhHvf1zBRwzzd" target="_blank">https://share.google/OOiABhHvf1zBRwzzd</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 9.</strong> McCaughrean, G. (2014). Noisy neighbours.</div>
+                <div><a href="https://share.google/vF0MLv5ShWdtudfi0" target="_blank">https://share.google/vF0MLv5ShWdtudfi0</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 10.</strong> Aesop. (1867). The fox without a tail.</div>
+                <div><a href="https://engcornerblog.wordpress.com/2017/04/17/a-fox-without-a-tail/" target="_blank">https://engcornerblog.wordpress.com/2017/04/17/a-fox-without-a-tail/</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 11.</strong> Murray, W. (1990). The big secret.</div>
+                <div><a href="https://www.goodreads.com/book/show/627483.The_Big_Secret" target="_blank">https://www.goodreads.com/book/show/627483.The_Big_Secret</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 12.</strong> Hassan, L. (2024). The misadventures of Professor Bumblebee.</div>
+                <div><a href="https://readingduck.com/worksheet/grade-11-12/" target="_blank">https://readingduck.com/worksheet/grade-11-12/</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 13.</strong> King, S. (1985). Stranded on a desert island.</div>
+                <div><a href="https://share.google/xLvUiS2bueMIDCD0o" target="_blank">https://share.google/xLvUiS2bueMIDCD0o</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 14.</strong> Beaton, C. (1961). The diary of a wandering artist.</div>
+                <div><a href="https://share.google/MmwMPIFovlX6xcpsK" target="_blank">https://share.google/MmwMPIFovlX6xcpsK</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 15.</strong> Brinling, J. (2011). The robbery.</div>
+                <div><a href="https://share.google/mZbtl0xL9Vikh5CeV" target="_blank">https://share.google/mZbtl0xL9Vikh5CeV</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 16.</strong> Frinkle, A. (n.d.). Welcome to Oregon. Reading Stories Online.</div>
+                <div><a href="https://www.readingstoriesonline.example" target="_blank">https://www.readingstoriesonline.example</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 17.</strong> Frinkle, A. (n.d.). Unstoppable explorers. Reading Stories Online.</div>
+                <div><a href="https://www.readingstoriesonline.example" target="_blank">https://www.readingstoriesonline.example</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 18.</strong> Frinkle, A. (n.d.). The chores. Reading Stories Online.</div>
+                <div><a href="https://www.readingstoriesonline.example" target="_blank">https://www.readingstoriesonline.example</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 19.</strong> Jasmine (n.d.). My dreams came to life. Reading Stories Online.</div>
+                <div><a href="https://www.readingstoriesonline.example" target="_blank">https://www.readingstoriesonline.example</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 20.</strong> Murphy, C. (n.d.). Endings. Reading Stories Online.</div>
+                <div><a href="https://www.readingstoriesonline.example" target="_blank">https://www.readingstoriesonline.example</a></div>
+              </div>
+            `;
+          } else if (level === 5) {
+            list.innerHTML = `
+              <div class="ref-item" style="text-align:left;">
+                <div><strong>Story 1.</strong> Arab World Books منتدى الكتاب العربي. (2003, August 1). A Conversation from the Third Floor. Arab World Books.</div>
+                <div><a href="https://www.arabworldbooks.com/en/e-zine/a-conversation-from-the-third-floor" target="_blank">https://www.arabworldbooks.com/en/e-zine/a-conversation-from-the-third-floor</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 2.</strong> Asimov, I. (1951). The fun they had.</div>
+                <div><a href="https://www.johnspence.org.uk/wp-content/uploads/2022/11/The-Fun-They-Had.pdf" target="_blank">https://www.johnspence.org.uk/wp-content/uploads/2022/11/The-Fun-They-Had.pdf</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 3.</strong> Atwood, M. (1992). There was once...</div>
+                <div><a href="https://www.johnspence.org.uk/wp-content/uploads/2022/11/There-Was-Once...pdf" target="_blank">https://www.johnspence.org.uk/wp-content/uploads/2022/11/There-Was-Once...pdf</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 4.</strong> Biblioklept, V. a. P. B. (2010, November 23). “A Gentleman’s C” — Padgett Powell. Biblioklept.</div>
+                <div><a href="https://biblioklept.org/2010/11/26/a-gentlemans-c-padgett-powell/" target="_blank">https://biblioklept.org/2010/11/26/a-gentlemans-c-padgett-powell/</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 5.</strong> Bradbury, R. (1953). The Golden Kite, the Silver Wind.</div>
+                <div><a href="https://mschapmansclass.com/wp-content/uploads/2014/03/the-golden-kite-the-silver-wind.pdf" target="_blank">https://mschapmansclass.com/wp-content/uploads/2014/03/the-golden-kite-the-silver-wind.pdf</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 6.</strong> Bury, R. B. (1951). The Pedestrian.</div>
+                <div><a href="https://www.riversidelocalschools.com/downloads/pedestrian%20short%20story.pdf" target="_blank">https://www.riversidelocalschools.com/downloads/pedestrian%20short%20story.pdf</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 7.</strong> Carver, R. (1981). Popular Mechanics.</div>
+                <div><a href="https://www.johnspence.org.uk/wp-content/uploads/2022/11/Popular-Mechanics.pdf" target="_blank">https://www.johnspence.org.uk/wp-content/uploads/2022/11/Popular-Mechanics.pdf</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 8.</strong> Chekhov, A. (1883). Joy.</div>
+                <div><a href="https://www.coquitlamcollege.com/wp-content/uploads/2024/11/Joy-by-Anton-Chekhov.pdf" target="_blank">https://www.coquitlamcollege.com/wp-content/uploads/2024/11/Joy-by-Anton-Chekhov.pdf</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 9.</strong> Dittmar, W., &amp; Kelleter, F. (2020). Jackson, Shirley: The Lottery.</div>
+                <div><a href="https://doi.org/10.1007/978-3-476-05728-0_" target="_blank">https://doi.org/10.1007/978-3-476-05728-0_</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 10.</strong> García Márquez, G. &amp; R.W. Ware. (2008). One of these days.</div>
+                <div><a href="https://www.flashfictiononline.com/pdf/fpublic0007-one-of-these-days-gabrie1-garcia-marquez.pdf" target="_blank">https://www.flashfictiononline.com/pdf/fpublic0007-one-of-these-days-gabrie1-garcia-marquez.pdf</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 11.</strong> Greenberg, B. (2018). Important Things.</div>
+                <div><a href="https://pubs.lib.uiowa.edu/iowareview/article/id/15238/" target="_blank">https://pubs.lib.uiowa.edu/iowareview/article/id/15238/</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 12.</strong> Jackson, S. (1965). The Possibility of Evil Summary &amp; Analysis | LitCharts.</div>
+                <div><a href="https://www.1itcharts.com/lit/the-possibility-of-evil/summary-and-analysis" target="_blank">https://www.1itcharts.com/lit/the-possibility-of-evil/summary-and-analysis</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 13.</strong> Leacock, S. (1910). The Awful Fate of Melpomenus Jones.</div>
+                <div><a href="https://short-stories.co/@stephen.leacock/the-awful-fate-of-melpomenus-jones-1knv7em64l63" target="_blank">https://short-stories.co/@stephen.leacock/the-awful-fate-of-melpomenus-jones-1knv7em64l63</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 14.</strong> Nowlan, A. (1988). Skipper (The last of her sons).</div>
+                <div><a href="https://dalspaceb.library.dal.ca/server/api/core/bitstreams/0c164731-b54e-4877-a038-c9179cc3c81b/content" target="_blank">https://dalspaceb.library.dal.ca/server/api/core/bitstreams/0c164731-b54e-4877-a038-c9179cc3c81b/content</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 15.</strong> Ross, L. (1941). Cemetery path.</div>
+                <div><a href="https://cmsnorthstar.weebly.com/uploads/5/6/6/3/56635067/cemetery_path__by_leonard_q__1_.pdf" target="_blank">https://cmsnorthstar.weebly.com/uploads/5/6/6/3/56635067/cemetery_path__by_leonard_q__1_.pdf</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 16.</strong> Téllez, H. (1950). Lather and nothing else.</div>
+                <div><a href="https://lingualeo.com/en/jungle/lather-and-nothing-else-by-hernando-tellez-477410." target="_blank">https://lingualeo.com/en/jungle/lather-and-nothing-else-by-hernando-tellez-477410.</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 17.</strong> The Other Wife by Colette. (2019, October 24).</div>
+                <div><a href="https://www.scribd.com/document/611590515/The-Other-Wife-Colette" target="_blank">https://www.scribd.com/document/611590515/The-Other-Wife-Colette</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 18.</strong> The Story of An Hour by Kate Chopin: A Feminist Perspective. (2023).</div>
+                <div><a href="https://doi.org/10.37605/ijllts.v3i2.5" target="_blank">https://doi.org/10.37605/ijllts.v3i2.5</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 19.</strong> Tolstoy, L. (1903). Three questions.</div>
+                <div><a href="https://www.marxists.org/archive/tolstoy/1903/three-questions.html" target="_blank">https://www.marxists.org/archive/tolstoy/1903/three-questions.html</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 20.</strong> O’Faolain, S. (1945). The Trout.</div>
+                <div><a href="https://mrdow.weebly.com/uploads/6/6/2/9/66297371/short_story_the_trout.pdf" target="_blank">https://mrdow.weebly.com/uploads/6/6/2/9/66297371/short_story_the_trout.pdf</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 21.</strong> U, M. (2018, September 10). “The Key Game” by Ida Fink.</div>
+                <div><a href="https://rereadinglives.blogspot.com/2018/09/the-key-game-by-ida-fink-short-story-on.html?fbclid=IwY2xjawOmB_FleHRuA2FlbQIxMQBzcnRjBmFwcF9pZA80MDk5NjI2MjMwODU2MDkAAR52AmQ0yc5a6DqTUfhm05ZVTVYaJ8kZYDMfXf544RgH6fuav_TfTyZhGjpOIQ_aem_X1SLlY7Ey0Xad_0j_hqWMA&m=1" target="_blank">https://rereadinglives.blogspot.com/2018/09/the-key-game-by-ida-fink-short-story-on.html?fbclid=...</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 22.</strong> Valgardson, W. D. (2006). Identities.</div>
+                <div><a href="https://281849408853532262.weebly.com/uploads/1/0/1/0/10106697/identities.pdf" target="_blank">https://281849408853532262.weebly.com/uploads/1/0/1/0/10106697/identities.pdf</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 23.</strong> Vonnegut, K. (2021). “Harrison Bergeron.”</div>
+                <div><a href="https://doi.org/10.4324/9781003235620-15" target="_blank">https://doi.org/10.4324/9781003235620-15</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 24.</strong> Wilde, O. (1887). The Model Millionaire.</div>
+                <div><a href="https://www.wilde-online.info/the-model-millionaire.html" target="_blank">https://www.wilde-online.info/the-model-millionaire.html</a></div>
+              </div>
+              <div class="ref-item" style="text-align:left; margin-top:12px;">
+                <div><strong>Story 25.</strong> Williams, W. C. (1963). The Use of Force.</div>
+                <div><a href="https://www.classicshorts.com/stories/force.html" target="_blank">https://www.classicshorts.com/stories/force.html</a></div>
+              </div>
+            `;
+          } else {
+            list.innerHTML = '<div>No references available for this level.</div>';
+          }
+          modal.style.display = 'block';
+        }
+
+        // handleBack: when viewing stories, return to levels; otherwise go back to reading page
+        function handleBack(){
+          const storiesView = document.getElementById('stories-view');
+          const levelsView = document.getElementById('levels-view');
+          if (storiesView && window.getComputedStyle(storiesView).display !== 'none'){
+            storiesView.style.display = 'none';
+            if (levelsView) levelsView.style.display = 'block';
+          } else {
+            location.href = 'reading.html';
+          }
+        }
       </script>
 
     </div>

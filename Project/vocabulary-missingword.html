@@ -44,10 +44,7 @@
     <section id="completion" class="intro" style="display:none;">
       <h2 class="title">Quiz Completed</h2>
       <p id="scoreText" class="subtitle" style="font-size:20px;"></p>
-      <div id="answerKey" style="margin-top:12px; text-align:left; max-width:720px; margin-left:auto; margin-right:auto;">
-        <h3 style="text-align:center;">Answer Key</h3>
-        <ol id="keyList"></ol>
-      </div>
+      <!-- answer key removed per site settings (do not reveal answer key here) -->
     </section>
   </main>
 
@@ -151,13 +148,15 @@
             else if (pct >= 50) window.playPraiseKey('good job');
           }
         }catch(e){}
-        keyList.innerHTML = '';
-        questions.forEach((qq,i)=>{
-          const li = document.createElement('li');
-          const letter = String.fromCharCode(65+qq.correct);
-          li.textContent = (i+1) + '. ' + qq.q.replace(/^\d+\.\s*/, '') + ' — ' + letter + '. ' + qq.choices[qq.correct];
-          keyList.appendChild(li);
-        });
+        if (keyList) {
+          keyList.innerHTML = '';
+          questions.forEach((qq,i)=>{
+            const li = document.createElement('li');
+            const letter = String.fromCharCode(65+qq.correct);
+            li.textContent = (i+1) + '. ' + qq.q.replace(/^\d+\.\s*/, '') + ' — ' + letter + '. ' + qq.choices[qq.correct];
+            keyList.appendChild(li);
+          });
+        }
       }
     });
   </script>

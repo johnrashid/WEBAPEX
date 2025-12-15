@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Grammar Test - Pronouns</title>
+  <title>Grammar Test - Verbs</title>
   <link rel="stylesheet" href="pretest.css">
   <link rel="stylesheet" href="grammartest.css">
   <link rel="stylesheet" href="design.css">
@@ -17,9 +17,11 @@
   </button>
 
   <main class="canvas" role="main">
+    <!-- Title removed so each question displays without a persistent page heading -->
+
     <section id="intro" class="intro" style="max-width:780px; text-align:center;">
-      <h1 class="title">Pronoun Quiz</h1>
-      <p class="subtitle">Identify pronouns and their correct use.</p>
+      <h1 class="title">Verb Quiz</h1>
+      <p class="subtitle">Choose the correct verb form to complete each sentence.</p>
       <button id="start" class="next-btn">Start Quiz</button>
     </section>
 
@@ -51,16 +53,16 @@
 
   <script>
     const questions = [
-      { q: '1. My brother is very funny; ___ always makes me laugh.', choices: ['A. she','B. he','C. him','D. I'], correct: 1 },
-      { q: '2. Sarah is at the park. Have you seen ___?', choices: ['A. he','B. her','C. them','D. us'], correct: 1 },
-      { q: '3. The dog is barking loudly; ___ must be hungry.', choices: ['A. him','B. they','C. it','D. she'], correct: 2 },
-      { q: '4. ___ are my best friends; we play soccer every weekend.', choices: ['A. us','B. we','C. they','D. I'], correct: 2 },
-      { q: '5. Mom asked ___ to clean the room, and I said yes.', choices: ['A. us','B. me','C. him','D. her'], correct: 1 },
-      { q: '6. Don\'t worry, the teacher will help ___ with the project.', choices: ['A. me','B. us','C. him','D. I'], correct: 1 },
-      { q: '7. This is my new classmate. Have you met ___ yet?', choices: ['A. him','B. her','C. they','D. us'], correct: 0 },
-      { q: '8. ___ forgot their homework, so the teacher got upset.', choices: ['A. Nobody','B. Someone','C. They','D. I'], correct: 1 },
-      { q: '9. ___ is perfect; we all make mistakes sometimes.', choices: ['A. Someone','B. Nobody','C. He','D. It'], correct: 1 },
-      { q: '10. Emma and I are partners. Please work with ___.', choices: ['A. them','B. us','C. he','D. her'], correct: 1 }
+      { q: "1. Rita ___ a mile every day.", choices: ['run','runs','ran','running'], correct: 1 },
+      { q: "2. The dogs ___ all night.", choices: ['barks','bark','barking','barked'], correct: 1 },
+      { q: "3. The cat ___ the snake.", choices: ['catch','caught','catches','catching'], correct: 1 },
+      { q: "4. We ___ in the park in the evenings.", choices: ['plays','play','played','playing'], correct: 1 },
+      { q: "5. Mia __ school yesterday.", choices: ['go','went','goes','going'], correct: 1 },
+      { q: "6. Sheela ___ to be a Police Officer when she grows up.", choices: ['want','wants','wanted','wanting'], correct: 1 },
+      { q: "7. Mahesh ___ back to his mother.", choices: ['run','ran','runs','running'], correct: 1 },
+      { q: "8. Amy ___ very fast.", choices: ['walk','walks','walked','walking'], correct: 1 },
+      { q: "9. You can ___ with us.", choices: ['come','came','comes','coming'], correct: 0 },
+      { q: "10. They ___ to a picnic together.", choices: ['go','went','goes','going'], correct: 1 }
     ];
 
     let index = 0;
@@ -79,10 +81,10 @@
     const timerEl = document.getElementById('timer');
     const timerText = document.getElementById('timer-text');
     const timerCircle = document.getElementById('timer-circle');
-    const totalTime = 60;
-    const circumference = 2 * Math.PI * 30;
     const completion = document.getElementById('completion');
     const scoreEl = document.getElementById('score');
+    const totalTime = 60;
+    const circumference = 2 * Math.PI * 30;
 
     function startTimer() {
       timeLeft = 60;
@@ -126,30 +128,29 @@
       try { intenseAudio = new Audio('intense.mp3'); intenseAudio.loop = true; intenseAudio.play(); } catch(e){}
       startTimer();
 
-      item.choices.forEach((label, i) => {
+      item.choices.forEach((label,i)=>{
         const btn = document.createElement('button');
         btn.className = 'level-btn choice-btn';
-        btn.textContent = label;
-
-        btn.addEventListener('click', () => {
+        btn.textContent = String.fromCharCode(65+i) + '. ' + label;
+        btn.addEventListener('click', ()=>{
           if (timerInterval) clearInterval(timerInterval);
           try { if (intenseAudio) { intenseAudio.pause(); intenseAudio.currentTime = 0; } } catch(e){}
-          const isCorrect = i === item.correct;
-          // mark selection visually
-          if (isCorrect) btn.classList.add('correct'); else btn.classList.add('wrong');
-          // disable all buttons
           const all = choicesEl.querySelectorAll('button');
-          all.forEach(b => b.disabled = true);
+          all.forEach(b=>b.disabled = true);
+          const correctIndex = item.correct;
+          const isCorrect = i === correctIndex;
 
           if (isCorrect) {
+            btn.classList.add('correct');
             feedback.textContent = 'Correct!';
             feedback.style.color = '#0a8a0a';
             score++;
-            try { if (window && window.playPraiseKey) window.playPraiseKey('correct'); } catch (e) {}
+            if (window && window.playPraiseKey) try{ window.playPraiseKey('correct'); }catch(e){}
           } else {
-            // reveal correct button
+            // mark the clicked button as wrong and reveal the correct one
+            btn.classList.add('wrong');
             const buttons = Array.from(choicesEl.querySelectorAll('button'));
-            const correctBtn = buttons[item.correct];
+            const correctBtn = buttons[correctIndex];
             if (correctBtn) correctBtn.classList.add('correct');
             feedback.textContent = 'Incorrect. The correct answer is ' + item.choices[item.correct] + '.';
             feedback.style.color = '#c62828';
@@ -159,19 +160,17 @@
           nextBtn.textContent = index < questions.length - 1 ? 'Next' : 'Finish';
           nextBtn.style.display = 'inline-block';
         });
-
         choicesEl.appendChild(btn);
       });
     }
 
-    startBtn.addEventListener('click', () => {
+    startBtn.addEventListener('click', ()=>{
       intro.style.display = 'none';
       qView.style.display = 'block';
       render();
     });
 
-    nextBtn.addEventListener('click', () => {
-      if (timerInterval) clearInterval(timerInterval);
+    nextBtn.addEventListener('click', ()=>{
       if (index < questions.length - 1) {
         index++;
         render();
@@ -179,19 +178,7 @@
         qView.style.display = 'none';
         completion.style.display = 'block';
         scoreEl.textContent = 'You got ' + score + ' / ' + questions.length;
-        // final-score praise
-        try {
-          const total = questions.length || 0;
-          const pct = total ? (score / total) * 100 : 0;
-          if (window && window.playPraiseKey) {
-            if (pct >= 90) window.playPraiseKey('excellent');
-            else if (pct >= 75) window.playPraiseKey('amazing');
-            else if (pct >= 50) window.playPraiseKey('good job');
-          }
-        } catch (e) {}
-        // reveal the answer key immediately on completion if present
-        const answerKey = document.getElementById('answerKey');
-        if (answerKey) answerKey.style.display = 'block';
+        try{ const total = questions.length || 0; const pct = total ? (score/total)*100 : 0; if (window && window.playPraiseKey){ if (pct>=90) window.playPraiseKey('excellent'); else if (pct>=75) window.playPraiseKey('amazing'); else if (pct>=50) window.playPraiseKey('good job'); } }catch(e){}
       }
     });
   </script>

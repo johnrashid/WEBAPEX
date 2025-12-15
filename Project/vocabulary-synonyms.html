@@ -43,35 +43,32 @@
     <section id="completion" class="intro" style="display:none;">
       <h2 class="title">Quiz Completed</h2>
       <p id="scoreText" class="subtitle" style="font-size:20px;"></p>
-      <div id="answerKey" style="margin-top:12px; text-align:left; max-width:720px; margin-left:auto; margin-right:auto;">
-        <h3 style="text-align:center;">Answer Key</h3>
-        <ol id="keyList"></ol>
-      </div>
+      <!-- answer key removed per site settings (do not reveal answer key here) -->
     </section>
   </main>
 
-  <script>
+    <script>
     const questions = [
-      {q:'1. Forbid', choices:['Allow','Permit','Prohibit','Welcome'], correct:2},
-      {q:'2. Disobeyed', choices:['Followed','Obeyed','Ignored','Approved'], correct:2},
-      {q:'3. Glorious', choices:['Magnificent','Boring','Ordinary','Dim'], correct:0},
-      {q:'4. Disguises', choices:['Reveals','Costumes','Containers','Stories'], correct:1},
-      {q:'5. Wagon', choices:['Carriage','Helmet','Shelter','Path'], correct:0},
-      {q:'6. Rough', choices:['Smooth','Harsh','Gentle','Soft'], correct:1},
-      {q:'7. Plague', choices:['Disease','Blessing','Celebration','Freedom'], correct:0},
-      {q:'8. Distinct', choices:['Clear','Blurry','Faint','Similar'], correct:0},
-      {q:'9. Shallow', choices:['Deep','Hollow','Superficial','Wide'], correct:2},
-      {q:'10. Despair', choices:['Hope','Joy','Hopelessness','Laughter'], correct:2},
-      {q:'11. Ingenuity', choices:['Foolishness','Creativity','Clumsiness','Weakness'], correct:1},
-      {q:'12. Sailing', choices:['Rowing','Jumping','Traveling by boat','Landing'], correct:2},
-      {q:'13. Emphasize', choices:['Highlight','Ignore','Hide','Remove'], correct:0},
-      {q:'14. Vision', choices:['Sight','Sound','Touch','Smell'], correct:0},
-      {q:'15. Boastful', choices:['Humble','Quiet','Proud','Shy'], correct:2},
-      {q:'16. Steadily', choices:['Randomly','Smoothly','Unpredictably','Suddenly'], correct:1},
-      {q:'17. Grazing', choices:['Eating','Running','Sleeping','Jumping'], correct:0},
-      {q:'18. Grumbling', choices:['Praising','Complaining','Laughing','Whispering'], correct:1},
-      {q:'19. Anxious', choices:['Calm','Relaxed','Nervous','Cheerful'], correct:2},
-      {q:'20. Wisdom', choices:['Foolishness','Intelligence','Anger','Misery'], correct:1}
+      {q:'1. The sun shines BRIGHTLY in the sky.', choices:['dimly','radiantly','slowly'], correct:1},
+      {q:'2. Birds chirp MELODIALLY at dawn.', choices:['sweetly','loudly','harshly'], correct:0},
+      {q:'3. Trees sway GENTLY in the breeze.', choices:['roughly','softly','quickly'], correct:1},
+      {q:'4. Children LAUGH and play in the park.', choices:['giggle','shout','whisper'], correct:0},
+      {q:'5. She wears a PRETTY dress to the party.', choices:['beautiful','plain','ugly'], correct:0},
+      {q:'6. The kite flies HIGH in the sky.', choices:['low','elevated','flat'], correct:1},
+      {q:'7. He LIKES to read books.', choices:['hates','enjoys','ignores'], correct:1},
+      {q:'8. We GO to the park every Sunday.', choices:['stop','visit','hide'], correct:1},
+      {q:'9. I want to LEARN Spanish.', choices:['study','forget','sleep'], correct:0},
+      {q:'10. She WORKS as a teacher.', choices:['rests','employed','quits'], correct:1},
+      {q:'11. He EATS breakfast every morning.', choices:['consumes','throws','drops'], correct:0},
+      {q:'12. We WATCH movies on weekends.', choices:['break','view','ignore'], correct:1},
+      {q:'13. He TALKS to his friends on the phone.', choices:['sleeps','speaks','walks'], correct:1},
+      {q:'14. She BUYS groceries every Friday.', choices:['purchases','sells','lends'], correct:0},
+      {q:'15. I LISTEN to music when I’m studying.', choices:['ignore','shout','hear'], correct:2},
+      {q:'16. She SHUTS the door before leaving.', choices:['opens','closes','locks'], correct:1},
+      {q:'17. He SLEEPS for eight hours every dusk.', choices:['rests','wakes','leaps'], correct:0},
+      {q:'18. We STUDY for exams during the week.', choices:['prepare','skip','forget'], correct:0},
+      {q:'19. He received a SPECIAL gift on his birthday.', choices:['ordinary','unique','boring'], correct:1},
+      {q:'20. Her BRILLIANT idea solved the problem easily.', choices:['dull','clever','silly'], correct:1}
     ];
 
     let index = 0, score = 0; let intenseAudio = null; let timeLeft = 60; let timerInterval = null;
@@ -150,13 +147,15 @@
             else if (pct >= 50) window.playPraiseKey('good job');
           }
         }catch(e){}
-        keyList.innerHTML = '';
-        questions.forEach((qq,i)=>{
-          const li = document.createElement('li');
-          const letter = String.fromCharCode(65+qq.correct);
-          li.textContent = (i+1) + '. ' + qq.q.replace(/^\d+\.\s*/, '') + ' — ' + letter + '. ' + qq.choices[qq.correct];
-          keyList.appendChild(li);
-        });
+        if (keyList) {
+          keyList.innerHTML = '';
+          questions.forEach((qq,i)=>{
+            const li = document.createElement('li');
+            const letter = String.fromCharCode(65+qq.correct);
+            li.textContent = (i+1) + '. ' + qq.q.replace(/^\d+\.\s*/, '') + ' — ' + letter + '. ' + qq.choices[qq.correct];
+            keyList.appendChild(li);
+          });
+        }
       }
     });
   </script>
