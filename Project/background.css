@@ -1,0 +1,7 @@
+/* Minimal background styles to ensure consistent deployment appearance */
+html, body {
+  background: #f4efff;
+}
+
+/* Keep this file for any background-specific rules (gradients, images)
+   Add rules here if deployment shows missing background assets. */

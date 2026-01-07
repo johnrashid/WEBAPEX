@@ -50,8 +50,23 @@ main, .canvas, .wrapper, .container{ position: relative; z-index: 10; }
 }
 
 /* responsive: tone down decorations on small screens */
-@media (max-width:640px){
-	body{ background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%); }
+@media (max-width:960px){
+	/* remove heavy radial gradients on medium/small screens for performance */
+	body{
+		background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
+		background-attachment: scroll; /* avoid fixed attachment on mobile */
+	}
+	/* reduce vignette so it doesn't darken content on small screens */
+	body::before{ background: radial-gradient(60% 40% at 50% 45%, rgba(255,255,255,0) 45%, rgba(255,255,255,0.03) 65%, rgba(9,8,20,0.01) 100%); }
+}
+
+@media (max-width:420px){
+	/* minimal background for smallest devices to preserve readability and battery */
+	body{
+		background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
+		background-attachment: scroll;
+	}
+	body::before{ background: none; }
 }
 
 

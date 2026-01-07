@@ -6,6 +6,33 @@
   <title>Story</title>
   <link rel="stylesheet" href="reading.css">
   <link rel="stylesheet" href="design.css">
+  <style>
+    /* Page-scoped responsive overrides for story page.
+       These ensure the story is readable and scrollable on mobile while
+       preserving desktop layout. Placed after design.css so it wins. */
+    @media (max-width: 920px){
+      html, body { height: auto !important; overflow: auto !important; }
+      body { display: block !important; align-items: normal !important; padding-top: 14px; padding-bottom: 22px; }
+      .wrapper, .canvas { max-width: 100% !important; padding-left: 12px !important; padding-right: 12px !important; }
+      .canvas { margin: 0 auto !important; }
+      #story { max-width: 900px !important; width: 100% !important; margin: 0 auto !important; overflow: visible !important; }
+      #story #story-content { white-space: normal !important; word-break: break-word !important; overflow-wrap: break-word !important; font-size: clamp(15px, 3.6vw, 18px) !important; line-height: 1.6 !important; }
+      /* Make sticky number static on small screens so it doesn't overlap text */
+      #story .story-number { position: static !important; text-align: center; margin-bottom: 12px; }
+      /* stack index badges and Questions button */
+      .index-row { display: flex !important; flex-direction: column !important; gap: 10px !important; align-items: stretch !important; }
+      #story-index { order: 0; }
+      .questions-btn { order: 1; width: 100% !important; }
+      /* ensure the back button doesn't cover content */
+      .back-btn{ position: fixed; top: 10px; left: 10px; z-index: 11000; }
+    }
+
+    /* Desktop: ensure central column and comfortable reading width */
+    @media (min-width: 921px){
+      #story { max-width: 780px; margin: 0 auto; }
+      #story #story-content { font-size: 18px; }
+    }
+  </style>
 </head>
 <body>
 
@@ -18,12 +45,12 @@
 
   <div class="wrapper">
     <div class="canvas">
-      <section id="story" class="intro" style="max-width:780px; text-align:left; display:block;">
-        <div id="story-number" class="story-number" style="text-align:center"></div>
-        <h1 id="story-title" class="title" style="text-align:center"></h1>
-        <div id="story-content" style="margin-top:18px; font-size:18px; line-height:1.6;"></div>
+      <section id="story" class="intro">
+        <div id="story-number" class="story-number"></div>
+        <h1 id="story-title" class="title"></h1>
+        <div id="story-content"></div>
         <!-- Story index and Questions button row -->
-        <div class="index-row" style="margin-top:18px; display:flex; align-items:center; justify-content:space-between; gap:12px;">
+        <div class="index-row">
           <div id="story-index" style="display:flex; gap:8px; overflow-x:auto; padding:8px 0;"></div>
           <button id="questionsBtn" class="questions-btn" aria-haspopup="dialog">Questions</button>
         </div>

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Apex</title>
+    <link rel="stylesheet" href="home.css?v=2">
+    <link rel="stylesheet" href="design.css">
+    <style>
+      /* Inline overrides to ensure deployed site applies these modal styles (cache-safe)
+         Keeps text justified and styles the OK button with high priority. */
+      .about-box .about-text{ text-align: justify; text-justify: inter-word; line-height:1.6; hyphens:auto; }
+      #about-ok{ padding:10px 18px; border-radius:10px; border:none; background:#402688; color:#fff; font-weight:800; cursor:pointer; box-shadow:0 10px 22px rgba(64,38,136,0.16); }
+      #about-ok:hover{ transform: translateY(-3px); background:#6f4edb; box-shadow:0 16px 34px rgba(64,38,136,0.18); }
+      #about-ok:focus{ outline:3px solid rgba(64,38,136,0.18); outline-offset:2px; }
+    </style>
+    <style>
+      /* Home/index-specific: keep subtle background vignette and floating words visible on small screens.
+         Placed inline after design.css so it does not affect other pages (e.g. story.html). */
+      @media (max-width:420px){
+        .floating-words{ display: block !important; }
+        .floating-words .word{ opacity: 0.18 !important; filter: none !important; font-size: clamp(12px, 4.4vw, 26px) !important; }
+        body::before{ background: radial-gradient(60% 40% at 50% 45%, rgba(255,255,255,0) 45%, rgba(255,255,255,0.04) 65%, rgba(9,8,20,0.02) 100%); }
+      }
+      @media (max-width:360px){
+        .floating-words .word{ font-size: clamp(10px, 5vw, 22px) !important; opacity: 0.16 !important; }
+      }
+    </style>
+
+</head>
+<body>
+
+      <div class="wrapper">
+    <!-- floating words (decorative) -->
+    <div class="floating-words">
+      <span class="word" style="left:6%;  top:8%;   animation-duration:10s; animation-delay:-2s;">LEARN</span>
+      <span class="word" style="left:24%; top:18%;  animation-duration:12s; animation-delay:-4s;">CREATE</span>
+      <span class="word" style="left:62%; top:6%;   animation-duration:9s;  animation-delay:-1s;">EXPLORE</span>
+      <span class="word" style="left:78%; top:26%;  animation-duration:11s; animation-delay:-3s;">BUILD</span>
+      <span class="word" style="left:46%; top:44%;  animation-duration:13s; animation-delay:-5s;">UNDERSTAND</span>
+      <span class="word" style="left:14%; top:56%;  animation-duration:14s; animation-delay:-6s;">PRACTICE</span>
+      <span class="word" style="left:64%; top:60%;  animation-duration:10s; animation-delay:-2s;">PLAY</span>
+      <span class="word" style="left:36%; top:72%;  animation-duration:12s; animation-delay:-4s;">GROW</span>
+    </div>
+    
+<div class="container">
+
+    <!-- logout button (upper-right) -->
+    <button class="logout-btn" id="logout-btn" type="button" title="Logout">
+      <!-- simple logout SVG -->
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M16 13v-2H7V8l-5 4 5 4v-3zM20 3H10v2h10v14H10v2h10c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>
+      </svg>
+    </button>
+
+    <!-- about button (placed below logout) -->
+    <button class="about-btn" id="about-btn" type="button" title="About" aria-label="About">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+      </svg>
+    </button>
+
+    <!-- title (about removed from here) -->
+    <div class="title-container">
+      <h1 class="title">WEB APEX</h1>
+    </div>
+
+    <div class="menu">
+        <button onclick="window.location.href='pretest.html'">PRE TEST</button>
+        <button onclick="window.location.href='reading.html'">READING COMPREHENSION</button>
+        <button onclick="window.location.href='textsglossary.html'">TEXTS GLOSSARY</button>
+        <button onclick="window.location.href='grammartest-parts.html'">PARTS OF SPEECH</button>
+        <button onclick="window.location.href='grammartest.html'">GRAMMAR TEST</button>
+        <button onclick="window.location.href='vocabularytest.html'">VOCABULARY TEST</button>
+        <button onclick="window.location.href='posttest.html'">POST TEST</button>
+    </div>
+</div>
+
+<script src="audio.js" defer></script>
+
+    <audio id="bg-audio" src="bgmusic.mp3" loop preload="auto" autoplay muted playsinline></audio>
+
+<!-- Audio control (lower-right) -->
+<div class="audio-control" aria-hidden="false">
+    <button class="audio-btn" id="audio-toggle" aria-label="Toggle sound" title="Sound">
+      <!-- speaker icon (svg) -->
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+        <path d="M3 10v4h4l5 5V5L7 10H3z" fill="currentColor"></path>
+        <path class="wave" d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v8.06c1.48-.74 2.5-2.26 2.5-4.03z" fill="currentColor"></path>
+      </svg>
+    </button>
+
+    <div class="audio-panel" id="audio-panel" aria-hidden="true">
+      <input type="range" id="audio-volume" class="audio-volume" min="0" max="1" step="0.01" value="0.6" aria-label="Volume">
+      <button id="audio-mute" class="audio-mute" aria-label="Mute">Mute</button>
+    </div>
+  </div>
+
+  <!-- audio.js already included with defer above; single controller manages playback -->
+  
+  <!-- Logout confirmation modal -->
+  <div class="confirm-overlay" id="logout-modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="confirm-box" role="document">
+      <h3>Do you want to quit the game?</h3>
+      <div class="confirm-actions">
+        <button class="cancel" id="logout-cancel">Cancel</button>
+        <button class="logout" id="logout-confirm">Quit</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- About modal -->
+  <div class="about-overlay" id="about-modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="about-box" role="document">
+      <h3>About Web Apex</h3>
+      <p class="about-text">
+        Web Apex is a friendly and easy-to-use learning website made to help students feel more confident in English. Here, you can practice reading comprehension, learn new words through our glossary, understand parts of speech, and master subject–verb agreement with clear and simple lessons. You can also try meaning tests and explore many synonyms and antonyms to grow your vocabulary. Web Apex is designed to guide you step by step, give you helpful examples, and make learning English easier and more enjoyable. Whether you want to study for school or just improve your skills, Web Apex is here to support you every day.
+      </p>
+      <div class="about-actions">
+        <button class="about-ok" id="about-ok">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      const logoutBtn = document.getElementById('logout-btn');
+      const modal = document.getElementById('logout-modal');
+      const cancel = document.getElementById('logout-cancel');
+      const confirm = document.getElementById('logout-confirm');
+
+      function showModal(){
+        modal.classList.add('open');
+        modal.setAttribute('aria-hidden','false');
+        // trap focus briefly
+        cancel.focus();
+      }
+      function hideModal(){
+        modal.classList.remove('open');
+        modal.setAttribute('aria-hidden','true');
+        logoutBtn.focus();
+      }
+
+      if (logoutBtn){
+        logoutBtn.addEventListener('click', function(e){
+          e.preventDefault();
+          showModal();
+        });
+      }
+      if (cancel){ cancel.addEventListener('click', hideModal); }
+      if (modal){
+        modal.addEventListener('click', function(e){
+          if (e.target === modal) hideModal();
+        });
+      }
+
+      if (confirm){
+        confirm.addEventListener('click', function(){
+          // stop local audio if present
+          const local = document.getElementById('bg-audio');
+          if (local){ try{ local.pause(); local.currentTime = 0; }catch(e){} }
+          // attempt to close persistent player window
+          try{
+            const playerWin = window.open('', 'webapex-player');
+            if (playerWin && !playerWin.closed) playerWin.close();
+          }catch(e){}
+          // perform logout redirect
+          window.location.href = 'index.html';
+        });
+      }
+
+      // keyboard support: Escape to cancel
+      document.addEventListener('keydown', function(e){
+        if (e.key === 'Escape' && modal.classList.contains('open')) hideModal();
+      });
+
+      // --- About modal handlers ---
+      const aboutBtn = document.getElementById('about-btn');
+      const aboutModal = document.getElementById('about-modal');
+      const aboutOk = document.getElementById('about-ok');
+
+      function showAbout(){
+        if (!aboutModal) return;
+        aboutModal.classList.add('open');
+        aboutModal.setAttribute('aria-hidden','false');
+        aboutOk.focus();
+      }
+      function hideAbout(){
+        if (!aboutModal) return;
+        aboutModal.classList.remove('open');
+        aboutModal.setAttribute('aria-hidden','true');
+        if (aboutBtn) aboutBtn.focus();
+      }
+
+      if (aboutBtn){
+        aboutBtn.addEventListener('click', function(e){
+          e.preventDefault();
+          showAbout();
+        });
+      }
+      if (aboutOk){ aboutOk.addEventListener('click', hideAbout); }
+      if (aboutModal){
+        aboutModal.addEventListener('click', function(e){
+          if (e.target === aboutModal) hideAbout();
+        });
+      }
+      // Escape closes about modal
+      document.addEventListener('keydown', function(e){
+        if (e.key === 'Escape' && aboutModal && aboutModal.classList.contains('open')) hideAbout();
+      });
+
+    })();
+  </script>
+</body>
+</html>

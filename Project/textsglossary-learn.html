@@ -48,7 +48,7 @@
       <div id="puzzle" class="puzzle" aria-hidden="true" style="display:none">
         <div id="blanks" class="blanks" aria-hidden="false"></div>
         <div id="tiles" class="tiles" aria-hidden="false"></div>
-        <div class="hint">Tap letters to fill the blanks. Click a filled box to remove a letter.</div>
+        <div class="hint">Rearrange the letters to form a word that matches the given meaning.</div>
       </div>
 
       <div class="label">Meaning:</div>
@@ -236,7 +236,7 @@
 
     chooseModeBtn.addEventListener('click', ()=>{
       // Go to main index (Choose Mode)
-      window.location.href = 'index.html';
+      window.location.href = 'home.html';
     });
 
     // Correct-modal elements
@@ -351,6 +351,7 @@
               // correct: mark blanks as correct (green) and disable tiles
               blanks.forEach(x=>{ x.classList.remove('incorrect'); x.classList.add('correct'); });
               tilesEl.querySelectorAll('.tile').forEach(t=>t.classList.add('disabled'));
+              try{ if (window && window.playPraiseKey) window.playPraiseKey('correct'); }catch(e){}
               // show modal with word, pronunciation and example (if present)
               const entry = entries[idx] || {};
               if (correctWordEl) correctWordEl.textContent = entry.word || '';
@@ -364,7 +365,8 @@
               // incorrect: mark blanks red so user knows the guess is wrong
               blanks.forEach(x=>x.classList.add('incorrect'));
               // increment attempts and trigger shake animation
-              puzzleState.attempts = (puzzleState.attempts || 0) + 1;
+                  puzzleState.attempts = (puzzleState.attempts || 0) + 1;
+                  try{ if (window && window.playTryAgain) window.playTryAgain(); }catch(e){}
               if (blanksEl){
                 blanksEl.classList.add('shake');
               }
@@ -481,10 +483,10 @@
       });
     }
 
-    // Choose Mode from result modal -> index.html
+    // Choose Mode from result modal -> home.html
     if (resultChooseBtn){
       resultChooseBtn.addEventListener('click', ()=>{
-        window.location.href = 'index.html';
+        window.location.href = 'home.html';
       });
     }
 

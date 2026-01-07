@@ -28,6 +28,19 @@
     audio.removeEventListener = () => {};
   }
 
+  // Only allow automatic background playback on specific pages.
+  // This prevents the site's bg music from playing on every HTML page after deploy.
+  const pageFile = (window.location.pathname.split('/').pop() || 'index.html').toLowerCase();
+  const allowedPages = ['index.html', 'home.html', '']; // '' covers root `/`
+  const audioAllowed = allowedPages.includes(pageFile);
+  if (!audioAllowed) {
+    // Mute and pause the audio to ensure it won't autoplay on disallowed pages.
+    try { if (audio && audio.pause) audio.pause(); } catch(e){}
+    try { if (audio) audio.muted = true; } catch(e){}
+    // If there is a visible audio control, hide it so users don't get a confusing UI on other pages.
+    if (controlRoot) controlRoot.style.display = 'none';
+  }
+
   // If UI pieces are missing, create a minimal control so user can start playback
   if (!controlRoot || !toggleBtn || !panel || !volSlider || !muteBtn) {
     console.warn('audio.js: some audio control elements missing. Creating minimal control...');
@@ -78,10 +91,34 @@
   // Load saved settings
   const savedVol = parseFloat(localStorage.getItem('webapex-audio-volume'));
   const savedMuted = localStorage.getItem('webapex-audio-muted') === 'true';
+  // separate sound effects (praise) mute setting so SFX can play even when
+  // background music is muted. Default: false (SFX enabled).
+  let sfxMuted = localStorage.getItem('webapex-sfx-muted') === 'true';
+  // shared AudioContext for short SFX fallback; will be resumed on user interaction
+  let sfxCtx = null;
+  function getSfxContext(){
+    if (!sfxCtx){
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      if (!Ctx) return null;
+      try{ sfxCtx = new Ctx(); }catch(e){ sfxCtx = null; }
+    }
+    return sfxCtx;
+  }
+  function resumeSfxContext(){
+    try{
+      const c = getSfxContext();
+      if (c && c.state === 'suspended') c.resume().catch(()=>{});
+    }catch(e){}
+  }
+  // resume SFX audio context on first user gesture (click/keydown)
+  document.addEventListener('click', resumeSfxContext, { once: true, capture: true });
+  document.addEventListener('keydown', resumeSfxContext, { once: true, capture: true });
   audio.volume = !isNaN(savedVol) ? savedVol : 0.6;
   // persisted playback position (session-only so it resets when the browser session ends)
   const savedTime = parseFloat(sessionStorage.getItem('webapex-audio-time'));
   const savedPlaying = sessionStorage.getItem('webapex-audio-playing') === 'true';
+  // If the user previously allowed sound during this browser session, remember it
+  const priorGesture = sessionStorage.getItem('webapex-audio-user-gesture') === 'true';
 
   // Prefer unmuted autoplay first; if blocked, fall back to muted autoplay (many browsers block unmuted autoplay)
   const tryUnmutedAutoplay = () => {
@@ -124,10 +161,16 @@
       if (audio.readyState >= 1) setTime(); else audio.addEventListener('loadedmetadata', setTime, { once: true });
     }
     // then try autoplay/resume only after position restored
-    tryUnmutedAutoplay();
+    if (priorGesture) {
+      audio.muted = false;
+      tryUnmutedAutoplay().then((ok) => { if (!ok) showEnableSoundPrompt(); });
+    } else {
+      tryUnmutedAutoplay().then((ok) => { if (!ok) showEnableSoundPrompt(); });
+    }
   };
 
-  restorePosition();
+  // Restore position and attempt autoplay only on allowed pages.
+  if (audioAllowed) restorePosition();
 
   // Init UI values
   volSlider.value = audio.volume;
@@ -144,8 +187,11 @@
       localStorage.setItem('webapex-audio-muted', 'false');
     }
   };
-  document.addEventListener('click', playOnInteraction, { once: true });
-  document.addEventListener('keydown', playOnInteraction, { once: true });
+  // Only attach first-user-gesture listeners to trigger playback on allowed pages.
+  if (audioAllowed) {
+    document.addEventListener('click', playOnInteraction, { once: true });
+    document.addEventListener('keydown', playOnInteraction, { once: true });
+  }
 
   // Toggle panel open/close
   const setOpen = (open) => {
@@ -225,17 +271,16 @@
   // Uses SpeechSynthesis when available; falls back to a short beep via WebAudio.
   function _speakPhrase(text, opts){
     try{
+      if (sfxMuted) return;
+      // Attempt SpeechSynthesis first, but guard with a timeout to fallback
       if ('speechSynthesis' in window){
         const u = new SpeechSynthesisUtterance(text);
-        // happy/energetic defaults — can be overridden by opts
         opts = opts || {};
         u.lang = opts.lang || 'en-US';
-        // slightly faster and higher pitch for a cheerful tone
-        u.rate = (typeof opts.rate === 'number') ? opts.rate : 1.15;
-        u.pitch = (typeof opts.pitch === 'number') ? opts.pitch : 1.25;
+        // speak at a near-normal rate but slightly brighter pitch for a happy tone
+        u.rate = (typeof opts.rate === 'number') ? opts.rate : 1.0;
+        u.pitch = (typeof opts.pitch === 'number') ? opts.pitch : 1.2;
         u.volume = (typeof opts.volume === 'number') ? opts.volume : 1;
-
-        // Prefer a bright/energetic English voice when available
         try {
           const voices = window.speechSynthesis.getVoices() || [];
           let preferred = null;
@@ -247,35 +292,61 @@
           if (!preferred) preferred = voices.find(v => v && v.lang && String(v.lang).toLowerCase().startsWith('en')) || voices[0];
           if (preferred) u.voice = preferred;
         } catch (e) {
-          // non-fatal — voice selection best-effort
         }
 
-        // cancel any previous short utterances so praises don't queue up
+        // cancel previous short utterances so praises don't queue
         try{ window.speechSynthesis.cancel(); }catch(e){}
-        window.speechSynthesis.speak(u);
+
+        let started = false;
+        const startHandler = () => { started = true; clearTimeout(fbTimeout); u.removeEventListener('start', startHandler); };
+        const errHandler = () => { started = false; clearTimeout(fbTimeout); u.removeEventListener('error', errHandler); fallbackBeep(); };
+        u.addEventListener('start', startHandler);
+        u.addEventListener('error', errHandler);
+        // if speech doesn't start within 700ms, fallback to short melody
+        const fbTimeout = setTimeout(() => { if (!started) try{ window.speechSynthesis.cancel(); }catch(e){} fallbackBeep(); }, 700);
+
+        try{ window.speechSynthesis.speak(u); }catch(e){ clearTimeout(fbTimeout); fallbackBeep(); }
         return;
       }
     }catch(e){
       console.warn('audio.js: speechSynthesis failed', e);
     }
 
-    // fallback: tiny beep
+    // fallback: short melodic figure via shared AudioContext (resumed on user gesture)
     try{
-      const Ctx = window.AudioContext || window.webkitAudioContext;
-      if (!Ctx) return;
-      const ctx = new Ctx();
-      const o = ctx.createOscillator();
-      const g = ctx.createGain();
-      o.type = 'sine';
-      o.frequency.value = 880;
-      g.gain.value = 0.0001;
-      o.connect(g);
-      g.connect(ctx.destination);
-      o.start();
-      g.gain.exponentialRampToValueAtTime(0.18, ctx.currentTime + 0.01);
-      g.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.25);
-      setTimeout(()=>{ try{ o.stop(); ctx.close(); }catch(e){} }, 300);
+      fallbackBeep();
     }catch(e){}
+  }
+
+  // Play a short, pleasant melody using WebAudio as a fallback for praise.
+  function fallbackBeep(){
+    if (sfxMuted) return;
+    const ctx = getSfxContext();
+    if (!ctx) return;
+    if (ctx.state === 'suspended') try{ ctx.resume(); }catch(e){}
+    try{
+      const now = ctx.currentTime + 0.01;
+      const notes = [880, 988, 1047]; // simple arpeggio
+      const gain = ctx.createGain();
+      gain.gain.value = 0.00001;
+      gain.connect(ctx.destination);
+      let offset = 0;
+      notes.forEach((freq, i) => {
+        const o = ctx.createOscillator();
+        o.type = 'sine';
+        o.frequency.value = freq;
+        const g = ctx.createGain();
+        g.gain.value = 0.00001;
+        o.connect(g);
+        g.connect(gain);
+        const startAt = now + offset;
+        o.start(startAt);
+        g.gain.exponentialRampToValueAtTime(0.12, startAt + 0.01);
+        g.gain.exponentialRampToValueAtTime(0.00001, startAt + 0.18);
+        setTimeout(()=>{ try{ o.stop(); }catch(e){} }, (offset + 0.25) * 1000);
+        offset += 0.12;
+      });
+    }catch(e){ }
   }
 
   // Public API: praise helpers.
@@ -321,7 +392,7 @@
 
   window.playPraiseShuffle = function(options){
     try{
-      if (audio.muted) return;
+      if (sfxMuted) return;
       options = options || {};
       const interval = (typeof options.interval === 'number') ? options.interval : 700;
       const count = (typeof options.count === 'number' && options.count > 0) ? options.count : null;
@@ -331,7 +402,7 @@
       // build phrases array and apply excludes (Fisher-Yates shuffle applied after filtering)
       let phrases = Object.values(praiseKeyMap).slice();
       // support exclude options: array of keys (`excludeKeys`) or phrase texts (`excludeValues`) or `exclude` (alias)
-      const excludeKeys = Array.isArray(options.excludeKeys) ? options.excludeKeys.map(s=>String(s).toLowerCase()) : [];
+       const excludeKeys = Array.isArray(options.excludeKeys) ? options.excludeKeys.map(s=>String(s).toLowerCase()) : [];
       const excludeValues = Array.isArray(options.excludeValues) ? options.excludeValues.map(s=>String(s).toLowerCase()) : [];
       const exclude = Array.isArray(options.exclude) ? options.exclude.map(s=>String(s).toLowerCase()) : [];
       const allExcludes = excludeKeys.concat(excludeValues).concat(exclude);
@@ -368,7 +439,7 @@
 
       for (let i = 0; i < total; i++){
         const text = _praiseShuffleState.lastShuffle[i];
-        const t = setTimeout(((txt) => () => { if (!audio.muted) _speakPhrase(txt); })(text), i * interval);
+        const t = setTimeout(((txt) => () => { if (!sfxMuted) _speakPhrase(txt); })(text), i * interval);
         _praiseShuffleState.timers.push(t);
       }
 
@@ -391,19 +462,29 @@
 
   window.playPraiseKey = function(key){
     try{
-      if (audio.muted) return;
+      try{ console.debug && console.debug('audio.js: playPraiseKey called', { sfxMuted: !!sfxMuted, audioMuted: !!(audio && audio.muted), key: key }); }catch(e){}
+      if (sfxMuted) { try{ console.debug && console.debug('audio.js: playPraiseKey aborted (sfxMuted)'); }catch(e){}; return; }
       if (!key) return window.playPraise();
       const k = String(key).toLowerCase().trim();
-      const resolved = praiseKeyMap[k] || praiseKeyMap[k.replace(/\s+/g,'')];
-      const text = resolved || String(key);
-      // Use a slightly faster, higher-pitched delivery for keyed praise
-      _speakPhrase(text, { rate: 1.35, pitch: 1.45, volume: 1 });
+      let text;
+      // When quizzes call 'correct', choose a random praise phrase for variety
+      if (k === 'correct'){
+        const vals = Object.values(praiseKeyMap);
+        text = vals[Math.floor(Math.random() * vals.length)];
+      } else {
+        const resolved = praiseKeyMap[k] || praiseKeyMap[k.replace(/\s+/g,'')];
+        text = resolved || String(key);
+      }
+      try{ console.debug && console.debug('audio.js: playPraiseKey ->', k, text); }catch(e){}
+      // Use a slightly energetic but not rushed delivery for keyed praise
+      _speakPhrase(text, { rate: 1.05, pitch: 1.25, volume: 1 });
     }catch(e){ console.warn('audio.js: playPraiseKey failed', e); }
   };
 
   window.playPraise = function(preferredPhraseOrKey){
     try{
-      if (audio.muted) return; // respect user's mute
+      try{ console.debug && console.debug('audio.js: playPraise called', { sfxMuted: !!sfxMuted, audioMuted: !!(audio && audio.muted), arg: preferredPhraseOrKey }); }catch(e){}
+      if (sfxMuted) { try{ console.debug && console.debug('audio.js: playPraise aborted (sfxMuted)'); }catch(e){}; return; } // respect user's SFX mute
       // no argument: random known praise
       if (!preferredPhraseOrKey){
         const phrases = Object.values(praiseKeyMap);
@@ -421,5 +502,44 @@
     }catch(e){
       console.warn('audio.js: playPraise failed', e);
     }
+  };
+
+  // Play a short 'Try again' feedback (speech when available, WebAudio fallback)
+  window.playTryAgain = function(){
+    try{
+      if (sfxMuted) return;
+      const text = 'Try again!';
+      if ('speechSynthesis' in window){
+        try{ window.speechSynthesis.cancel(); }catch(e){}
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = 'en-US';
+        u.rate = 1.0;
+        u.pitch = 1.15;
+        u.volume = 1;
+        try{ window.speechSynthesis.speak(u); return; }catch(e){}
+      }
+    }catch(e){}
+
+    // fallback short two-tone chirp
+    try{
+      const ctx = getSfxContext();
+      if (!ctx) return;
+      if (ctx.state === 'suspended') try{ ctx.resume(); }catch(e){}
+      const now = ctx.currentTime + 0.01;
+      const freqs = [880, 660];
+      freqs.forEach((f,i)=>{
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.type = 'sine';
+        o.frequency.value = f;
+        g.gain.value = 0.00001;
+        o.connect(g); g.connect(ctx.destination);
+        const startAt = now + i * 0.12;
+        o.start(startAt);
+        g.gain.exponentialRampToValueAtTime(0.12, startAt + 0.01);
+        g.gain.exponentialRampToValueAtTime(0.00001, startAt + 0.12);
+        setTimeout(()=>{ try{ o.stop(); }catch(e){} }, (i * 0.12 + 0.18) * 1000);
+      });
+    }catch(e){}
   };
 })();

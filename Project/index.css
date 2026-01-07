@@ -1,8 +1,83 @@
-/* RESET */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+:root{
+  --scale: 1;
+  --purple-deep: #402688;
+
+}
+
+/* basic page layout */
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* constrain canvas */
+.canvas{
+  position: relative;
+  width: 100%;
+  max-width: 780px;
+  padding: 36px;
+  box-sizing: border-box;
+
+  /* center all inner content */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh; /* gives vertical space so content centers nicely */
+}
+
+/* top-left circle (matches pretest) */
+.circle{
+  position: relative;
+  left: auto;
+  top: auto;
+  transform: none;
+
+  /* bigger */
+  width: 200px;
+  height: 200px;
+
+  /* point this to your image file (relative to the HTML/CSS) */
+  background-image: url("logo.png");
+  background-repeat: no-repeat;
+  background-size: cover;    /* crop/scale to fill the circle */
+  background-position: center;
+  background-color: transparent; /* fallback while image loads */
+  border-radius: 50%;
+  z-index: 10;
+
+  /* lower (push down from the center) */
+  margin-top: 24px;
+  margin-bottom: -20px;
+}
+
+/* title */
+.title{
+  font-size: 36px;
+  font-weight: 800;
+  color: #07101a;
+  margin: 0 0 24px 0; /* reset previous top margin and add spacing below */
+  text-align: center;
+}
+
+.subtitle{
+  font-size: 20px;
+  font-weight: 600;
+  color: #333333;
+  margin: 0 0 24px 0; /* reset previous top margin and add spacing below */
+  text-align: center;
+}
+/* center the single Play button */
+.play{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 0;
 }
 
 html, body {
@@ -14,280 +89,36 @@ html, body {
 }
 
 
-/* FULLSCREEN CENTER */
-body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-/* MAIN CARD */
-.container {
-    width: 100%;
-    max-width: 780px;
-    padding: 40px 25px;
-    border-radius: 18px;
-    position: relative;
-    text-align: center;
-    overflow: hidden;
-
-    margin: 0 auto;
-    z-index: 1; /* keep UI above decorative layers */
-}
-
-/* ensure container is a positioning context */
-.container{
-  position: relative;
-}
-
-
-
-/* TITLE */
-.title {
-    font-size: 36px;
-    font-weight: 800;
-    margin-bottom: 30px;
-}
-
-/* title + small about icon */
-.title-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 18px; /* adjust to match visual spacing */
-  position: relative;
-}
-
-/* Title tweaks (keep existing .title rules if any) */
-.title {
-  margin-bottom: 20px; /* reduce bottom margin */
-  font-size: 48px; /* keep or match existing */
-  font-weight: 800;
-  letter-spacing: 1px;
-}
-
-/* BUTTONS: make menu buttons centered and responsive */
-.menu {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-}
-.menu button {
-    display: block;
-    width: 100%;
-    max-width: 420px;
-    margin: 0 auto;
-    padding: 15px 20px;
-    border-radius: 30px;
-    color : hsl(0, 0%, 100%);
-    border: none;
-    background: #b86cff;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background .18s, transform .18s ease, box-shadow .18s ease;
-    box-shadow: 0 6px 12px rgba(0,0,0,0.06);
-}
-.menu button:hover {
-    background: #9a4fe7;
-    transform: translateY(-6px);
-    box-shadow: 0 14px 28px rgba(0,0,0,0.10);
-}
-
-/* logout button top-right - fixed coordinates */
-.logout-btn{
-  position: fixed; /* fixed to viewport upper-right */
-  top: 18px;
-  right: 18px;
-  z-index: 9999;
-  width: 44px;
-  height: 44px;
-  padding: 0;
+.play-btn{
+  --btn-w: 100px;
+  --btn-h: 50px;
+  width: var(--btn-w);
+  height: var(--btn-h);
   border: none;
-  border-radius: 50%;
-  background: #402688; /* deep purple */
+  border-radius: 28px;
+  background: linear-gradient(90deg, #3ad6d6 0%, #0c5fb0 100%);
+  color: #07101a;
+  font-weight: 800;
+  font-size: 20px;
+  cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 6px 14px rgba(0,0,0,0.12);
-  transition: transform .15s ease, opacity .15s ease;
-  color: #fff;
-}
-.logout-btn svg{ width:20px; height:20px; fill: #fff; }
-.logout-btn:hover{ transform: translateY(-2px); opacity: 0.95; }
-.logout-btn:focus{ outline: 3px solid rgba(64,38,136,0.18); outline-offset: 2px; }
-
-/* small screens: slightly smaller and inset from edges */
-@media (max-width:420px){
-  .logout-btn{ top: 10px; right: 10px; width:36px; height:36px; }
-  .logout-btn svg{ width:16px; height:16px; }
+  box-shadow: 0 8px 18px rgba(0,0,0,0.08);
 }
 
-
-/* Audio control (lower-right) */
-.audio-control{
-  position: fixed;
-  right: 18px;
-  bottom: 18px;
-  z-index: 10050;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-family: Arial, sans-serif;
-  pointer-events: auto;
+/* hover */
+.play-btn:hover{
+  transform: translateY(-2px);
+  filter: brightness(1.03);
 }
 
-/* main round button */
-.audio-btn{
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: #402688;
-  color: #fff;
-  border: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 8px 18px rgba(64,38,136,0.18);
-  transition: transform .15s ease, background .15s;
-}
-.audio-btn:hover{ transform: translateY(-3px); }
-
-/* hidden panel with volume slider + mute */
-.audio-panel{
-  display: none;
-  align-items: center;
-  gap: 8px;
-  background: rgba(255,255,255,0.95);
-  padding: 8px;
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-  backdrop-filter: blur(6px);
-}
-
-/* visible state */
-.audio-control.open .audio-panel{ display: flex; }
-
-.audio-volume::-webkit-slider-thumb{
-  -webkit-appearance: none;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: #fff;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-  border: 2px solid rgba(64,38,136,0.12);
-}
-
-/* mute button */
-.audio-mute{
-  background: transparent;
-  border: none;
-  color: #402688;
-  font-weight: 700;
-  cursor: pointer;
-  padding: 6px 8px;
-  border-radius: 8px;
-}
-.audio-mute:hover{ background: rgba(64,38,136,0.06); }
-
-/* small screens: slightly smaller and inset from edges */
-@media (max-width:420px){
-  .audio-volume{ width: 110px; }
-  .audio-control{ right: 12px; bottom: 12px; }
-}
-
-/* decorative floating words layer (non-interactive) */
-.floating-words{
-  position: fixed; /* cover the viewport so words fall across the whole page */
-  inset: 0;
-  pointer-events: none; /* won't block clicks */
-  z-index: 0;           /* behind .container content (container has z-index:1) */
-  overflow: visible;
-  will-change: transform;
-}
-
-/* word appearance (moderate visibility so it doesn't overpower UI) */
-.floating-words .word{
-  position: absolute;
-  font-weight: 800;
-  white-space: nowrap;
-  color: rgba(64,38,136,0.32);
-  opacity: 0.28;
-  font-family: Arial, sans-serif;
-  filter: drop-shadow(0 6px 10px rgba(0,0,0,0.06));
-  transform-origin: center;
-  will-change: transform, opacity;
-  /* default falling animation — individual words can override duration/delay inline */
-  animation: fall 14s linear infinite;
-  animation-fill-mode: both;
-
-  /* sizes match main.css (use --scale fallback to 1) */
-  font-size: calc(32px * var(--scale, 1));
-}
-
-/* varied colors / sizes (match main.css sizing) */
-.floating-words .word:nth-child(3n+1){
-  color: rgba(64,38,136,0.54);
-  font-size: calc(42px * var(--scale, 1));
-}
-.floating-words .word:nth-child(3n+2){
-  color: rgba(138,92,255,0.38);
-  font-size: calc(30px * var(--scale, 1));
-}
-.floating-words .word:nth-child(3n){
-  color: rgba(186,140,255,0.28);
-  font-size: calc(24px * var(--scale, 1));
-}
-
-/* falling animation keyframes */
-@keyframes fall {
-  0%   { transform: translateY(-18vh) rotate(var(--r, -6deg)); opacity: 1; }
-  60%  { opacity: 0.5; }
-  100% { transform: translateY(120vh) rotate(calc(var(--r, -6deg) + 40deg)); opacity: 0; }
-}
-
-/* per-word timing + rotation so words fall independently and infinitely */
-.floating-words .word {
-  /* use per-word vars if present, otherwise use defaults */
-  --d: 14s;
-  --delay: 0s;
-  --r: -6deg;
-  animation-name: fall;
-  animation-duration: var(--d);
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-  animation-delay: var(--delay);
-  animation-fill-mode: both;
-}
-
-/* stagger durations and delays (adjust or remove entries you don't need) */
-.floating-words .word:nth-child(1)  { --d: 14s; --delay: 0.0s; --r: -10deg; }
-.floating-words .word:nth-child(2)  { --d: 18s; --delay: 1.8s; --r: 6deg; }
-.floating-words .word:nth-child(3)  { --d: 12s; --delay: 0.6s; --r: -6deg; }
-.floating-words .word:nth-child(4)  { --d: 16s; --delay: 2.4s; --r: 10deg; }
-.floating-words .word:nth-child(5)  { --d: 13s; --delay: 1.1s; --r: -8deg; }
-.floating-words .word:nth-child(6)  { --d: 20s; --delay: 3.2s; --r: 4deg; }
-.floating-words .word:nth-child(7)  { --d: 11s; --delay: 0.2s; --r: -4deg; }
-.floating-words .word:nth-child(8)  { --d: 15s; --delay: 2.0s; --r: 2deg; }
-.floating-words .word:nth-child(9)  { --d: 17s; --delay: 1.4s; --r: 8deg; }
-.floating-words .word:nth-child(10) { --d: 19s; --delay: 2.8s; --r: -6deg; }
-.floating-words .word:nth-child(11) { --d: 13s; --delay: 0.9s; --r: 6deg; }
-.floating-words .word:nth-child(12) { --d: 21s; --delay: 3.6s; --r: -10deg; }
-
-/* optional: reduce intensity on smaller screens */
-@media (max-width: 720px){
-  .floating-words .word { opacity: 0.28; }
-}
+/* small screens */
 @media (max-width: 420px){
-  .floating-words { display: none; }
-}
+  .level-btn{ width: 260px; font-size: 20px; height: 56px; }
+  .circle{
 
-/* Logout confirmation modal */
+/* Logout confirmation modal (shared styling) */
 .confirm-overlay{
   position: fixed;
   inset: 0;
@@ -333,90 +164,168 @@ body {
   color: #fff;
 }
 
-/* About button (styled as small white circle next to title) */
-.about-btn {
-  position: fixed; /* fixed to viewport upper-left */
-  top: 18px;
-  left: 18px;     /* moved from right -> left */
-  z-index: 9999;
-  width: 44px;
-  height: 44px;
-  padding: 0;
-  border: none;
+    width: 110px;
+    height: 110px;
+    margin-top: 14px;
+    margin-bottom: 18px;
+  }
+}
+
+/* wrapper must be positioning context for floating words */
+.wrapper{
+  position: relative;
+  overflow: hidden;
+}
+
+/* ensure canvas sits above decorative words */
+.canvas{
+  z-index: 1; /* existing .canvas rules remain; this adds stacking */
+}
+
+/* floating words — falling effect across the viewport */
+.floating-words {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;               /* behind UI */
+  overflow: visible;
+  will-change: transform;
+}
+
+/* word base: start above the viewport and fall down continuously */
+.floating-words .word {
+  position: absolute;
+  left: 0;
+  top: -12%;                /* start above viewport */
+  font-weight: 900;
+  white-space: nowrap;
+  font-family: Arial, sans-serif;
+  mix-blend-mode: multiply;
+  filter: drop-shadow(0 8px 18px rgba(0,0,0,0.12));
+  opacity: .42;
+  transform-origin: center;
+  will-change: transform, opacity;
+
+  /* per-word vars (duration, delay, rotation) */
+  --d: 12s;                 /* duration */
+  --delay: 0s;              /* initial offset */
+  --r: -6deg;               /* base rotation */
+
+  /* run the fall animation infinitely; use negative delay so words are visually distributed immediately */
+  animation-name: fall;
+  animation-duration: var(--d);
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-delay: calc(var(--delay) * -1);
+  animation-fill-mode: none;
+
+  font-size: calc(32px * var(--scale));
+}
+
+/* varied colors / sizes */
+.floating-words .word:nth-child(3n+1){ color: rgba(64,38,136,0.54); font-size: calc(42px * var(--scale)); }
+.floating-words .word:nth-child(3n+2){ color: rgba(138,92,255,0.38); font-size: calc(30px * var(--scale)); }
+.floating-words .word:nth-child(3n)  { color: rgba(186,140,255,0.28); font-size: calc(24px * var(--scale)); }
+
+/* keyframe: fall from above to below viewport while slowly rotating and fading */
+@keyframes fall {
+  0%   { transform: translateY(-18vh) rotate(var(--r)); opacity: 1; }
+  60%  { opacity: .6; }
+  100% { transform: translateY(120vh) rotate(calc(var(--r) + 40deg)); opacity: .06; }
+}
+
+/* scattered horizontal placements + per-word timing so they fall independently (keeps negative delay) */
+.floating-words .word:nth-child(1){ left:4%;  --d:14s; --delay:0s;  --r:-12deg; }
+.floating-words .word:nth-child(2){ left:18%; --d:18s; --delay:1.8s; --r:6deg;  }
+.floating-words .word:nth-child(3){ left:38%; --d:12s; --delay:0.6s; --r:-6deg;  }
+.floating-words .word:nth-child(4){ left:60%; --d:16s; --delay:2.4s; --r:10deg;  }
+.floating-words .word:nth-child(5){ left:78%; --d:13s; --delay:1.1s; --r:-8deg;  }
+.floating-words .word:nth-child(6){ left:8%;  --d:20s; --delay:3.2s; --r:4deg;   }
+.floating-words .word:nth-child(7){ left:28%; --d:11s; --delay:0.2s; --r:-4deg;  }
+.floating-words .word:nth-child(8){ left:52%; --d:15s; --delay:2.0s; --r:2deg;   }
+.floating-words .word:nth-child(9){ left:72%; --d:17s; --delay:1.4s; --r:8deg;   }
+.floating-words .word:nth-child(10){left:12%; --d:19s; --delay:2.8s; --r:-6deg;  }
+.floating-words .word:nth-child(11){left:36%; --d:13s; --delay:0.9s; --r:6deg;   }
+.floating-words .word:nth-child(12){left:64%; --d:21s; --delay:3.6s; --r:-10deg; }
+
+/* responsive: reduce size / hide on very small screens */
+@media (max-width: 720px){
+  .floating-words .word { font-size: calc(20px * var(--scale)); opacity: .32; }
+}
+@media (max-width: 420px){
+  .floating-words { display: none; } /* keep UI clear on very small screens */
+}
+
+/* audio control (reuse from index.css) */
+.audio-control{
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 10050;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  pointer-events: auto;
+}
+
+.audio-btn{
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
-  background: #402688; /* deep purple */
+  background: #402688;
+  color: #fff;
+  border: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 6px 14px rgba(0,0,0,0.12);
-  transition: transform .15s ease, opacity .15s ease;
-  color: #fff;
+  box-shadow: 0 8px 18px rgba(64,38,136,0.18);
+  transition: transform .15s ease, background .15s;
 }
+.audio-btn:hover{ transform: translateY(-3px); }
 
-.about-btn svg {
-  width: 16px;
-  height: 16px;
-  fill: #fff9f9;
-}
-
-.about-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 14px rgba(0,0,0,0.16);
-}
-
-/* ensure any previous override doesn't force absolute positioning */
-.about-btn[style], .about-btn { position: fixed !important; }
-
-/* About modal (similar to confirm modal) */
-.about-overlay{
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.45);
+.audio-panel{
   display: none;
   align-items: center;
-  justify-content: center;
-  z-index: 100001;
-  padding: 20px;
-}
-.about-overlay.open{ display: flex; }
-.about-box{
-  background: #fff;
-  padding: 20px 18px;
+  gap: 8px;
+  background: rgba(255,255,255,0.95);
+  padding: 8px;
   border-radius: 12px;
-  width: min(92%, 620px);
-  box-shadow: 0 20px 48px rgba(0,0,0,0.18);
-  text-align: center; /* center the modal content (heading + ok button) */
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  backdrop-filter: blur(6px);
 }
-.about-box h3{
-  margin: 0 0 10px;
-  font-size: 20px;
-  color: #201844;
-  text-align: center;
+.audio-control.open .audio-panel{ display: flex; }
+
+.audio-volume{
+  width: 160px;
+  -webkit-appearance: none;
+  height: 6px;
+  background: linear-gradient(90deg,#3ad6d6,#0c5fb0);
+  border-radius: 6px;
+  outline: none;
+}
+.audio-volume::-webkit-slider-thumb{
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  border: 2px solid rgba(64,38,136,0.12);
 }
 
-/* justify description for better readability */
-.about-text{
-  font-size: 15px;
-  line-height: 1.6;
-  color: #17202a;
-  margin: 8px 0 16px;
-  text-align: justify;
-  text-justify: inter-word;
-}
-
-/* keep OK button centered */
-.about-actions{
-  display:flex;
-  justify-content:center;
-}
-.about-ok{
-  padding: 10px 18px;
-  border-radius: 10px;
+.audio-mute{
+  background: transparent;
   border: none;
-  background: #6b3be6;
-  color: #fff;
+  color: #402688;
   font-weight: 700;
   cursor: pointer;
+  padding: 6px 8px;
+  border-radius: 8px;
 }
-.about-ok:hover{ transform: translateY(-2px); box-shadow: 0 8px 18px rgba(64,38,136,0.12); }
+.audio-mute:hover{ background: rgba(64,38,136,0.06); }
+
+@media (max-width:420px){
+  .audio-volume{ width: 110px; }
+  .audio-control{ right: 12px; bottom: 12px; }
+}
