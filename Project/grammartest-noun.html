@@ -7,6 +7,11 @@
   <link rel="stylesheet" href="pretest.css">
   <link rel="stylesheet" href="grammartest.css">
   <link rel="stylesheet" href="design.css">
+  
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <script src="firebase-config.js"></script>
 </head>
 <body>
 
@@ -53,6 +58,17 @@
     <section id="completion" class="intro" style="max-width:780px; text-align:center; display:none;">
       <h2 class="title">Quiz Completed</h2>
       <p id="score" class="subtitle" style="font-size:22px;"></p>
+      
+      <!-- References Section -->
+      <div style="margin-top: 30px; padding: 20px; background: rgba(255,255,255,0.9); border-radius: 12px; text-align: left; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+        <h3 style="font-size: 18px; font-weight: 700; color: #402688; margin-bottom: 12px; text-align: center;">References</h3>
+        <div style="font-size: 14px; line-height: 1.8; color: #333;">
+          <p style="margin: 8px 0;">Murphy, R. (2019). <em>English grammar in use</em> (5th ed.). Cambridge University Press.</p>
+          <p style="margin: 8px 0;">
+            <a href="https://www.dochub.com/fillable-form/24112-subject-verb-agreement-worksheets-with-answers-7th-grade-pdf" target="_blank" style="color: #402688; text-decoration: underline;">https://www.dochub.com/fillable-form/24112-subject-verb-agreement-worksheets-with-answers-7th-grade-pdf</a>
+          </p>
+        </div>
+      </div>
     </section>
   </main>
 
@@ -183,6 +199,33 @@
         qView.style.display = 'none';
         completion.style.display = 'block';
         scoreEl.textContent = 'You got ' + score + ' / ' + questions.length;
+        
+        // Save score to localStorage and Firestore
+        (async () => {
+          try {
+            const percentage = Math.round((score / questions.length) * 100);
+            const scoreData = {
+              category: 'grammar',
+              testName: 'Noun Quiz',
+              score: score,
+              total: questions.length,
+              percentage: percentage,
+              date: new Date().toISOString()
+            };
+            
+            // Use the combined save function if available, otherwise fallback to localStorage only
+            if (typeof window.saveScore === 'function') {
+              await window.saveScore(scoreData);
+            } else {
+              const existingScores = JSON.parse(localStorage.getItem('webapex_scores') || '[]');
+              existingScores.push(scoreData);
+              localStorage.setItem('webapex_scores', JSON.stringify(existingScores));
+            }
+          } catch (e) {
+            console.error('Error saving score:', e);
+          }
+        })();
+        
         try{ const total = questions.length || 0; const pct = total ? (score/total)*100 : 0; if (window && window.playPraiseKey){ if (pct>=90) window.playPraiseKey('excellent'); else if (pct>=75) window.playPraiseKey('amazing'); else if (pct>=50) window.playPraiseKey('good job'); } }catch(e){}
       }
     });

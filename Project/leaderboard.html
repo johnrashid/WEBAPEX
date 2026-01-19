@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard - Web Apex</title>
+    <link rel="stylesheet" href="leaderboard.css">
+    <link rel="stylesheet" href="design.css">
+    
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="firebase-config.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <!-- Floating words decoration -->
+        <div class="floating-words">
+            <span class="word" style="left:6%;  top:8%;   animation-duration:10s; animation-delay:-2s;">CHAMPIONS</span>
+            <span class="word" style="left:24%; top:18%;  animation-duration:12s; animation-delay:-4s;">VICTORY</span>
+            <span class="word" style="left:62%; top:6%;   animation-duration:9s;  animation-delay:-1s;">WINNERS</span>
+            <span class="word" style="left:78%; top:26%;  animation-duration:11s; animation-delay:-3s;">STARS</span>
+            <span class="word" style="left:46%; top:44%;  animation-duration:13s; animation-delay:-5s;">EXCELLENCE</span>
+            <span class="word" style="left:14%; top:56%;  animation-duration:14s; animation-delay:-6s;">ACHIEVE</span>
+            <span class="word" style="left:64%; top:60%;  animation-duration:10s; animation-delay:-2s;">SUCCESS</span>
+            <span class="word" style="left:36%; top:72%;  animation-duration:12s; animation-delay:-4s;">GLORY</span>
+        </div>
+
+        <div class="container">
+            <!-- Back button -->
+            <button class="back-btn" onclick="window.location.href='home.html'" title="Back to Home">
+                <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+                    <path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                </svg>
+            </button>
+
+            <!-- Title -->
+            <div class="title-container">
+                <svg class="trophy-icon" viewBox="0 0 24 24" width="48" height="48">
+                    <path fill="#ffd700" d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/>
+                </svg>
+                <h1 class="title">LEADERBOARD</h1>
+            </div>
+
+            <!-- Filter tabs -->
+            <div class="filter-tabs">
+                <button class="tab-btn active" data-category="all">All</button>
+                <button class="tab-btn" data-category="pretest">Pre Test</button>
+                <button class="tab-btn" data-category="reading">Reading</button>
+                <button class="tab-btn" data-category="glossary">Glossary</button>
+                <button class="tab-btn" data-category="partsOfSpeech">Parts of Speech</button>
+                <button class="tab-btn" data-category="grammar">Grammar</button>
+                <button class="tab-btn" data-category="vocabulary">Vocabulary</button>
+                <button class="tab-btn" data-category="posttest">Post Test</button>
+            </div>
+
+            <!-- Leaderboard list -->
+            <div class="leaderboard-list" id="leaderboard-list">
+                <!-- Sample data - will be populated dynamically -->
+                <div class="leaderboard-item rank-1">
+                    <div class="rank-badge">
+                        <svg viewBox="0 0 24 24" width="24" height="24">
+                            <path fill="#ffd700" d="M12 2l2.4 7.4h7.6l-6 4.6 2.3 7-6.3-4.6-6.3 4.6 2.3-7-6-4.6h7.6z"/>
+                        </svg>
+                        <span class="rank-number">1</span>
+                    </div>
+                    <div class="player-info">
+                        <span class="player-name">Loading...</span>
+                        <span class="player-category">All Categories</span>
+                    </div>
+                    <div class="player-score">0</div>
+                </div>
+            </div>
+
+            <!-- Empty state -->
+            <div class="empty-state" id="empty-state" style="display: none;">
+                <svg viewBox="0 0 24 24" width="64" height="64">
+                    <path fill="#ccc" d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/>
+                </svg>
+                <p>No scores yet. Be the first to complete a test!</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="audio.js" defer></script>
+    <audio id="bg-audio" src="bgmusic.mp3" loop preload="auto" autoplay muted playsinline></audio>
+
+    <!-- Audio control -->
+    <div class="audio-control" aria-hidden="false">
+        <button class="audio-btn" id="audio-toggle" aria-label="Toggle sound" title="Sound">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+                <path d="M3 10v4h4l5 5V5L7 10H3z" fill="currentColor"></path>
+                <path class="wave" d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v8.06c1.48-.74 2.5-2.26 2.5-4.03z" fill="currentColor"></path>
+            </svg>
+        </button>
+        <div class="audio-panel" id="audio-panel" aria-hidden="true">
+            <input type="range" id="audio-volume" class="audio-volume" min="0" max="1" step="0.01" value="0.6" aria-label="Volume">
+            <button id="audio-mute" class="audio-mute" aria-label="Mute">Mute</button>
+        </div>
+    </div>
+
+    <script>
+        // Leaderboard data management
+        const leaderboardData = {
+            all: [],
+            pretest: [],
+            reading: [],
+            glossary: [],
+            partsOfSpeech: [],
+            grammar: [],
+            vocabulary: [],
+            posttest: []
+        };
+
+        let currentCategory = 'all';
+        let isLoadingFromFirestore = false;
+
+        // Load scores from Firestore
+        async function loadScoresFromFirestore() {
+            if (isLoadingFromFirestore) return;
+            isLoadingFromFirestore = true;
+            
+            try {
+                console.log('Loading scores from Firestore...');
+                const scores = await getLeaderboardFromFirestore('all', 100);
+                
+                if (scores && scores.length > 0) {
+                    // Organize scores by category
+                    leaderboardData.all = scores.sort((a, b) => b.score - a.score);
+                    leaderboardData.pretest = scores.filter(s => s.category === 'pretest' || s.category === 'pre-test').sort((a, b) => b.score - a.score);
+                    leaderboardData.reading = scores.filter(s => s.category === 'reading').sort((a, b) => b.score - a.score);
+                    leaderboardData.glossary = scores.filter(s => s.category === 'glossary' || s.category === 'texts-glossary').sort((a, b) => b.score - a.score);
+                    leaderboardData.partsOfSpeech = scores.filter(s => s.category === 'partsOfSpeech' || s.category === 'parts-of-speech').sort((a, b) => b.score - a.score);
+                    leaderboardData.grammar = scores.filter(s => s.category === 'grammar').sort((a, b) => b.score - a.score);
+                    leaderboardData.vocabulary = scores.filter(s => s.category === 'vocabulary').sort((a, b) => b.score - a.score);
+                    leaderboardData.posttest = scores.filter(s => s.category === 'posttest' || s.category === 'post-test').sort((a, b) => b.score - a.score);
+                    
+                    console.log('Loaded ' + scores.length + ' scores from Firestore');
+                } else {
+                    // Fallback to localStorage if Firestore is empty
+                    console.log('No Firestore data, falling back to localStorage');
+                    loadScoresFromLocalStorage();
+                }
+            } catch (e) {
+                console.error('Error loading scores from Firestore:', e);
+                // Fallback to localStorage
+                loadScoresFromLocalStorage();
+            } finally {
+                isLoadingFromFirestore = false;
+            }
+        }
+
+        // Load scores from localStorage (fallback)
+        function loadScoresFromLocalStorage() {
+            try {
+                const storedScores = localStorage.getItem('webapex_scores');
+                if (storedScores) {
+                    const scores = JSON.parse(storedScores);
+                    
+                    // Add userName field if missing
+                    scores.forEach(s => {
+                        if (!s.userName) s.userName = 'Anonymous';
+                    });
+                    
+                    // Organize scores by category
+                    leaderboardData.all = scores.sort((a, b) => b.score - a.score);
+                    leaderboardData.pretest = scores.filter(s => s.category === 'pretest' || s.category === 'pre-test').sort((a, b) => b.score - a.score);
+                    leaderboardData.reading = scores.filter(s => s.category === 'reading').sort((a, b) => b.score - a.score);
+                    leaderboardData.glossary = scores.filter(s => s.category === 'glossary' || s.category === 'texts-glossary').sort((a, b) => b.score - a.score);
+                    leaderboardData.partsOfSpeech = scores.filter(s => s.category === 'partsOfSpeech' || s.category === 'parts-of-speech').sort((a, b) => b.score - a.score);
+                    leaderboardData.grammar = scores.filter(s => s.category === 'grammar').sort((a, b) => b.score - a.score);
+                    leaderboardData.vocabulary = scores.filter(s => s.category === 'vocabulary').sort((a, b) => b.score - a.score);
+                    leaderboardData.posttest = scores.filter(s => s.category === 'posttest' || s.category === 'post-test').sort((a, b) => b.score - a.score);
+                    
+                    console.log('Loaded ' + scores.length + ' scores from localStorage');
+                }
+            } catch (e) {
+                console.error('Error loading scores from localStorage:', e);
+            }
+        }
+
+        // Display leaderboard for a category
+        function displayLeaderboard(category) {
+            const listContainer = document.getElementById('leaderboard-list');
+            const emptyState = document.getElementById('empty-state');
+            const data = leaderboardData[category] || [];
+
+            if (data.length === 0) {
+                listContainer.style.display = 'none';
+                emptyState.style.display = 'flex';
+                return;
+            }
+
+            listContainer.style.display = 'block';
+            emptyState.style.display = 'none';
+            listContainer.innerHTML = '';
+
+            data.forEach((entry, index) => {
+                const item = document.createElement('div');
+                item.className = `leaderboard-item ${index < 3 ? 'rank-' + (index + 1) : ''}`;
+                
+                let rankIcon = '';
+                if (index === 0) {
+                    rankIcon = '<svg viewBox="0 0 24 24" width="24" height="24"><path fill="#ffd700" d="M12 2l2.4 7.4h7.6l-6 4.6 2.3 7-6.3-4.6-6.3 4.6 2.3-7-6-4.6h7.6z"/></svg>';
+                } else if (index === 1) {
+                    rankIcon = '<svg viewBox="0 0 24 24" width="24" height="24"><path fill="#c0c0c0" d="M12 2l2.4 7.4h7.6l-6 4.6 2.3 7-6.3-4.6-6.3 4.6 2.3-7-6-4.6h7.6z"/></svg>';
+                } else if (index === 2) {
+                    rankIcon = '<svg viewBox="0 0 24 24" width="24" height="24"><path fill="#cd7f32" d="M12 2l2.4 7.4h7.6l-6 4.6 2.3 7-6.3-4.6-6.3 4.6 2.3-7-6-4.6h7.6z"/></svg>';
+                }
+
+                item.innerHTML = `
+                    <div class="rank-badge">
+                        ${rankIcon}
+                        <span class="rank-number">${index + 1}</span>
+                    </div>
+                    <div class="player-info">
+                        <span class="player-name">${entry.userName || entry.name || 'Anonymous'}</span>
+                        <span class="player-category">${entry.testName || entry.category}</span>
+                    </div>
+                    <div class="player-score">${entry.score}${entry.total ? '/' + entry.total : ''}</div>
+                `;
+                
+                listContainer.appendChild(item);
+            });
+        }
+
+        // Tab switching
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Update active state
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Display corresponding category
+                currentCategory = this.getAttribute('data-category');
+                displayLeaderboard(currentCategory);
+            });
+        });
+
+        // Initialize - wait for Firebase to be ready
+        setTimeout(async () => {
+            if (typeof getLeaderboardFromFirestore !== 'undefined') {
+                await loadScoresFromFirestore();
+            } else {
+                console.log('Firestore not available, using localStorage only');
+                loadScoresFromLocalStorage();
+            }
+            displayLeaderboard(currentCategory);
+        }, 500);
+        displayLeaderboard('all');
+    </script>
+</body>
+</html>

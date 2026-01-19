@@ -97,6 +97,40 @@ body {
     box-shadow: 0 14px 28px rgba(0,0,0,0.10);
 }
 
+/* Leaderboard section */
+.leaderboard-section {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.leaderboard-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 30px;
+    border-radius: 30px;
+    border: none;
+    background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+    color: #402688;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all .18s ease;
+    box-shadow: 0 6px 12px rgba(255, 215, 0, 0.3);
+}
+
+.leaderboard-btn:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(255, 215, 0, 0.4);
+    background: linear-gradient(135deg, #ffed4e 0%, #ffd700 100%);
+}
+
+.leaderboard-btn svg {
+    fill: currentColor;
+}
+
 /* logout button top-right - fixed coordinates */
 .logout-btn{
   position: fixed; /* fixed to viewport upper-right */

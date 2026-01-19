@@ -3,342 +3,941 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Web Apex - Levels</title>
+  <title>Web Apex - Pre Test</title>
 
   <!-- Shared background (common to other screens) -->
-    <link rel="stylesheet" href="pretest.css">
+  <link rel="stylesheet" href="pretest.css">
   <link rel="stylesheet" href="design.css">
+  <style>
+    /* Scrollable test styles */
+    .test-container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 30px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    }
+    .test-header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 3px solid #b86cff;
+    }
+    .test-title {
+      font-size: 32px;
+      font-weight: 800;
+      color: #402688;
+      margin-bottom: 10px;
+    }
+    .test-instructions {
+      font-size: 16px;
+      color: #666;
+      line-height: 1.6;
+    }
+    .passage {
+      margin: 30px 0;
+      padding: 25px;
+      background: #f9f6ff;
+      border-left: 4px solid #b86cff;
+      border-radius: 10px;
+    }
+    .passage-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #402688;
+      margin-bottom: 15px;
+    }
+    .passage-text {
+      font-size: 16px;
+      line-height: 1.8;
+      color: #333;
+      text-align: justify;
+      margin-bottom: 10px;
+    }
+    .question-block {
+      margin: 25px 0;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      border: 2px solid #e0e0e0;
+    }
+    .question-text {
+      font-size: 17px;
+      font-weight: 600;
+      color: #07101a;
+      margin-bottom: 15px;
+      line-height: 1.6;
+    }
+    .choices {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .choice-label {
+      display: flex;
+      align-items: center;
+      padding: 12px 15px;
+      background: #f5f5f5;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 2px solid transparent;
+    }
+    .choice-label:hover {
+      background: #e8d9ff;
+      border-color: #b86cff;
+    }
+    .choice-label input[type="radio"] {
+      margin-right: 12px;
+      cursor: pointer;
+      width: 18px;
+      height: 18px;
+    }
+    .choice-label input[type="radio"]:checked + span {
+      font-weight: 700;
+      color: #402688;
+    }
+    .choice-label:has(input:checked) {
+      background: #e8d9ff;
+      border-color: #b86cff;
+    }
+    .submit-section {
+      margin-top: 40px;
+      padding: 25px;
+      text-align: center;
+      background: #f9f6ff;
+      border-radius: 10px;
+    }
+    .submit-btn {
+      padding: 15px 50px;
+      font-size: 18px;
+      font-weight: 800;
+      color: white;
+      background: linear-gradient(135deg, #b86cff 0%, #9a4fe7 100%);
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(184, 108, 255, 0.3);
+      transition: all 0.3s;
+    }
+    .submit-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(184, 108, 255, 0.4);
+    }
+    @media (max-width: 768px) {
+      .test-container {
+        padding: 20px;
+        margin: 20px 10px;
+      }
+      .test-title {
+        font-size: 24px;
+      }
+      .passage-title {
+        font-size: 18px;
+      }
+      .passage-text, .question-text {
+        font-size: 15px;
+      }
+    }
+  </style>
 </head>
 <body>
 
   <!-- Back button (fixed upper-left) -->
-  <button type="button" class="back-btn" onclick="history.back()" aria-label="Go back">
+  <button type="button" class="back-btn" onclick="window.location.href='home.html'" aria-label="Go back">
     <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
       <path d="M20 11H7.83l5.58-5.59L12 4 4 12l8 8 1.41-1.41L7.83 13H20v-2z" fill="#fff"/>
     </svg>
   </button>
 
-  <!-- optional: hidden reference image (local path) -->
-  <img src="/mnt/data/e24e5444-a8ac-4566-95b1-2cc5ab38518a.png" alt="reference" style="display:none;">
-
   <div class="wrapper">
-    <div class="canvas">
-      <!-- Intro view -->
-      <section id="intro-view" class="intro" style="max-width:780px; text-align:center;">
-        <h1 class="title">Welcome to Pretest Mode</h1>
-        <button id="start-pretest" class="next-btn" aria-label="Start Pretest">Next</button>
-      </section>
-
-      <!-- Synonyms intro view -->
-      <section id="synonyms-intro" class="intro" style="max-width:780px; text-align:center; display:none;">
-        <h1 class="title">Synonyms</h1>
-        <p class="subtitle">Choose the word that has the SAME meaning as the underlined word.</p>
-        <button id="start-synonyms" class="play-btn" aria-label="Start Synonyms">Play</button>
-      </section>
-
-      <!-- Question view (dynamic) -->
-      <div id="question-view" class="question" style="max-width:780px; text-align:center; display:none;">
-        <div id="timer" style="position:relative; width:70px; height:70px; margin:0 auto 12px;">
-          <svg width="70" height="70" style="transform:rotate(-90deg);">
-            <circle cx="35" cy="35" r="30" fill="none" stroke="rgba(47,111,184,0.18)" stroke-width="4"/>
-            <circle id="timer-circle" cx="35" cy="35" r="30" fill="none" stroke="url(#gradient)" stroke-width="4" stroke-dasharray="188.496" stroke-dashoffset="0" style="transition:stroke-dashoffset 1s linear;"/>
-            <defs>
-              <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" style="stop-color:#2f6fb8;stop-opacity:1" />
-                <stop offset="100%" style="stop-color:#6a3fc0;stop-opacity:1" />
-              </linearGradient>
-            </defs>
-          </svg>
-          <div id="timer-text" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:18px; font-weight:900; background:linear-gradient(135deg, #2f6fb8 0%, #6a3fc0 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">1:00</div>
-        </div>
-        <p id="q-text" class="q-text" style="font-size:24px; font-weight:800; color:#07101a; margin: 0 0 18px;"></p>
-        <div id="choices" class="levels" style="gap:16px;"></div>
-        <div id="feedback" class="feedback" aria-live="polite" style="margin-top:14px; font-weight:700;"></div>
-        <button id="next-btn" class="next-btn" style="margin-top:16px; display:none;">Next</button>
+    <div class="test-container">
+      <div class="test-header">
+        <h1 class="test-title">Reading Comprehension Pre-Test</h1>
+        <p class="test-instructions">Read each passage carefully and answer the questions that follow. Select the best answer for each question.</p>
       </div>
 
-      <!-- Antonyms intro view -->
-      <section id="antonyms-intro" class="intro" style="max-width:780px; text-align:center; display:none;">
-        <h1 class="title">Antonyms</h1>
-        <p class="subtitle">Choose the word that is OPPOSITE in meaning to the underlined word.</p>
-        <button id="start-antonyms" class="play-btn" aria-label="Start Antonyms">Play</button>
-      </section>
+      </div>
 
-      <!-- Parts of Speech intro view -->
-      <section id="parts-intro" class="intro" style="max-width:780px; text-align:center; display:none;">
-        <h1 class="title">Parts of Speech</h1>
-        <p class="subtitle">Identify the part of speech of the underlined word.</p>
-        <button id="start-parts" class="play-btn" aria-label="Start Parts of Speech">Play</button>
-      </section>
+      <!-- Passage 1: Smartphones in the Classroom -->
+      <div class="passage">
+        <h2 class="passage-title">Smartphones in the Classroom</h2>
+        <p class="passage-text">In recent years, the use of smartphones in schools has become a controversial topic. Some educators argue that smartphones can enhance learning by giving students access to online dictionaries, educational apps, and the ability to research topics instantly. Others, however, believe that phones are a major distraction, leading to reduced attention and increased cheating.</p>
+        <p class="passage-text">Some schools have tried to strike a balance by allowing phones for learning purposes only, while banning social media and messaging apps during school hours. The effectiveness of such policies often depends on the enforcement and the cooperation of both teachers and students.</p>
+      </div>
 
-      <!-- Completion view -->
-      <section id="completion-view" class="intro" style="max-width:780px; text-align:center; display:none;">
-        <h1 class="title">Pretest Completed!</h1>
-        <p id="score-display" class="subtitle" style="font-size:28px; margin-top:20px;"></p>
-      </section>
+      <div class="question-block">
+        <p class="question-text">1. What is the main argument *against* smartphone use in class?</p>
+        <div class="choices">
+          <label class="choice-label">
+            <input type="radio" name="q1" value="A">
+            <span>A. They are expensive to buy</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q1" value="B">
+            <span>B. They help students learn too fast</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q1" value="C">
+            <span>C. They can be a distraction and encourage cheating</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q1" value="D">
+            <span>D. They are difficult to operate</span>
+          </label>
+        </div>
+      </div>
 
-      <script>
-        // Toggle from intro to synonyms intro
-        (function(){
-          const intro = document.getElementById('intro-view');
-          const synonymsIntro = document.getElementById('synonyms-intro');
-          const questionView = document.getElementById('question-view');
-          const startBtn = document.getElementById('start-pretest');
-          const startSynonyms = document.getElementById('start-synonyms');
-          
-          if (startBtn) {
-            startBtn.addEventListener('click', () => {
-              if (intro) intro.style.display = 'none';
-              if (synonymsIntro) synonymsIntro.style.display = 'block';
-            });
-          }
-          
-          if (startSynonyms) {
-            startSynonyms.addEventListener('click', () => {
-              if (synonymsIntro) synonymsIntro.style.display = 'none';
-              if (questionView) questionView.style.display = 'block';
-            });
-          }
-        })();
+      <div class="question-block">
+        <p class="question-text">2. According to the passage, how have some schools responded to the smartphone issue?</p>
+        <div class="choices">
+          <label class="choice-label">
+            <input type="radio" name="q2" value="A">
+            <span>A. By banning all phones on campus</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q2" value="B">
+            <span>B. By encouraging students to use social media</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q2" value="C">
+            <span>C. By allowing phones only for learning purposes</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q2" value="D">
+            <span>D. By giving each student a school-owned phone</span>
+          </label>
+        </div>
+      </div>
 
-        // Multi-question quiz logic
-        (function(){
-          const synonyms = [
-            { q: '1. The teacher gave a BRIEF explanation.', choices: ['A. long','B. short','C. confusing','D. repeated'], correct: 1 },
-            { q: '2. The students were EAGER to learn.', choices: ['A. bored','B. unwilling','C. excited','D. silent'], correct: 2 },
-            { q: '3. The room was IMMENSE.', choices: ['A. tiny','B. loud','C. huge','D. crowded'], correct: 2 },
-            { q: '4. She ADMIRED by her mother.', choices: ['A. disliked','B. respected','C. ignored','D. helped'], correct: 1 },
-            { q: '5. The movie was very HUMOROUS.', choices: ['A. sad','B. funny','C. dull','D. plain'], correct: 1 },
-            { q: '6. The FRAGILE vase broke easily.', choices: ['A. strong','B. cheap','C. delicate','D. colorful'], correct: 2 },
-            { q: '7. He COMPLETED his homework early.', choices: ['A. skipped','B. started','C. finished','D. erased'], correct: 2 },
-            { q: '8. The scenery was MAGNIFICENT.', choices: ['A. ugly','B. ordinary','C. beautiful','D. dark'], correct: 2 },
-            { q: '9. She felt WEARY after walking all day.', choices: ['A. rested','B. tired','C. excited','D. angry'], correct: 1 },
-            { q: '10. The child had a VIVID imagination.', choices: ['A. dull','B. lively','C. weak','D. short'], correct: 1 },
-            { q: '11. The jungle was DENCE.', choices: ['A. thin','B. thick','C. wet','D. high'], correct: 1 },
-            { q: '12. He spoke in a TIMID voice.', choices: ['A. loud','B. shy','C. happy','D. angry'], correct: 1 },
-            { q: '13. She made a CRUCIAL decision.', choices: ['A. unimportant','B. risky','C. central','D. delayed'], correct: 2 },
-            { q: '14. The air was FRIGID this morning.', choices: ['A. cold','B. warm','C. clear','D. polluted'], correct: 0 },
-            { q: '15. They gave GENEROUS donations.', choices: ['A. large','B. selfish','C. few','D. secret'], correct: 0 },
-            { q: '16. The message was URGENT.', choices: ['A. slow','B. unimportant','C. immediate','D. late'], correct: 2 },
-            { q: '17. She wore a GLORIOUS dress.', choices: ['A. ordinary','B. bright','C. splendid','D. simple'], correct: 2 },
-            { q: '18. The boy was OBEDIENT.', choices: ['A. helpful','B. careful','C. respectful','D. compliant'], correct: 3 },
-            { q: '19. They lived in a TRANQUIL place.', choices: ['A. noisy','B. peaceful','C. crowded','D. far'], correct: 1 },
-            { q: '20. The old man looked FRAIL.', choices: ['A. strong','B. weak','C. sick','D. tall'], correct: 1 }
-          ];
+      <div class="question-block">
+        <p class="question-text">3. The word *controversial* in paragraph 1 most likely means:</p>
+        <div class="choices">
+          <label class="choice-label">
+            <input type="radio" name="q3" value="A">
+            <span>A. Popular</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q3" value="B">
+            <span>B. Difficult to understand</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q3" value="C">
+            <span>C. Causing disagreement</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q3" value="D">
+            <span>D. Easy to manage</span>
+          </label>
+        </div>
+      </div>
 
-          const antonyms = [
-            { q: '21. The girl was POLITE.', choices: ['A. rude','B. sweet','C. quiet','D. shy'], correct: 0 },
-            { q: '22. The lake was SHALLOW.', choices: ['A. wide','B. deep','C. clear','D. narrow'], correct: 1 },
-            { q: '23. It was a GLOOMY day.', choices: ['A. sad','B. bright','C. cold','D. long'], correct: 1 },
-            { q: '24. He gave a TRUTHFUL answer.', choices: ['A. honest','B. complete','C. polite','D. dishonest'], correct: 3 },
-            { q: '25. The dog was HOSTILE.', choices: ['A. friendly','B. big','C. playful','D. fast'], correct: 0 },
-            { q: '26. The results were ACCURATE.', choices: ['A. wrong','B. old','C. fast','D. late'], correct: 0 },
-            { q: '27. She wore CASUAL clothes.', choices: ['A. fancy','B. dirty','C. new','D. comfortable'], correct: 0 },
-            { q: '28. He is very BRAVE.', choices: ['A. strong','B. cowardly','C. quick','D. noisy'], correct: 1 },
-            { q: '29. That was a COMMON mistake.', choices: ['A. unusual','B. easy','C. frequent','D. correct'], correct: 0 },
-            { q: '30. The boy seemed ARROGANT.', choices: ['A. proud','B. shy','C. humble','D. angry'], correct: 2 },
-            { q: '31. The worker was DILIGENT.', choices: ['A. lazy','B. helpful','C. slow','D. happy'], correct: 0 },
-            { q: '32. The river flowed RAPIDLY.', choices: ['A. quickly','B. slowly','C. quietly','D. steadily'], correct: 1 },
-            { q: '33. She gave a VAGUE answer.', choices: ['A. unclear','B. long','C. complete','D. clear'], correct: 3 },
-            { q: '34. The soup is BLAND.', choices: ['A. tasteless','B. spicy','C. warm','D. old'], correct: 1 },
-            { q: '35. He felt CONFIDENT before the test.', choices: ['A. nervous','B. ready','C. energetic','D. proud'], correct: 0 }
-          ];
+      <!-- Passage 2: Choosing the Right Path -->
+      <div class="passage">
+        <h2 class="passage-title">Choosing the Right Path</h2>
+        <p class="passage-text">Decisions and choices are the things that set senior high school apart from junior high school. Graduates have shared that deciding on the strand/track to take is just the beginning of creating choices. As we move to the next level, more critical choices are made. Entering Grade 12 marks the next crucial step in life choosing the curricular exit. Curricular exits are the paths that learners take after they finish their senior high school. These exits include higher education, middle level skills development, entrepreneurship, and employment. The decisions and choices to be made would rely on numerous factors like the resources and priorities. Senior high school may not be not college yet and not junior high school, but it is the important period in choosing the right path.</p>
+      </div>
 
-          const partsOfSpeech = [
-            { q: '36. The CAT slept on the couch.', choices: ['A. noun','B. verb','C. adjective','D. adverb'], correct: 0 },
-            { q: '37. She sings BEAUTIFULLY.', choices: ['A. noun','B. adverb','C. adjective','D. verb'], correct: 1 },
-            { q: '38. The BLUE ribbon was shiny.', choices: ['A. adjective','B. noun','C. verb','D. pronoun'], correct: 0 },
-            { q: '39. They RUN every morning.', choices: ['A. verb','B. noun','C. adverb','D. adjective'], correct: 0 },
-            { q: '40. WOW! That was amazing.', choices: ['A. conjunction','B. interjection','C. verb','D. noun'], correct: 1 },
-            { q: '41. The cat hid UNDER the bed.', choices: ['A. preposition','B. adverb','C. pronoun','D. noun'], correct: 0 },
-            { q: '42. SHE is my best friend.', choices: ['A. pronoun','B. noun','C. verb','D. adverb'], correct: 0 },
-            { q: '43. The QUICK fox jumped over the fence.', choices: ['A. adjective','B. adverb','C. pronoun','D. verb'], correct: 0 },
-            { q: '44. They walked SLOWLY.', choices: ['A. verb','B. noun','C. adverb','D. adjective'], correct: 2 },
-            { q: '45. The children PLAYED in the park.', choices: ['A. noun','B. adverb','C. adjective','D. verb'], correct: 3 },
-            { q: '46. I bought a NEW notebook.', choices: ['A. adjective','B. noun','C. verb','D. adverb'], correct: 0 },
-            { q: '47. The teacher wrote on the board AND explained the lesson.', choices: ['A. conjunction','B. verb','C. adverb','D. noun'], correct: 0 },
-            { q: '48. Please close the door QUIETLY.', choices: ['A. adjective','B. pronoun','C. adverb','D. noun'], correct: 2 },
-            { q: '49. The TEAM won the game.', choices: ['A. verb','B. adjective','C. noun','D. pronoun'], correct: 2 },
-            { q: '50. We saw a bird BEHIND the tree.', choices: ['A. adverb','B. verb','C. preposition','D. adjective'], correct: 2 }
-          ];
+      <div class="question-block">
+        <p class="question-text">4. What is considered a crucial step that requires a good decision for the senior high school learner in accomplishing their basic education?</p>
+        <div class="choices">
+          <label class="choice-label">
+            <input type="radio" name="q4" value="A">
+            <span>A. Choosing the curricular exit</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q4" value="B">
+            <span>B. Deciding on the course to take</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q4" value="C">
+            <span>C. Planning on one's ambition</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q4" value="D">
+            <span>D. Selecting the track/strand</span>
+          </label>
+        </div>
+      </div>
 
-          let quiz = synonyms;
-          let section = 'synonyms';
-          let score = 0;
+      <div class="question-block">
+        <p class="question-text">5. What can the learners expect as they move up to the next level?</p>
+        <div class="choices">
+          <label class="choice-label">
+            <input type="radio" name="q5" value="A">
+            <span>A. Hectic schedule</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q5" value="B">
+            <span>B. New environment</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q5" value="C">
+            <span>C. More difficult subjects</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q5" value="D">
+            <span>D. More critical decisions</span>
+          </label>
+        </div>
+      </div>
 
-          let index = 0;
-          const qText = document.getElementById('q-text');
-          const choicesEl = document.getElementById('choices');
-          const feedback = document.getElementById('feedback');
-          const nextBtn = document.getElementById('next-btn');
-          const timerEl = document.getElementById('timer');
-          const timerText = document.getElementById('timer-text');
-          const timerCircle = document.getElementById('timer-circle');
-          let intenseAudio = null;
-          let timeLeft = 60;
-          let timerInterval = null;
-          const totalTime = 60;
-          const circumference = 2 * Math.PI * 30;
+      <div class="question-block">
+        <p class="question-text">6. For whom is this paragraph written?</p>
+        <div class="choices">
+          <label class="choice-label">
+            <input type="radio" name="q6" value="A">
+            <span>A. Parents</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q6" value="B">
+            <span>B. Teachers</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q6" value="C">
+            <span>C. College students</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q6" value="D">
+            <span>D. Senior High School students</span>
+          </label>
+        </div>
+      </div>
 
-          function startTimer() {
-            timeLeft = 60;
-            timerText.textContent = '1:00';
-            timerCircle.style.strokeDashoffset = '0';
-            if (timerInterval) clearInterval(timerInterval);
-            timerInterval = setInterval(() => {
-              timeLeft--;
-              const mins = Math.floor(timeLeft / 60);
-              const secs = timeLeft % 60;
-              timerText.textContent = mins + ':' + (secs < 10 ? '0' : '') + secs;
-              const progress = (totalTime - timeLeft) / totalTime;
-              timerCircle.style.strokeDashoffset = circumference * progress;
-              if (timeLeft <= 0) {
-                clearInterval(timerInterval);
-                handleTimeout();
-              }
-            }, 1000);
-          }
+      <div class="question-block">
+        <p class="question-text">7. After senior high school, what are the learners expected to be as can be implied from the paragraph?</p>
+        <div class="choices">
+          <label class="choice-label">
+            <input type="radio" name="q7" value="A">
+            <span>A. Decisive learners</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q7" value="B">
+            <span>B. Matured individuals</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q7" value="C">
+            <span>C. Students with awareness</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q7" value="D">
+            <span>D. Prepared college students</span>
+          </label>
+        </div>
+      </div>
 
-          function handleTimeout() {
-            try { if (intenseAudio) { intenseAudio.pause(); intenseAudio.currentTime = 0; } } catch(e){}
-            try { const buzzer = new Audio('wrong.mp3'); buzzer.play(); } catch(e){}
-            const item = quiz[index];
-            const all = choicesEl.querySelectorAll('button');
-            all.forEach(b => b.disabled = true);
-            const buttons = Array.from(all);
-            const correctBtn = buttons[item.correct];
-            if (correctBtn) correctBtn.classList.add('correct');
-            feedback.textContent = 'Time\'s up! The correct answer is ' + item.choices[item.correct] + '.';
-            feedback.style.color = '#c62828';
-            nextBtn.style.display = 'inline-block';
-          }
+      <div class="question-block">
+        <p class="question-text">8. What is the best title for this paragraph?</p>
+        <div class="choices">
+          <label class="choice-label">
+            <input type="radio" name="q8" value="A">
+            <span>A. Realities about Life in college</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q8" value="B">
+            <span>B. Decision making in Senior High School</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q8" value="C">
+            <span>C. Decision and choices in Junior High School</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q8" value="D">
+            <span>D. Senior High School: Transitioning through Crucial Decisions</span>
+          </label>
+        </div>
+      </div>
 
-          function render() {
-            const item = quiz[index];
-            // Highlight the word in capital letters
-            qText.innerHTML = item.q.replace(/([A-Z]{2,})/g, '<strong>$1</strong>');
-            choicesEl.innerHTML = '';
-            feedback.textContent = '';
-            nextBtn.style.display = 'none';
-            try { intenseAudio = new Audio('intense.mp3'); intenseAudio.loop = true; intenseAudio.play(); } catch(e){}
-            startTimer();
+      <!-- Passage 3: Reading Makes a Full Man -->
+      <div class="passage">
+        <h2 class="passage-title">Reading Makes a Full Man</h2>
+        <p class="passage-text">Reading, the bard once said, makes a full man. This is true for the scholar, whose stature and contribution to the intellectual growth of society is made through constant reading and the common tao who has understood the printed word if he is not left behind, if one does not form the habit of reading. Conversely, if one avails of the wealth available through printed word, the task of developing a person, a community and the nation is made easier, more wholesomely. And this precisely is the reason or the theme of the year's observance of National Book Week, a project of the Integrated Library Association which we endorse wholeheartedly.</p>
+      </div>
 
-            item.choices.forEach((label, i) => {
-              const btn = document.createElement('button');
-              btn.className = 'level-btn choice-btn';
-              btn.textContent = label;
-              btn.addEventListener('click', () => {
-                if (timerInterval) clearInterval(timerInterval);
-                try { if (intenseAudio) { intenseAudio.pause(); intenseAudio.currentTime = 0; } } catch(e){}
-                const isCorrect = i === item.correct;
-                // mark selection visually
-                if (isCorrect) btn.classList.add('correct'); else btn.classList.add('wrong');
-                // disable all buttons immediately
-                const all = choicesEl.querySelectorAll('button');
-                all.forEach(b => b.disabled = true);
+      <div class="question-block">
+        <p class="question-text">9. What is the best title of the article?</p>
+        <div class="choices">
+          <label class="choice-label">
+            <input type="radio" name="q9" value="A">
+            <span>A. A Captive of Ignorance</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q9" value="B">
+            <span>B. The Common Tao and Reading</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q9" value="C">
+            <span>C. Reading Makes a Full Man</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q9" value="D">
+            <span>D. National Book Week</span>
+          </label>
+        </div>
+      </div>
 
-                if (isCorrect) {
-                  feedback.textContent = 'Correct!';
-                  feedback.style.color = '#0a8a0a';
-                  score++;
-                  try { if (window && window.playPraiseShuffle) window.playPraiseShuffle({ count: 1, excludeKeys: ['correct'] }); }
-                  catch(e){}
-                } else {
-                  const correctLabel = item.choices[item.correct];
-                  feedback.textContent = 'Incorrect. The correct answer is ' + correctLabel + '.';
-                  feedback.style.color = '#c62828';
-                  try { const wrongAudio = new Audio('wrong.mp3'); wrongAudio.play(); } catch(e){}
-                  // highlight the correct choice as well
-                  const buttons = Array.from(choicesEl.querySelectorAll('button'));
-                  const correctBtn = buttons[item.correct];
-                  if (correctBtn) correctBtn.classList.add('correct');
-                }
+      <div class="question-block">
+        <p class="question-text">10. What will happen to a person who doesn't have the habit of reading?</p>
+        <div class="choices">
+          <label class="choice-label">
+            <input type="radio" name="q10" value="A">
+            <span>A. developed</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q10" value="B">
+            <span>B. left behind</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q10" value="C">
+            <span>C. without a friend</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q10" value="D">
+            <span>D. faces a difficult life</span>
+          </label>
+        </div>
+      </div>
 
-                nextBtn.textContent = index < quiz.length - 1 ? 'Next' : 'Finish';
-                nextBtn.style.display = 'inline-block';
-              });
-              choicesEl.appendChild(btn);
-            });
-          }
+      <div class="question-block">
+        <p class="question-text">11. If everyone reads, what will happen to the task of developing nations?</p>
+        <div class="choices">
+          <label class="choice-label">
+            <input type="radio" name="q11" value="A">
+            <span>A. hard</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q11" value="B">
+            <span>B. delicate</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q11" value="C">
+            <span>C. difficult</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q11" value="D">
+            <span>D. easier and wholesome</span>
+          </label>
+        </div>
+      </div>
 
-          nextBtn.addEventListener('click', () => {
-            if (index < quiz.length - 1) {
-              index++;
-              render();
-            } else {
-              // Check which section just finished
-              if (section === 'synonyms') {
-                // Show Antonyms intro
-                document.getElementById('question-view').style.display = 'none';
-                document.getElementById('antonyms-intro').style.display = 'block';
-              } else if (section === 'antonyms') {
-                // Show Parts of Speech intro
-                document.getElementById('question-view').style.display = 'none';
-                document.getElementById('parts-intro').style.display = 'block';
-              } else {
-                // Finished all sections - show completion with score
-                document.getElementById('question-view').style.display = 'none';
-                const completionView = document.getElementById('completion-view');
-                const scoreDisplay = document.getElementById('score-display');
-                scoreDisplay.textContent = 'You got ' + score + '/50';
-                // final-score praise
-                try{
-                  const total = 50;
-                  const pct = total ? (score / total) * 100 : 0;
-                  if (window && window.playPraiseKey) {
-                    if (pct >= 90) window.playPraiseKey('excellent');
-                    else if (pct >= 75) window.playPraiseKey('amazing');
-                    else if (pct >= 50) window.playPraiseKey('good job');
-                  }
-                }catch(e){}
-                completionView.style.display = 'block';
-              }
-            }
-          });
+      <!-- Passage 4: Learning to Write Well -->
+      <div class="passage">
+        <h2 class="passage-title">Learning to Write Well</h2>
+        <p class="passage-text">As students, you should spend valuable practice in learning how to write well. In the course of an ordinary school, you have a wide range of experiences which may become possible materials for written composition. Each experience written up in a single paragraph provides opportunities to write the forms of composition, narrative, description, exposition and argument in small units. How long will depend upon how much material you have to put into them. The important thing about writing a paragraph is that every detail and every sentence in it must have a close relationship to the purpose or main idea which gives the paragraph its unity.</p>
+      </div>
 
-          // Antonyms intro Play button handler
-          const antonymsIntro = document.getElementById('antonyms-intro');
-          const startAntonyms = document.getElementById('start-antonyms');
-          if (startAntonyms) {
-            startAntonyms.addEventListener('click', () => {
-              antonymsIntro.style.display = 'none';
-              // Switch to antonyms questions
-              quiz = antonyms;
-              section = 'antonyms';
-              index = 0;
-              document.getElementById('question-view').style.display = 'block';
-              render();
-            });
-          }
+      <div class="question-block">
+        <p class="question-text">12. What is the paragraph all about?</p>
+        <div class="choices">
+          <label class="choice-label">
+            <input type="radio" name="q12" value="A">
+            <span>A. Learning to write well</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q12" value="B">
+            <span>B. The four types of composition</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q12" value="C">
+            <span>C. Materials for written composition</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q12" value="D">
+            <span>D. Making writing a profitable experience</span>
+          </label>
+        </div>
+      </div>
 
-          // Parts of Speech intro Play button handler
-          const partsIntro = document.getElementById('parts-intro');
-          const startParts = document.getElementById('start-parts');
-          if (startParts) {
-            startParts.addEventListener('click', () => {
-              partsIntro.style.display = 'none';
-              // Switch to parts of speech questions
-              quiz = partsOfSpeech;
-              section = 'parts';
-              index = 0;
-              document.getElementById('question-view').style.display = 'block';
-              render();
-            });
-          }
+      <div class="question-block">
+        <p class="question-text">13. What topic provides a rich source for writing a composition?</p>
+        <div class="choices">
+          <label class="choice-label">
+            <input type="radio" name="q13" value="A">
+            <span>A. School experience</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q13" value="B">
+            <span>B. New articles in newspapers</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q13" value="C">
+            <span>C. Close relationship with nature</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q13" value="D">
+            <span>D. Trips to malls and tourists spots</span>
+          </label>
+        </div>
+      </div>
 
-          // When the question view is shown (after Play), render first question
-          const observer = new MutationObserver(() => {
-            if (document.getElementById('question-view').style.display !== 'none' && qText.textContent === '') {
-              render();
-            }
-          });
-          observer.observe(document.getElementById('question-view'), { attributes: true, attributeFilter: ['style'] });
-        })();
-      </script>
+      <div class="question-block">
+        <p class="question-text">14. Which is the important thing about writing a paragraph?</p>
+        <div class="choices">
+          <label class="choice-label">
+            <input type="radio" name="q14" value="A">
+            <span>A. main idea which gives the paragraph its reason</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q14" value="B">
+            <span>B. every detail and sentence in it must have a close relationship</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q14" value="C">
+            <span>C. there should be a good paper and pen</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q14" value="D">
+            <span>D. each letter in it must be bold</span>
+          </label>
+        </div>
+      </div>
 
+      <!-- Passage 5: Filipino Fiestas -->
+      <div class="passage">
+        <h2 class="passage-title">Filipino Fiestas</h2>
+        <p class="passage-text">Everybody has a patron saint and every patron saint has a feast day. When the patron saint's feast day comes, it is fiesta time. We see the decoration hung over the town's main streets. The local band strikes up a tune and visitors come from different town and barrios. The celebrations are as diverse as there are customs and traditions in every region. Such is the case with the pagan minorities in the North and with the Muslim in the South.</p>
+      </div>
+
+      <div class="question-block">
+        <p class="question-text">15. What is inferred in the selection?</p>
+        <div class="choices">
+          <label class="choice-label">
+            <input type="radio" name="q15" value="A">
+            <span>A. Filipinos are music lovers.</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q15" value="B">
+            <span>B. Visitors come from different towns.</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q15" value="C">
+            <span>C. Fiestas are common in the Philippines.</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q15" value="D">
+            <span>D. The Philippines is composed of many towns.</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <p class="question-text">16. Based on the text, what is its main idea?</p>
+        <div class="choices">
+          <label class="choice-label">
+            <input type="radio" name="q16" value="A">
+            <span>A. Filipinos are thrifty.</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q16" value="B">
+            <span>B. Filipinos are peace-loving people.</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q16" value="C">
+            <span>C. Filipinos are lovers of saints.</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q16" value="D">
+            <span>D. Filipinos would not celebrate the feast day without money.</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <p class="question-text">17. Which of the statements proves that fiesta is popular among Filipinos?</p>
+        <div class="choices">
+          <label class="choice-label">
+            <input type="radio" name="q17" value="A">
+            <span>A. Children play in the street</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q17" value="B">
+            <span>B. Party goers attend the party.</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q17" value="C">
+            <span>C. Many are dressed in new clothes.</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q17" value="D">
+            <span>D. Visitors come from different barrios to join the celebration.</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Passage 6: Telling Time -->
+      <div class="passage">
+        <h2 class="passage-title">Telling Time</h2>
+        <p class="passage-text">Humans have used different objects to tell time. In the beginning, they used an hourglass. This is a cylindrical glass with a narrow center which allows sand to flow from its upper to its lower portion. Once all the sand has trickled to the lower portion, one knows that an hour has passed. Using the same idea, water clocks were constructed to measure time by having water flow through a narrow passage from one container to another. On the other hand, sundials allowed people to estimate an hour by looking at the position of the shadow cast by the sun on a plate. At night, people measured time by checking the alignment of the stars in the sky. None of these were accurate, though. The clock was the first accurate instrument for telling time.</p>
+      </div>
+
+      <div class="question-block">
+        <p class="question-text">18. Which of the following ways of telling time made use of sand?</p>
+        <div class="choices">
+          <label class="choice-label">
+            <input type="radio" name="q18" value="A">
+            <span>A. water clocks</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q18" value="B">
+            <span>B. hourglass</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q18" value="C">
+            <span>C. sundials</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q18" value="D">
+            <span>D. clock</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <p class="question-text">19. None of the clocks used long ago were accurate. Accurate in the sentence means:</p>
+        <div class="choices">
+          <label class="choice-label">
+            <input type="radio" name="q19" value="A">
+            <span>A. free from error</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q19" value="B">
+            <span>B. comparable</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q19" value="C">
+            <span>C. very useful</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q19" value="D">
+            <span>D. efficient</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <p class="question-text">20. When men of long ago told time at night, they looked at the ----- to tell the time.</p>
+        <div class="choices">
+          <label class="choice-label">
+            <input type="radio" name="q20" value="A">
+            <span>A. cloud formation</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q20" value="B">
+            <span>B. moon</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q20" value="C">
+            <span>C. stars</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q20" value="D">
+            <span>D. sun</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <p class="question-text">21. The sundials may not be useful in telling time -----</p>
+        <div class="choices">
+          <label class="choice-label">
+            <input type="radio" name="q21" value="A">
+            <span>A. at noontime</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q21" value="B">
+            <span>B. in the morning</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q21" value="C">
+            <span>C. during a rainy day</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q21" value="D">
+            <span>D. when the sun shines brightly</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <p class="question-text">22. How are the hourglass and the water clock similar?</p>
+        <div class="choices">
+          <label class="choice-label">
+            <input type="radio" name="q22" value="A">
+            <span>A. Both tell time by the hour.</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q22" value="B">
+            <span>B. Both use water to tell time.</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q22" value="C">
+            <span>C. Both are used only in the daytime.</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q22" value="D">
+            <span>D. Both have a narrow center through which something flows.</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <p class="question-text">23. The best title of the selection is -----.</p>
+        <div class="choices">
+          <label class="choice-label">
+            <input type="radio" name="q23" value="A">
+            <span>A. The Uses of Clocks</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q23" value="B">
+            <span>B. Why People Need to Tell Time</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q23" value="C">
+            <span>C. Ways of Telling Time: Then and Now</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q23" value="D">
+            <span>D. Comparing the Different Types of Clocks</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <p class="question-text">24. Which of these sentences is a topic sentence?</p>
+        <div class="choices">
+          <label class="choice-label">
+            <input type="radio" name="q24" value="A">
+            <span>A. The invention of the clock 600 years ago was the first accurate measurement of time.</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q24" value="B">
+            <span>B. Hourglass contained sand that fell through one container to another.</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q24" value="C">
+            <span>C. Long ago people used simple tools such as the hour glass.</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q24" value="D">
+            <span>D. Humans have used different objects to tell the time.</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Passage 7: Counting the Hours -->
+      <div class="passage">
+        <h2 class="passage-title">Counting the Hours</h2>
+        <p class="passage-text">When men decided to divide the day into twenty-four hours, they used numbers one through twelve two times. As a result, there was one o'clock during the day and another one o'clock after midnight. This created confusion. If one was told to submit a project at six o'clock, did this mean six o'clock in the morning or at night?</p>
+        <p class="passage-text">The Romans provided a solution to this problem. They thought that noon time, the time when the sun is at its apex, is an important time. They called noon Meridies and measured time by this. They called the morning ante meridiem, which means "before noon" while "after noon" was called post meridiem. Ante meridiem was shortened to A.M. while post meridiem was shortened to P.M.</p>
+      </div>
+
+      <div class="question-block">
+        <p class="question-text">25. When the day was divided into twenty-four hours, what numbers were used to express time?</p>
+        <div class="choices">
+          <label class="choice-label">
+            <input type="radio" name="q25" value="A">
+            <span>A. one to six</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q25" value="B">
+            <span>B. one to twelve</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q25" value="C">
+            <span>C. one to thirty-six</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q25" value="D">
+            <span>D. one to twenty four</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <p class="question-text">26. Having one number to express time twice caused confusion. In this selection confusion may ----- mean.</p>
+        <div class="choices">
+          <label class="choice-label">
+            <input type="radio" name="q26" value="A">
+            <span>A. differences</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q26" value="B">
+            <span>B. discussions</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q26" value="C">
+            <span>C. problems</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q26" value="D">
+            <span>D. mistakes</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <p class="question-text">27. The Romans thought of a solution. This means that they provided -----.</p>
+        <div class="choices">
+          <label class="choice-label">
+            <input type="radio" name="q27" value="A">
+            <span>A. an answer to the problem</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q27" value="B">
+            <span>B. a better interpretation</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q27" value="C">
+            <span>C. a new set of numbers</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q27" value="D">
+            <span>D. another clock</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <p class="question-text">28. Meridies means -----.</p>
+        <div class="choices">
+          <label class="choice-label">
+            <input type="radio" name="q28" value="A">
+            <span>A. apex</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q28" value="B">
+            <span>B. noon</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q28" value="C">
+            <span>C. before</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q28" value="D">
+            <span>D. daylight</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <p class="question-text">29. The early Romans used the position of the sun to tell the time. When the sun was at its apex, it was noon. What does apex mean?</p>
+        <div class="choices">
+          <label class="choice-label">
+            <input type="radio" name="q29" value="A">
+            <span>A. highest point</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q29" value="B">
+            <span>B. lowest point</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q29" value="C">
+            <span>C. farthest point</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q29" value="D">
+            <span>D. nearest point</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="question-block">
+        <p class="question-text">30. Another good title for this selection is:</p>
+        <div class="choices">
+          <label class="choice-label">
+            <input type="radio" name="q30" value="A">
+            <span>A. Why There Are Twenty-Four Hours in a Day</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q30" value="B">
+            <span>B. Why Noontime is Important to Romans</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q30" value="C">
+            <span>C. How the Romans Told Time</span>
+          </label>
+          <label class="choice-label">
+            <input type="radio" name="q30" value="D">
+            <span>D. The Meaning of A.M. and P.M.</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Submit Section -->
+      <div class="submit-section">
+        <button class="submit-btn" id="submit-btn">Submit Test</button>
+        <p id="result-message" style="margin-top: 20px; font-size: 18px; font-weight: 700; display: none;"></p>
+      </div>
     </div>
   </div>
+
   <script src="audio.js" defer></script>
+
+  <script>
+    // Answer key (not visible to students, used for grading)
+    const answerKey = {
+      q1: 'C', q2: 'C', q3: 'C', q4: 'A', q5: 'D',
+      q6: 'D', q7: 'A', q8: 'D', q9: 'C', q10: 'B',
+      q11: 'D', q12: 'A', q13: 'A', q14: 'B', q15: 'C',
+      q16: 'C', q17: 'D', q18: 'B', q19: 'A', q20: 'C',
+      q21: 'C', q22: 'D', q23: 'C', q24: 'D', q25: 'B',
+      q26: 'C', q27: 'A', q28: 'B', q29: 'A', q30: 'D'
+    };
+
+    document.getElementById('submit-btn').addEventListener('click', function() {
+      let score = 0;
+      let totalQuestions = 30;
+      let unanswered = 0;
+
+      // Check all answers
+      for (let i = 1; i <= totalQuestions; i++) {
+        const questionName = 'q' + i;
+        const selected = document.querySelector(`input[name="${questionName}"]:checked`);
+        
+        if (!selected) {
+          unanswered++;
+        } else if (selected.value === answerKey[questionName]) {
+          score++;
+        }
+      }
+
+      // Display result
+      const resultMessage = document.getElementById('result-message');
+      
+      if (unanswered > 0) {
+        resultMessage.textContent = `Please answer all questions. You have ${unanswered} unanswered question(s).`;
+        resultMessage.style.color = '#c62828';
+        resultMessage.style.display = 'block';
+        // Scroll to top to see the message
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        const percentage = Math.round((score / totalQuestions) * 100);
+        resultMessage.textContent = `Test Completed! Your score: ${score}/${totalQuestions} (${percentage}%)`;
+        resultMessage.style.color = '#402688';
+        resultMessage.style.display = 'block';
+        
+        // Save score to localStorage
+        try {
+          const existingScores = JSON.parse(localStorage.getItem('webapex_scores') || '[]');
+          existingScores.push({
+            category: 'pretest',
+            testName: 'Pre-Test',
+            score: score,
+            total: totalQuestions,
+            percentage: percentage,
+            date: new Date().toISOString()
+          });
+          localStorage.setItem('webapex_scores', JSON.stringify(existingScores));
+        } catch (e) {
+          console.error('Error saving score:', e);
+        }
+
+        // Scroll to result
+        resultMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    });
+  </script>
 
 </body>
 </html>

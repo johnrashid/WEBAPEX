@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Reading Comprehension Quiz</title>
+  <title>Questions - Reading Comprehension</title>
   <link rel="stylesheet" href="pretest.css">
   <link rel="stylesheet" href="grammartest.css">
   <link rel="stylesheet" href="design.css">
@@ -17,16 +17,14 @@
   </button>
 
   <main class="canvas" role="main">
-    <!-- Intro Screen -->
     <section id="intro" class="intro" style="max-width:780px; text-align:center;">
-      <h1 class="title" id="quizTitle">Reading Comprehension Quiz</h1>
+      <h1 class="title" id="storyTitle">Reading Comprehension Quiz</h1>
       <div id="instruction-banner" style="max-width:680px; margin:18px auto; padding:12px 14px; border-radius:4px; background:rgba(0,0,0,0.02); text-align:center; font-weight:700; color:#074; font-size:18px;">
         Directions: Answer each question based on the story you just read. Select the correct answer before the timer ends.
       </div>
       <button id="start" class="next-btn">Start Quiz</button>
     </section>
 
-    <!-- Question View -->
     <div id="question-view" class="question" style="max-width:780px; text-align:center; display:none;">
       <div id="instruction-banner-question" style="max-width:980px; margin:8px auto 18px; padding:12px 18px; border-radius:4px; background:rgba(0,0,0,0.02); text-align:center; font-weight:700; color:#074; font-size:18px;">
         Directions: Answer each question based on the story you just read. Select the correct answer before the timer ends.
@@ -50,24 +48,27 @@
       <button id="next-btn" class="next-btn" style="margin-top:18px; display:none;">Next</button>
     </div>
 
-    <!-- Completion Screen -->
     <section id="completion" class="intro" style="max-width:780px; text-align:center; display:none;">
       <h2 class="title">Quiz Completed</h2>
-      <p id="score" class="subtitle" style="font-size:22px;"></p>
-      <button id="nextStoryBtn" class="next-btn" style="margin-top:18px;">Next Story</button>
+      <p id="scoreText" class="subtitle" style="font-size:22px;"></p>
+      <div id="next-story-container" style="margin-top:20px;">
+        <button id="nextStoryBtn" class="next-btn">Next Story</button>
+      </div>
     </section>
   </main>
 
   <script>
-    // Get level and story from URL parameters
+    // Build the questions for Level 1 Story 1
     const params = new URLSearchParams(location.search);
     const level = params.get('level') || '1';
     const story = params.get('story') || '1';
 
     function goBack(){
+      // return to story page
       window.location.href = `story.html?level=${level}&story=${story}`;
     }
 
+    // questions organized by level -> story
     const questionsByLevel = {
       '1': {
       '1': {
@@ -177,183 +178,183 @@
         key: [1,1,0,1,2,1,2,1,2,0,0,2,1,2,3]
       }
       }
-    };
+      };
 
-    // Get the questions for the current level and story
+    // select by level then story; fall back to level 1 story 1 if missing
     const levelData = questionsByLevel[level] || questionsByLevel['1'];
     const storyData = (levelData && levelData[story]) || (levelData && levelData['1']);
     const questions = storyData.questions;
-    const key = storyData.key;
+    const header = document.getElementById('questionsHeader');
+    if (header) header.textContent = storyData.title;
+    // update document title too
+    document.title = `Questions - ${storyData.title}`;
 
-    // Quiz state
-    let index = 0;
-    let score = 0;
-    let intenseAudio = null;
-    let timeLeft = 60;
-    let timerInterval = null;
+    const container = document.getElementById('questionsContainer');
 
-    // DOM elements
-    const intro = document.getElementById('intro');
-    const startBtn = document.getElementById('start');
-    const qView = document.getElementById('question-view');
-    const qText = document.getElementById('q-text');
-    const choicesEl = document.getElementById('choices');
-    const feedback = document.getElementById('feedback');
-    const nextBtn = document.getElementById('next-btn');
-    const timerEl = document.getElementById('timer');
-    const timerText = document.getElementById('timer-text');
-    const timerCircle = document.getElementById('timer-circle');
-    const completion = document.getElementById('completion');
-    const scoreEl = document.getElementById('score');
-    const nextStoryBtn = document.getElementById('nextStoryBtn');
-    const quizTitle = document.getElementById('quizTitle');
+    function render(){
+      container.innerHTML = '';
+        questions.forEach((item, idx) => {
+        const qDiv = document.createElement('div');
+        qDiv.className = 'question';
+        const h = document.createElement('h2'); h.textContent = item.q;
+        qDiv.appendChild(h);
+        const ul = document.createElement('ul'); ul.className = 'choices';
+        item.choices.forEach((c, ci) => {
+          const li = document.createElement('li');
+          li.className = 'choice';
+          li.setAttribute('role','button');
+          li.setAttribute('tabindex','0');
+          li.dataset.q = idx;
+          li.dataset.choice = ci;
+          // extract letter (first non-space char) and text after label (supports 'A.','A)','A -', etc.)
+          const letter = c.trim().charAt(0);
+          // remove only the leading choice label (e.g. 'A.', 'A)', 'A) ', 'A -')
+          const text = c.replace(/^[A-Za-z]+\s*[\)\.\-]?\s*/, '').trim();
+          li.innerHTML = `<span class="letter">${letter}</span><span class="text">${text}</span>`;
+          li.addEventListener('click', onChoice);
+          li.addEventListener('keydown', (e)=>{ if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onChoice.call(li, e); }});
+          ul.appendChild(li);
+        });
+        qDiv.appendChild(ul);
+        container.appendChild(qDiv);
+      });
 
-    const totalTime = 60;
-    const circumference = 2 * Math.PI * 30;
+      // Append submit footer at the end so it is inside the scrollable area
+      const footer = document.createElement('div');
+      footer.className = 'questions-footer';
+      footer.innerHTML = '<button id="submitBtn" class="btn-submit">Submit</button>';
+      container.appendChild(footer);
+    }
 
-    // Set the quiz title
-    if (quizTitle) quizTitle.textContent = storyData.title;
+    function onChoice(e){
+      const el = (this === undefined || this === window) ? e.currentTarget : this;
+      const q = el.dataset.q;
+      // remove selected in same question
+      const choices = container.querySelectorAll(`.choice[data-q="${q}"]`);
+      choices.forEach(ch => ch.classList.remove('selected'));
+      el.classList.add('selected');
+    }
 
-    function startTimer() {
-      timeLeft = 60;
-      timerText.textContent = '1:00';
-      timerCircle.style.strokeDashoffset = '0';
-      if (timerInterval) clearInterval(timerInterval);
-      timerInterval = setInterval(() => {
-        timeLeft--;
-        const mins = Math.floor(timeLeft / 60);
-        const secs = timeLeft % 60;
-        timerText.textContent = mins + ':' + (secs < 10 ? '0' : '') + secs;
-        const progress = (totalTime - timeLeft) / totalTime;
-        timerCircle.style.strokeDashoffset = circumference * progress;
-        if (timeLeft <= 0) {
-          clearInterval(timerInterval);
-          handleTimeout();
+    render();
+
+    // submit handler (attach after render so the button exists)
+    function attachSubmit(){
+      const submit = document.getElementById('submitBtn');
+      if(!submit) return;
+      submit.addEventListener('click', ()=>{
+        // use key from story data
+        const key = storyData.key || [];
+        const selected = container.querySelectorAll('.choice.selected');
+        // build answers array (undefined if unanswered)
+        const answers = Array(key.length).fill(null);
+        selected.forEach(s => { answers[Number(s.dataset.q)] = Number(s.dataset.choice); });
+        // score
+        let score = 0;
+        for (let i=0;i<key.length;i++){
+          if (answers[i] !== null && answers[i] === key[i]) score++;
         }
-      }, 1000);
-    }
+        // Build detailed breakdown: for each question, show correct answer and user's answer (if wrong)
+        function cleanChoiceLabel(choiceStr){
+          return choiceStr.replace(/^[A-Za-z]+\s*[\)\.\-]?\s*/, '').trim();
+        }
 
-    function handleTimeout() {
-      try { if (intenseAudio) { intenseAudio.pause(); intenseAudio.currentTime = 0; } } catch(e){}
-      try { const buzzer = new Audio('wrong.mp3'); buzzer.play(); } catch(e){}
-      const item = questions[index];
-      const all = choicesEl.querySelectorAll('button');
-      all.forEach(b => b.disabled = true);
-      const buttons = Array.from(all);
-      const correctBtn = buttons[key[index]];
-      if (correctBtn) correctBtn.classList.add('correct');
-      feedback.textContent = 'Time\'s up! The correct answer is ' + item.choices[key[index]] + '.';
-      feedback.style.color = '#c62828';
-      nextBtn.style.display = 'inline-block';
-    }
+        let details = '';
+        for (let i = 0; i < key.length; i++){
+          const qItem = questions[i];
+          const correctIndex = key[i];
+          const correctRaw = (qItem && qItem.choices && qItem.choices[correctIndex]) || '';
+          const correctLabel = (correctRaw || '').trim().charAt(0);
+          const correctText = cleanChoiceLabel(correctRaw || '');
 
-    function render() {
-      const item = questions[index];
-      qText.textContent = item.q;
-      choicesEl.innerHTML = '';
-      feedback.textContent = '';
-      nextBtn.style.display = 'none';
-      try { intenseAudio = new Audio('intense.mp3'); intenseAudio.loop = true; intenseAudio.play(); } catch(e){}
-      startTimer();
-
-      item.choices.forEach((label, i) => {
-        const btn = document.createElement('button');
-        btn.className = 'level-btn choice-btn';
-        btn.textContent = label;
-        btn.addEventListener('click', () => {
-          if (timerInterval) clearInterval(timerInterval);
-          try { if (intenseAudio) { intenseAudio.pause(); intenseAudio.currentTime = 0; } } catch(e){}
-          const all = choicesEl.querySelectorAll('button');
-          all.forEach(b => b.disabled = true);
-          const correctIndex = key[index];
-          const isCorrect = i === correctIndex;
-
-          if (isCorrect) {
-            btn.classList.add('correct');
-            feedback.textContent = 'Correct!';
-            feedback.style.color = '#0a8a0a';
-            score++;
-            if (window && window.playPraiseKey) try{ window.playPraiseKey('correct'); }catch(e){}
+          const userIndex = answers[i];
+          let userHtml = '';
+          if (userIndex === null || userIndex === undefined){
+            userHtml = '<em>Unanswered</em>';
           } else {
-            btn.classList.add('wrong');
-            const buttons = Array.from(choicesEl.querySelectorAll('button'));
-            const correctBtn = buttons[correctIndex];
-            if (correctBtn) correctBtn.classList.add('correct');
-            feedback.textContent = 'Incorrect. The correct answer is ' + item.choices[correctIndex] + '.';
-            feedback.style.color = '#c62828';
-            try { const wrongAudio = new Audio('wrong.mp3'); wrongAudio.play(); } catch(e){}
+            const userRaw = (qItem && qItem.choices && qItem.choices[userIndex]) || '';
+            const userLabel = (userRaw || '').trim().charAt(0);
+            const userText = cleanChoiceLabel(userRaw || '');
+            if (userIndex === correctIndex){
+              userHtml = `<span style="color:green;font-weight:700">${userLabel}. ${userText} (correct)</span>`;
+            } else {
+              userHtml = `<span style="color:#c62828;font-weight:700">${userLabel}. ${userText} (your answer)</span>`;
+            }
           }
 
-          nextBtn.textContent = index < questions.length - 1 ? 'Next' : 'Finish';
-          nextBtn.style.display = 'inline-block';
-        });
-        choicesEl.appendChild(btn);
-      });
-    }
-
-    startBtn.addEventListener('click', () => {
-      intro.style.display = 'none';
-      qView.style.display = 'block';
-      render();
-    });
-
-    nextBtn.addEventListener('click', () => {
-      if (index < questions.length - 1) {
-        index++;
-        render();
-      } else {
-        qView.style.display = 'none';
-        completion.style.display = 'block';
-        scoreEl.textContent = 'You got ' + score + ' / ' + questions.length;
-        
-        // Save score to localStorage
-        try {
-          const percentage = Math.round((score / questions.length) * 100);
-          const existingScores = JSON.parse(localStorage.getItem('webapex_scores') || '[]');
-          existingScores.push({
-            category: 'reading',
-            testName: 'Reading Comprehension - ' + storyData.title,
-            score: score,
-            total: questions.length,
-            percentage: percentage,
-            date: new Date().toISOString()
-          });
-          localStorage.setItem('webapex_scores', JSON.stringify(existingScores));
-        } catch(e) {
-          console.error('Error saving score:', e);
+          // build the block for this question
+          details += `
+            <div class="q-result" style="margin-bottom:12px;padding:10px;border-radius:8px;background:rgba(255,255,255,0.75);box-shadow:0 6px 14px rgba(10,10,30,0.04)">
+              <div style="font-weight:800;margin-bottom:6px">${i+1}. ${qItem.q.replace(/^\d+\.\s*/, '')}</div>
+              <div><strong>Correct:</strong> <span style="color:green;font-weight:700">${correctLabel}. ${correctText}</span></div>
+              <div><strong>Your answer:</strong> ${userHtml}</div>
+            </div>
+          `;
         }
 
-        // Play praise audio
+        // Hide the main page scrollbar and replace the questions content with results
+        try{
+          document.documentElement.classList.add('result-open');
+          document.body.classList.add('result-open');
+        }catch(e){}
+
+        // Render the results in-place inside the same container so position is preserved
+        container.innerHTML = `
+          <div class="result-grid" role="region">
+            <div class="result-list">
+              <div style="text-align:center; margin-bottom:10px">
+                <h2 style="margin:0">You got ${score}/${key.length}</h2>
+                <p style="margin:6px 0 12px; color:#333">See the correct answers, your selections, and points per question below.</p>
+              </div>
+              ${details}
+              <div style="height:18px"></div>
+              <div class="result-actions" style="text-align:center; margin-top:8px">
+                <button id="nextStoryBtn" class="btn-submit">${Number(story) === 5 ? 'Choose Level' : 'Next Story'}</button>
+              </div>
+            </div>
+          </div>
+        `;
+
+        // play final-score praise if available (thresholds)
         try {
-          const total = questions.length || 0;
-          const pct = total ? (score/total)*100 : 0;
           if (window && window.playPraiseKey) {
+            const pct = Math.round((score / key.length) * 100);
             if (pct >= 90) window.playPraiseKey('excellent');
             else if (pct >= 75) window.playPraiseKey('amazing');
             else if (pct >= 50) window.playPraiseKey('good job');
           }
-        } catch(e) {}
-      }
-    });
+        } catch (e) {}
 
-    // Next story button handler
-    if (nextStoryBtn) {
-      nextStoryBtn.addEventListener('click', () => {
-        if (Number(story) === 5) {
-          window.location.href = 'level.html';
-        } else {
-          const nextStory = Number(story) + 1;
-          window.location.href = `story.html?level=${level}&story=${nextStory}`;
+        // navigate when clicked: if this is story 5 go to level selection, else go to next story
+        const next = document.getElementById('nextStoryBtn');
+        if (next) {
+          // restore page scrolling, remove overlay, show container, then navigate
+          const restoreAndNavigate = (target) => {
+            try{
+              document.documentElement.classList.remove('result-open');
+              document.body.classList.remove('result-open');
+            }catch(e){}
+            // clean up result state and restore questions (in case navigation is prevented)
+              try{
+                document.documentElement.classList.remove('result-open');
+                document.body.classList.remove('result-open');
+              }catch(e){}
+              try{ render(); }catch(e){}
+              // navigate
+              window.location.href = target;
+          };
+
+          if (Number(story) === 5) {
+            next.addEventListener('click', ()=>{ restoreAndNavigate('level.html'); });
+          } else {
+            next.addEventListener('click', ()=>{
+              const nextStory = Number(story) + 1;
+              restoreAndNavigate(`story.html?level=${level}&story=${nextStory}`);
+            });
+          }
         }
       });
-      
-      // Update button text based on current story
-      if (Number(story) === 5) {
-        nextStoryBtn.textContent = 'Choose Level';
-      } else {
-        nextStoryBtn.textContent = 'Next Story';
-      }
     }
+    attachSubmit();
   </script>
   <script src="audio.js" defer></script>
 </body>

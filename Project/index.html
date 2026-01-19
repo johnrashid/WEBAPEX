@@ -30,7 +30,80 @@
       <span class="word" style="left:36%; top:72%;  animation-duration:12s; animation-delay:-4s;">GROW</span>
     </div>
 
+  <!-- Username Modal -->
+  <div id="usernameModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <h2 style="margin-top: 0; color: #402688; text-align: center;">Enter Your Name</h2>
+      <p style="text-align: center; color: #666; margin-bottom: 20px;">Your name will appear on the leaderboard</p>
+      <input 
+        type="text" 
+        id="usernameInput" 
+        placeholder="Enter your name" 
+        maxlength="20"
+        style="width: 100%; padding: 12px; font-size: 16px; border: 2px solid #ddd; border-radius: 8px; margin-bottom: 20px; box-sizing: border-box;"
+        autocomplete="off"
+      />
+      <div style="display: flex; gap: 10px; justify-content: center;">
+        <button id="skipUsername" class="modal-btn secondary" style="padding: 12px 24px; font-size: 16px; border-radius: 8px; border: 2px solid #ddd; background: white; color: #666; cursor: pointer;">
+          Skip (Play as Guest)
+        </button>
+        <button id="confirmUsername" class="modal-btn primary" style="padding: 12px 24px; font-size: 16px; border-radius: 8px; border: none; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; cursor: pointer; font-weight: bold;">
+          Start Playing
+        </button>
+      </div>
+    </div>
+  </div>
+
   <script src="audio.js" defer></script>
+  <script>
+    // Username modal functions
+    function showUsernameModal() {
+      document.getElementById('usernameModal').style.display = 'flex';
+      document.getElementById('usernameInput').focus();
+    }
+
+    function hideUsernameModal() {
+      document.getElementById('usernameModal').style.display = 'none';
+    }
+
+    function saveUsername() {
+      const username = document.getElementById('usernameInput').value.trim();
+      if (username) {
+        localStorage.setItem('webapex_userName', username);
+      } else {
+        localStorage.setItem('webapex_userName', 'Guest');
+      }
+      location.href = 'home.html';
+    }
+
+    function skipUsername() {
+      localStorage.setItem('webapex_userName', 'Guest');
+      location.href = 'home.html';
+    }
+
+    // Event listeners
+    document.addEventListener('DOMContentLoaded', function() {
+      // Enter key on input
+      document.getElementById('usernameInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          saveUsername();
+        }
+      });
+
+      // Confirm button
+      document.getElementById('confirmUsername').addEventListener('click', saveUsername);
+
+      // Skip button
+      document.getElementById('skipUsername').addEventListener('click', skipUsername);
+
+      // Close modal when clicking outside
+      document.getElementById('usernameModal').addEventListener('click', function(e) {
+        if (e.target.id === 'usernameModal') {
+          hideUsernameModal();
+        }
+      });
+    });
+  </script>
 
     <audio id="bg-audio" src="bgmusic.mp3" loop preload="auto" autoplay></audio>
 
@@ -61,7 +134,7 @@
       <h1 class="subtitle" style="text-align:center; margin-top:1px;">Where reading becomes winning.</h1>
       <!-- centered Play button (reuses .level-btn styling) -->
       <div class="play" style="top: calc(320px * var(--scale));">
-        <button class="play-btn" onclick="location.href='home.html'"><span>PLAY</span></button>
+        <button class="play-btn" onclick="showUsernameModal()"><span>PLAY</span></button>
       </div>
     </div>
       </div>

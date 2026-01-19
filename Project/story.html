@@ -1675,20 +1675,8 @@ Ultimately, the narrative becomes a reflection on the difficulty of telling stor
       if (modalNo){ modalNo.addEventListener('click', hideModal); }
       if (modalYes){
         modalYes.addEventListener('click', () => {
-          // Navigate to the correct questions page per level
-          const lv = String(level);
-          let page = 'questions.html';
-          if (lv === '2') page = 'questions2.html';
-          else if (lv === '3') page = 'questions3.html';
-          else if (lv === '4') page = 'questions4.html';
-          else if (lv === '5') page = 'questions5.html';
-
-          // Level 5: send only story to questions5.html as requested
-          if (lv === '5') {
-            window.location.href = `${page}?story=${story}`;
-          } else {
-            window.location.href = `${page}?level=${level}&story=${story}`;
-          }
+          // Navigate to questions.html with level and story parameters
+          window.location.href = `questions.html?level=${level}&story=${story}`;
         });
       }
       // close modal with Escape key

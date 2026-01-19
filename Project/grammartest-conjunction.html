@@ -1,7 +1,21 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
+  <met    <section id="completion" class="intro" style="max-width:780px; text-align:center; display:none;">
+      <h2 class="title">Quiz Completed</h2>
+      <p id="score" class="subtitle" style="font-size:22px;"></p>
+      
+      <!-- References Section -->
+      <div style="margin-top: 30px; padding: 20px; background: rgba(255,255,255,0.9); border-radius: 12px; text-align: left; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+        <h3 style="font-size: 18px; font-weight: 700; color: #402688; margin-bottom: 12px; text-align: center;">References</h3>
+        <div style="font-size: 14px; line-height: 1.8; color: #333;">
+          <p style="margin: 8px 0;">Murphy, R. (2019). <em>English grammar in use</em> (5th ed.). Cambridge University Press.</p>
+          <p style="margin: 8px 0;">
+            <a href="https://www.dochub.com/fillable-form/24112-subject-verb-agreement-worksheets-with-answers-7th-grade-pdf" target="_blank" style="color: #402688; text-decoration: underline;">https://www.dochub.com/fillable-form/24112-subject-verb-agreement-worksheets-with-answers-7th-grade-pdf</a>
+          </p>
+        </div>
+      </div>
+    </section>arset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Grammar Test - Conjunctions</title>
   <link rel="stylesheet" href="pretest.css">
@@ -81,7 +95,35 @@
     function handleTimeout(){ try { if (intenseAudio) { intenseAudio.pause(); intenseAudio.currentTime = 0; } } catch(e){} try { const buzzer = new Audio('wrong.mp3'); buzzer.play(); } catch(e){} const item = questions[index]; const all = choicesEl.querySelectorAll('button'); all.forEach(b => b.disabled = true); const buttons = Array.from(all); const correctBtn = buttons[item.correct]; if (correctBtn) correctBtn.classList.add('correct'); feedback.textContent = 'Time\'s up! The correct answer is ' + item.choices[item.correct] + '.'; feedback.style.color = '#c62828'; nextBtn.style.display = 'inline-block'; }
     function render(){ const item = questions[index]; qText.textContent = item.q; choicesEl.innerHTML = ''; feedback.textContent = ''; nextBtn.style.display = 'none'; try { intenseAudio = new Audio('intense.mp3'); intenseAudio.loop = true; intenseAudio.play(); } catch(e){} startTimer(); item.choices.forEach((label,i)=>{ const btn = document.createElement('button'); btn.className = 'level-btn choice-btn'; btn.textContent = label; btn.addEventListener('click', ()=>{ if (timerInterval) clearInterval(timerInterval); try { if (intenseAudio) { intenseAudio.pause(); intenseAudio.currentTime = 0; } } catch(e){} const all = choicesEl.querySelectorAll('button'); all.forEach(b=>b.disabled = true); const correctIndex = item.correct; const isCorrect = i === correctIndex; if (isCorrect) { btn.classList.add('correct'); feedback.textContent = 'Correct!'; feedback.style.color = '#0a8a0a'; score++; if (window && window.playPraiseKey) try{ window.playPraiseKey('correct'); }catch(e){} } else { btn.classList.add('wrong'); const buttons = Array.from(choicesEl.querySelectorAll('button')); const correctBtn = buttons[correctIndex]; if (correctBtn) correctBtn.classList.add('correct'); feedback.textContent = 'Incorrect. The correct answer is ' + item.choices[item.correct] + '.'; feedback.style.color = '#c62828'; try { const wrongAudio = new Audio('wrong.mp3'); wrongAudio.play(); } catch(e){} } nextBtn.textContent = index < questions.length - 1 ? 'Next' : 'Finish'; nextBtn.style.display = 'inline-block'; }); choicesEl.appendChild(btn); }); }
     startBtn.addEventListener('click', ()=>{ intro.style.display='none'; qView.style.display='block'; render(); });
-    nextBtn.addEventListener('click', ()=>{ if (timerInterval) clearInterval(timerInterval); if(index<questions.length-1){ index++; render(); } else { qView.style.display='none'; completion.style.display='block'; scoreEl.textContent='You got '+score+' / '+questions.length; try{ const total = questions.length || 0; const pct = total ? (score/total)*100 : 0; if (window && window.playPraiseKey){ if (pct>=90) window.playPraiseKey('excellent'); else if (pct>=75) window.playPraiseKey('amazing'); else if (pct>=50) window.playPraiseKey('good job'); } }catch(e){} } });
+    nextBtn.addEventListener('click', ()=>{ 
+      if (timerInterval) clearInterval(timerInterval); 
+      if(index<questions.length-1){ 
+        index++; render(); 
+      } else { 
+        qView.style.display='none'; 
+        completion.style.display='block'; 
+        scoreEl.textContent='You got '+score+' / '+questions.length;
+        
+        // Save score to localStorage
+        try {
+          const percentage = Math.round((score / questions.length) * 100);
+          const existingScores = JSON.parse(localStorage.getItem('webapex_scores') || '[]');
+          existingScores.push({
+            category: 'grammar',
+            testName: 'Conjunction Quiz',
+            score: score,
+            total: questions.length,
+            percentage: percentage,
+            date: new Date().toISOString()
+          });
+          localStorage.setItem('webapex_scores', JSON.stringify(existingScores));
+        } catch (e) {
+          console.error('Error saving score:', e);
+        }
+        
+        try{ const total = questions.length || 0; const pct = total ? (score/total)*100 : 0; if (window && window.playPraiseKey){ if (pct>=90) window.playPraiseKey('excellent'); else if (pct>=75) window.playPraiseKey('amazing'); else if (pct>=50) window.playPraiseKey('good job'); } }catch(e){} 
+      } 
+    });
   </script>
   <script src="audio.js" defer></script>
 </body>

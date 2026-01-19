@@ -49,6 +49,14 @@
       <h2 class="title">Quiz Completed</h2>
       <p id="scoreText" class="subtitle" style="font-size:20px;"></p>
       <!-- answer key removed per site settings (do not reveal answer key here) -->
+      
+      <!-- References Section -->
+      <div style="margin-top: 30px; padding: 20px; background: rgba(255,255,255,0.9); border-radius: 12px; text-align: left; max-width:720px; margin-left:auto; margin-right:auto; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+        <h3 style="font-size: 18px; font-weight: 700; color: #402688; margin-bottom: 12px; text-align: center;">References</h3>
+        <div style="font-size: 14px; line-height: 1.8; color: #333;">
+          <p style="margin: 8px 0;">Merriam-Webster Dictionary. (n.d.). <em>Synonyms and meanings of English words</em>. <a href="https://www.merriam-webster.com" target="_blank" style="color: #402688; text-decoration: underline;">https://www.merriam-webster.com</a></p>
+        </div>
+      </div>
     </section>
   </main>
 
@@ -143,6 +151,24 @@
         qView.style.display='none'; completion.style.display='block';
         if (titleEl) titleEl.style.display = 'block';
         scoreText.textContent = 'You got ' + score + ' / ' + questions.length;
+        
+        // Save score to localStorage
+        try {
+          const percentage = Math.round((score / questions.length) * 100);
+          const existingScores = JSON.parse(localStorage.getItem('webapex_scores') || '[]');
+          existingScores.push({
+            category: 'vocabulary',
+            testName: 'Synonyms Quiz',
+            score: score,
+            total: questions.length,
+            percentage: percentage,
+            date: new Date().toISOString()
+          });
+          localStorage.setItem('webapex_scores', JSON.stringify(existingScores));
+        } catch (e) {
+          console.error('Error saving score:', e);
+        }
+        
         try{
           const total = questions.length || 0;
           const pct = total ? (score / total) * 100 : 0;

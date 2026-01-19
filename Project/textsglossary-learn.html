@@ -450,6 +450,25 @@
         if (label === 'result'){
           // show result modal with final score
           if (resultScoreEl) resultScoreEl.textContent = String(score || 0);
+          
+          // Save score to localStorage
+          try {
+            const totalQuestions = entries.length;
+            const percentage = Math.round((score / totalQuestions) * 100);
+            const existingScores = JSON.parse(localStorage.getItem('webapex_scores') || '[]');
+            existingScores.push({
+              category: 'glossary',
+              testName: 'Texts Glossary',
+              score: score,
+              total: totalQuestions,
+              percentage: percentage,
+              date: new Date().toISOString()
+            });
+            localStorage.setItem('webapex_scores', JSON.stringify(existingScores));
+          } catch (e) {
+            console.error('Error saving score:', e);
+          }
+          
           if (resultModal){ resultModal.style.display = 'flex'; resultModal.setAttribute('aria-hidden','false'); resultChooseBtn.focus(); }
           return;
         }
@@ -473,6 +492,25 @@
           // show result modal with final score
           if (correctModal){ correctModal.style.display = 'none'; correctModal.setAttribute('aria-hidden','true'); }
           if (resultScoreEl) resultScoreEl.textContent = String(score || 0);
+          
+          // Save score to localStorage
+          try {
+            const totalQuestions = entries.length;
+            const percentage = Math.round((score / totalQuestions) * 100);
+            const existingScores = JSON.parse(localStorage.getItem('webapex_scores') || '[]');
+            existingScores.push({
+              category: 'glossary',
+              testName: 'Texts Glossary',
+              score: score,
+              total: totalQuestions,
+              percentage: percentage,
+              date: new Date().toISOString()
+            });
+            localStorage.setItem('webapex_scores', JSON.stringify(existingScores));
+          } catch (e) {
+            console.error('Error saving score:', e);
+          }
+          
           if (resultModal){ resultModal.style.display = 'flex'; resultModal.setAttribute('aria-hidden','false'); resultChooseBtn.focus(); }
           return;
         }
