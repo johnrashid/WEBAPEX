@@ -7,6 +7,10 @@
   <link rel="stylesheet" href="pretest.css">
   <link rel="stylesheet" href="grammartest.css">
   <link rel="stylesheet" href="design.css">
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <script src="firebase-config.js"></script>
 </head>
 <body>
   <button type="button" class="back-btn" onclick="history.back()" aria-label="Go back">
@@ -74,6 +78,22 @@
       { q: '10. Ambition urges us _____.', choices: ['A. before','B. once','C. out','D. forward'], correct: 3 }
     ];
     let index=0, score=0; let intenseAudio = null; let timeLeft = 60; let timerInterval = null;
+    
+    // Autoplay pou.mp3 when entering this game mode
+    let gameModeAudio = null;
+    try {
+      gameModeAudio = new Audio('pou.mp3');
+      gameModeAudio.loop = true;
+      gameModeAudio.volume = 0.5;
+      gameModeAudio.play().catch(e => console.log('Autoplay blocked:', e));
+    } catch(e) {
+      console.log('Audio setup failed:', e);
+    }
+    
+    // Stop game music when leaving page
+    window.addEventListener('beforeunload', () => {
+      try { if (gameModeAudio) gameModeAudio.pause(); } catch(e) {}
+    });
     const intro=document.getElementById('intro');
     const startBtn=document.getElementById('start');
     const qView=document.getElementById('question-view');
@@ -90,7 +110,7 @@
     const scoreEl=document.getElementById('score');
     function startTimer(){ timeLeft = 60; timerText.textContent = '1:00'; timerCircle.style.strokeDashoffset = '0'; if (timerInterval) clearInterval(timerInterval); timerInterval = setInterval(() => { timeLeft--; const mins = Math.floor(timeLeft / 60); const secs = timeLeft % 60; timerText.textContent = mins + ':' + (secs < 10 ? '0' : '') + secs; const progress = (totalTime - timeLeft) / totalTime; timerCircle.style.strokeDashoffset = circumference * progress; if (timeLeft <= 0) { clearInterval(timerInterval); handleTimeout(); } }, 1000); }
     function handleTimeout(){ try { if (intenseAudio) { intenseAudio.pause(); intenseAudio.currentTime = 0; } } catch(e){} try { const buzzer = new Audio('wrong.mp3'); buzzer.play(); } catch(e){} const item = questions[index]; const all = choicesEl.querySelectorAll('button'); all.forEach(b => b.disabled = true); const buttons = Array.from(all); const correctBtn = buttons[item.correct]; if (correctBtn) correctBtn.classList.add('correct'); feedback.textContent = 'Time\'s up! The correct answer is ' + item.choices[item.correct] + '.'; feedback.style.color = '#c62828'; nextBtn.style.display = 'inline-block'; }
-    function render(){ const item = questions[index]; qText.textContent = item.q; choicesEl.innerHTML = ''; feedback.textContent = ''; nextBtn.style.display = 'none'; try { intenseAudio = new Audio('intense.mp3'); intenseAudio.loop = true; intenseAudio.play(); } catch(e){} startTimer(); item.choices.forEach((label,i)=>{ const btn = document.createElement('button'); btn.className = 'level-btn choice-btn'; btn.textContent = label; btn.addEventListener('click', ()=>{ if (timerInterval) clearInterval(timerInterval); try { if (intenseAudio) { intenseAudio.pause(); intenseAudio.currentTime = 0; } } catch(e){} const all = choicesEl.querySelectorAll('button'); all.forEach(b=>b.disabled = true); const correctIndex = item.correct; const isCorrect = i === correctIndex; if (isCorrect) { btn.classList.add('correct'); feedback.textContent = 'Correct!'; feedback.style.color = '#0a8a0a'; score++; if (window && window.playPraiseKey) try{ window.playPraiseKey('correct'); }catch(e){} } else { btn.classList.add('wrong'); const buttons = Array.from(choicesEl.querySelectorAll('button')); const correctBtn = buttons[correctIndex]; if (correctBtn) correctBtn.classList.add('correct'); feedback.textContent = 'Incorrect. The correct answer is ' + item.choices[item.correct] + '.'; feedback.style.color = '#c62828'; try { const wrongAudio = new Audio('wrong.mp3'); wrongAudio.play(); } catch(e){} } nextBtn.textContent = index < questions.length - 1 ? 'Next' : 'Finish'; nextBtn.style.display = 'inline-block'; }); choicesEl.appendChild(btn); }); }
+    function render(){ const item = questions[index]; qText.textContent = item.q; choicesEl.innerHTML = ''; feedback.textContent = ''; nextBtn.style.display = 'none'; try { intenseAudio = new Audio('pou.mp3'); intenseAudio.loop = true; intenseAudio.play(); } catch(e){} startTimer(); item.choices.forEach((label,i)=>{ const btn = document.createElement('button'); btn.className = 'level-btn choice-btn'; btn.textContent = label; btn.addEventListener('click', ()=>{ if (timerInterval) clearInterval(timerInterval); try { if (intenseAudio) { intenseAudio.pause(); intenseAudio.currentTime = 0; } } catch(e){} const all = choicesEl.querySelectorAll('button'); all.forEach(b=>b.disabled = true); const correctIndex = item.correct; const isCorrect = i === correctIndex; if (isCorrect) { btn.classList.add('correct'); feedback.textContent = 'Correct!'; feedback.style.color = '#0a8a0a'; score++; if (window && window.playPraiseKey) try{ window.playPraiseKey('correct'); }catch(e){} } else { btn.classList.add('wrong'); const buttons = Array.from(choicesEl.querySelectorAll('button')); const correctBtn = buttons[correctIndex]; if (correctBtn) correctBtn.classList.add('correct'); feedback.textContent = 'Incorrect. The correct answer is ' + item.choices[item.correct] + '.'; feedback.style.color = '#c62828'; try { const wrongAudio = new Audio('wrong.mp3'); wrongAudio.play(); } catch(e){} } nextBtn.textContent = index < questions.length - 1 ? 'Next' : 'Finish'; nextBtn.style.display = 'inline-block'; }); choicesEl.appendChild(btn); }); }
     startBtn.addEventListener('click', ()=>{ intro.style.display='none'; qView.style.display='block'; render(); });
     nextBtn.addEventListener('click', ()=>{ 
       if (timerInterval) clearInterval(timerInterval); 
@@ -104,16 +124,26 @@
         // Save score to localStorage
         try {
           const percentage = Math.round((score / questions.length) * 100);
-          const existingScores = JSON.parse(localStorage.getItem('webapex_scores') || '[]');
-          existingScores.push({
-            category: 'grammar',
+          const scoreData = {
+            category: 'partsOfSpeech',
             testName: 'Adverb Quiz',
             score: score,
             total: questions.length,
             percentage: percentage,
             date: new Date().toISOString()
-          });
-          localStorage.setItem('webapex_scores', JSON.stringify(existingScores));
+          };
+          
+          // Use unified save function (saves to both localStorage and Firebase with username)
+          if (typeof saveScore !== 'undefined') {
+            saveScore(scoreData).catch(e => console.error('Error saving score:', e));
+          } else {
+            // Fallback to localStorage only
+            try {
+              const existingScores = JSON.parse(localStorage.getItem('webapex_scores') || '[]');
+              existingScores.push(scoreData);
+              localStorage.setItem('webapex_scores', JSON.stringify(existingScores));
+            } catch(e) { console.error('Error saving to localStorage:', e); }
+          }
         } catch (e) {
           console.error('Error saving score:', e);
         }

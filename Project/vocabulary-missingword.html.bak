@@ -3,11 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Subject-Verb Agreement Quiz</title>
+  <title>Missing Word</title>
   <link rel="stylesheet" href="vocabularytest.css">
   <link rel="stylesheet" href="pretest.css">
   <link rel="stylesheet" href="design.css">
-  
   <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
@@ -19,7 +18,7 @@
   </button>
 
   <main class="canvas" role="main">
-    <h1 class="title">Subject-Verb Agreement</h1>
+    <h1 class="title">Missing Word</h1>
 
     <section id="intro" class="intro">
       <div id="instruction-banner" style="max-width:680px; margin:18px auto; padding:12px 14px; border-radius:4px; background:rgba(0,0,0,0.02); text-align:center; font-weight:700; color:#074; font-size:18px;">
@@ -54,18 +53,14 @@
     <section id="completion" class="intro" style="display:none;">
       <h2 class="title">Quiz Completed</h2>
       <p id="scoreText" class="subtitle" style="font-size:20px;"></p>
-      <div id="answerKey" style="margin-top:12px; text-align:left; max-width:720px; margin-left:auto; margin-right:auto;">
-        <h3 style="text-align:center;">Answer Key</h3>
-        <ol id="keyList"></ol>
-      </div>
+      <!-- answer key removed per site settings (do not reveal answer key here) -->
       
       <!-- References Section -->
       <div style="margin-top: 30px; padding: 20px; background: rgba(255,255,255,0.9); border-radius: 12px; text-align: left; max-width:720px; margin-left:auto; margin-right:auto; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
         <h3 style="font-size: 18px; font-weight: 700; color: #402688; margin-bottom: 12px; text-align: center;">References</h3>
         <div style="font-size: 14px; line-height: 1.8; color: #333;">
-          <p style="margin: 8px 0;">Murphy, R. (2019). <em>English grammar in use</em> (5th ed.). Cambridge University Press.</p>
           <p style="margin: 8px 0;">
-            <a href="https://www.dochub.com/fillable-form/24112-subject-verb-agreement-worksheets-with-answers-7th-grade-pdf" target="_blank" style="color: #402688; text-decoration: underline;">https://www.dochub.com/fillable-form/24112-subject-verb-agreement-worksheets-with-answers-7th-grade-pdf</a>
+            Merriam-Webster Dictionary. (n.d.). <em>Dictionary</em>. Retrieved from <a href="https://www.merriam-webster.com/dictionary" target="_blank" style="color: #402688; text-decoration: underline;">https://www.merriam-webster.com/dictionary</a>
           </p>
         </div>
       </div>
@@ -74,55 +69,29 @@
 
   <script>
     const questions = [
-      {q:'The cat (runs / run) across the yard.', choices:['runs','run'], correct:0},
-      {q:'The students (studies / study) for the exam.', choices:['studies','study'], correct:1},
-      {q:'My sister (likes / like) chocolate.', choices:['likes','like'], correct:0},
-      {q:'The flowers (blooms / bloom) in the summer.', choices:['blooms','bloom'], correct:1},
-      {q:'This book (is / are) very interesting.', choices:['is','are'], correct:0},
-      {q:'These apples (looks / look) fresh.', choices:['looks','look'], correct:1},
-      {q:'The car (needs / need) new tires.', choices:['needs','need'], correct:0},
-      {q:'The babies (cries / cry) loudly.', choices:['cries','cry'], correct:1},
-      {q:'The athlete (trains / train) every day.', choices:['trains','train'], correct:0},
-      {q:'The chairs (was / were) placed neatly.', choices:['was','were'], correct:1},
-      {q:'Everyone (was / were) excited for the trip.', choices:['was','were'], correct:0},
-      {q:'Each student (has / have) a folder.', choices:['has','have'], correct:0},
-      {q:'Neither answer (seems / seem) correct.', choices:['seems','seem'], correct:0},
-      {q:'Anybody (is / are) welcome to join.', choices:['is','are'], correct:0},
-      {q:'Somebody (was / were) knocking on the door.', choices:['was','were'], correct:0},
-      {q:'Either option (works / work) for me.', choices:['works','work'], correct:0},
-      {q:'Nobody (wants / want) to fail the test.', choices:['wants','want'], correct:0},
-      {q:'Each of the bags (was / were) checked.', choices:['was','were'], correct:0},
-      {q:'Anyone (is / are) allowed to participate.', choices:['is','are'], correct:0},
-      {q:'Neither of them (needs / need) help.', choices:['needs','need'], correct:0},
-      {q:'The color of the fish and birds (serves / serve) as a protection.', choices:['serves','serve'], correct:0},
-      {q:'One of those students (was / were) late again.', choices:['was','were'], correct:0},
-      {q:'The teacher, as well as the students, (was / were) praised.', choices:['was','were'], correct:0},
-      {q:"A happy smile or a friendly hello (doesn't / don't) hurt anyone.", choices:["doesn't","don't"], correct:0},
-      {q:'Neither one of our neighbors (has / have) any children.', choices:['has','have'], correct:0},
-      {q:'The student, together with his teachers, (was / were) in the room.', choices:['was','were'], correct:0},
-      {q:'The coach and his assistant (teaches / teach) us patiently.', choices:['teaches','teach'], correct:1},
-      {q:'The coach or his assistant (teaches / teach) us patiently.', choices:['teaches','teach'], correct:0},
-      {q:'Either Jane or Joe (was / were) at the games.', choices:['was','were'], correct:0},
-      {q:'Either Jane or her sisters (was / were) at the games.', choices:['was','were'], correct:1}
+      {q:'1. His spending habits were extremely ________, far more than necessary.', choices:['exorbitant','minimal'], correct:0},
+      {q:'2. The family lived in a ________ mansion overlooking the ocean.', choices:['affluent','basic'], correct:0},
+      {q:'3. The carving was deeply ________ into the stone.', choices:['etched','erased'], correct:0},
+      {q:'4. She acted ________, knowing exactly what she wanted to accomplish.', choices:['deliberately','accidentally'], correct:0},
+      {q:'5. The argument escalated and soon they were loudly ________.', choices:['quarreling','greeting'], correct:0},
+      {q:'6. The old tree was ________ and carried away by the storm.', choices:['uprooted','planted'], correct:0},
+      {q:'7. The little stream looked like a peaceful ________.', choices:['creek','blaze'], correct:0},
+      {q:'8. His reaction was strange—some might even call it ________.', choices:['peculiar','ordinary'], correct:0},
+      {q:'9. His spending was extremely ________, far more than needed.', choices:['excessive','moderate'], correct:0},
+      {q:'10. The design was very ________, nothing unusual about it.', choices:['conventional','peculiar'], correct:0},
+      {q:'11. The top edges of the boat, called the ________, were freshly painted.', choices:['gunwales','anchors'], correct:0},
+      {q:'12. The tiny stream looked like a peaceful ________.', choices:['creek','mountain'], correct:0},
+      {q:'13. She acted ________ to make sure her plan worked.', choices:['deliberately','accidentally'], correct:0},
+      {q:'14. The carving was ________ into the stone.', choices:['etched','erased'], correct:0},
+      {q:'15. After the storm, the tree was completely ________.', choices:['uprooted','planted'], correct:0},
+      {q:'16. He refused to ________, even when they pushed him.', choices:['budge','jump'], correct:0},
+      {q:'17. The cows were ________ in the field all afternoon.', choices:['grazing','sleeping'], correct:0},
+      {q:'18. She felt very ________ before the big exam.', choices:['anxious','calm'], correct:0},
+      {q:'19. His ________ impressed everyone during the speech.', choices:['eloquence','silence'], correct:0},
+      {q:'20. The teacher hoped to ________ the students by praising their effort.', choices:['gratify','disappoint'], correct:0}
     ];
 
     let index = 0, score = 0; let intenseAudio = null; let timeLeft = 60; let timerInterval = null;
-    
-    // Autoplay pou.mp3 when entering this game mode
-    let gameModeAudio = null;
-    try {
-      gameModeAudio = new Audio('pou.mp3');
-      gameModeAudio.loop = true;
-      gameModeAudio.volume = 0.5;
-      gameModeAudio.play().catch(e => console.log('Autoplay blocked:', e));
-    } catch(e) {
-      console.log('Audio setup failed:', e);
-    }
-    
-    // Stop game music when leaving page
-    window.addEventListener('beforeunload', () => {
-      try { if (gameModeAudio) gameModeAudio.pause(); } catch(e) {}
-    });
     const titleEl = document.querySelector('.title');
     const intro = document.getElementById('intro');
     const startBtn = document.getElementById('startBtn');
@@ -191,14 +160,31 @@
         scoreText.textContent = 'You got ' + score + ' / ' + questions.length;
         
         // Save score to localStorage
-        const percentage = (score / questions.length) * 100;
-        saveScore({
-          category: 'grammar',
-          testName: 'Subject-Verb Agreement Quiz',
-          score: score,
-          total: questions.length,
-          percentage: percentage
-        });
+        try {
+          const percentage = Math.round((score / questions.length) * 100);
+          const scoreData = {
+            category: 'vocabulary',
+            testName: 'Missing Word Quiz',
+            score: score,
+            total: questions.length,
+            percentage: percentage,
+            date: new Date().toISOString()
+          };
+          
+          // Use unified save function (saves to both localStorage and Firebase with username)
+          if (typeof saveScore !== 'undefined') {
+            saveScore(scoreData).catch(e => console.error('Error saving score:', e));
+          } else {
+            // Fallback to localStorage only
+            try {
+              const existingScores = JSON.parse(localStorage.getItem('webapex_scores') || '[]');
+              existingScores.push(scoreData);
+              localStorage.setItem('webapex_scores', JSON.stringify(existingScores));
+            } catch(e) { console.error('Error saving to localStorage:', e); }
+          }
+        } catch (e) {
+          console.error('Error saving score:', e);
+        }
         
         try{
           const total = questions.length || 0;
@@ -209,9 +195,15 @@
             else if (pct >= 50) window.playPraiseKey('good job');
           }
         }catch(e){}
-        // hide the answer key (do not show or populate it)
-        const answerKeyDiv = document.getElementById('answerKey');
-        if (answerKeyDiv) answerKeyDiv.style.display = 'none';
+        if (keyList) {
+          keyList.innerHTML = '';
+          questions.forEach((qq,i)=>{
+            const li = document.createElement('li');
+            const letter = String.fromCharCode(65+qq.correct);
+            li.textContent = (i+1) + '. ' + qq.q.replace(/^\d+\.\s*/, '') + ' — ' + letter + '. ' + qq.choices[qq.correct];
+            keyList.appendChild(li);
+          });
+        }
       }
     });
   </script>

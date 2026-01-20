@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Storage Test - WebApex</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; background: #667eea; color: white; border: none; border-radius: 4px; }
+        button:hover { background: #5568d3; }
+        button.danger { background: #e53e3e; }
+        button.danger:hover { background: #c53030; }
+        pre { background: #f7fafc; padding: 15px; border-radius: 4px; overflow-x: auto; }
+        .username-box { background: #edf2f7; padding: 15px; border-radius: 4px; margin: 15px 0; }
+        input { padding: 8px; margin: 5px; border: 2px solid #cbd5e0; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 WebApex Storage Debug Tool</h1>
+        
+        <div class="username-box">
+            <h3>Current Username</h3>
+            <p>Username: <strong id="currentUsername">-</strong></p>
+            <p>User ID: <strong id="currentUserId">-</strong></p>
+            <input type="text" id="newUsername" placeholder="Enter new username">
+            <button onclick="setUsername()">Set Username</button>
+        </div>
+        
+        <h3>Actions</h3>
+        <button onclick="checkStorage()">🔍 Check Storage</button>
+        <button onclick="updateAllScores()">✏️ Update All Scores with Current Username</button>
+        <button onclick="migratePartsOfSpeech()">🔄 Move Parts of Speech to Correct Category</button>
+        <button onclick="clearStorage()" class="danger">🗑️ Clear All Scores</button>
+        <button onclick="location.href='leaderboard.html'">📊 View Leaderboard</button>
+        
+        <h3>Storage Contents</h3>
+        <pre id="output">Click "Check Storage" to see data...</pre>
+    </div>
+    
+    <script>
+        function checkStorage() {
+            const output = document.getElementById('output');
+            const scores = localStorage.getItem('webapex_scores');
+            const userName = localStorage.getItem('webapex_userName');
+            const userId = localStorage.getItem('webapex_userId');
+            
+            document.getElementById('currentUsername').textContent = userName || 'Not set';
+            document.getElementById('currentUserId').textContent = userId || 'Not set';
+            
+            let text = '=== USERNAME INFO ===\n';
+            text += 'Username: ' + (userName || 'NOT SET') + '\n';
+            text += 'UserID: ' + (userId || 'NOT SET') + '\n\n';
+            text += '=== SCORES ===\n';
+            
+            if (scores) {
+                const parsed = JSON.parse(scores);
+                text += 'Total Scores: ' + parsed.length + '\n\n';
+                parsed.forEach((s, i) => {
+                    text += `[${i + 1}] ${s.testName || s.category}\n`;
+                    text += `    Score: ${s.score}/${s.total} (${s.percentage}%)\n`;
+                    text += `    Username: ${s.userName || 'MISSING'}\n`;
+                    text += `    Date: ${s.date}\n\n`;
+                });
+                text += '\n=== RAW JSON ===\n' + JSON.stringify(parsed, null, 2);
+            } else {
+                text += 'No scores found in localStorage';
+            }
+            
+            output.textContent = text;
+        }
+        
+        function setUsername() {
+            const newName = document.getElementById('newUsername').value.trim();
+            if (newName) {
+                localStorage.setItem('webapex_userName', newName);
+                alert('Username set to: ' + newName);
+                checkStorage();
+            } else {
+                alert('Please enter a username');
+            }
+        }
+        
+        function updateAllScores() {
+            const userName = localStorage.getItem('webapex_userName');
+            if (!userName) {
+                alert('Please set a username first!');
+                return;
+            }
+            
+            const scores = localStorage.getItem('webapex_scores');
+            if (!scores) {
+                alert('No scores to update');
+                return;
+            }
+            
+            const parsed = JSON.parse(scores);
+            let updated = 0;
+            
+            parsed.forEach(s => {
+                if (!s.userName || s.userName === 'Anonymous') {
+                    s.userName = userName;
+                    updated++;
+                }
+            });
+            
+            localStorage.setItem('webapex_scores', JSON.stringify(parsed));
+            alert(`Updated ${updated} scores with username: ${userName}`);
+            checkStorage();
+        }
+        
+        function migratePartsOfSpeech() {
+            const scores = localStorage.getItem('webapex_scores');
+            if (!scores) {
+                alert('No scores to migrate');
+                return;
+            }
+            
+            const parsed = JSON.parse(scores);
+            let migrated = 0;
+            
+            // List of parts of speech quiz names
+            const partsOfSpeechQuizzes = [
+                'Noun Quiz', 'Pronoun Quiz', 'Verb Quiz', 'Adjective Quiz',
+                'Adverb Quiz', 'Conjunction Quiz', 'Interjection Quiz', 'Preposition Quiz'
+            ];
+            
+            parsed.forEach(s => {
+                if (s.category === 'grammar' && partsOfSpeechQuizzes.includes(s.testName)) {
+                    s.category = 'partsOfSpeech';
+                    migrated++;
+                }
+            });
+            
+            localStorage.setItem('webapex_scores', JSON.stringify(parsed));
+            alert(`Migrated ${migrated} parts of speech scores to correct category!`);
+            checkStorage();
+        }
+        
+        function clearStorage() {
+            if (confirm('Clear all scores? This cannot be undone!')) {
+                localStorage.removeItem('webapex_scores');
+                alert('All scores cleared!');
+                checkStorage();
+            }
+        }
+        
+        // Auto-check on load
+        checkStorage();
+    </script>
+</body>
+</html>

@@ -33,6 +33,13 @@
                     <path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
                 </svg>
             </button>
+            
+            <!-- Refresh button -->
+            <button class="back-btn" onclick="refreshLeaderboard()" title="Refresh Leaderboard" style="left: 60px;">
+                <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+                    <path fill="currentColor" d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+                </svg>
+            </button>
 
             <!-- Title -->
             <div class="title-container">
@@ -114,6 +121,24 @@
 
         let currentCategory = 'all';
         let isLoadingFromFirestore = false;
+        // Check if Firebase is enabled in firebase-config.js
+        let useFirebase = (typeof USE_FIREBASE !== 'undefined') ? USE_FIREBASE : false;
+
+        // Refresh function for manual reload
+        function refreshLeaderboard() {
+            console.log('Manual refresh triggered');
+            isLoadingFromFirestore = false;
+            if (useFirebase && typeof getLeaderboardFromFirestore !== 'undefined') {
+                loadScoresFromFirestore().then(() => {
+                    displayLeaderboard(currentCategory);
+                    console.log('Leaderboard refreshed from Firebase');
+                });
+            } else {
+                loadScoresFromLocalStorage();
+                displayLeaderboard(currentCategory);
+                console.log('Leaderboard refreshed from localStorage');
+            }
+        }
 
         // Load scores from Firestore
         async function loadScoresFromFirestore() {
@@ -154,12 +179,21 @@
         function loadScoresFromLocalStorage() {
             try {
                 const storedScores = localStorage.getItem('webapex_scores');
+                const currentUserName = localStorage.getItem('webapex_userName');
+                console.log('Current username in localStorage:', currentUserName);
+                console.log('Raw localStorage data:', storedScores);
+                
                 if (storedScores) {
                     const scores = JSON.parse(storedScores);
+                    console.log('Parsed scores:', scores);
+                    console.log('Total scores found:', scores.length);
                     
-                    // Add userName field if missing
+                    // Add userName field if missing - use current username or Anonymous
                     scores.forEach(s => {
-                        if (!s.userName) s.userName = 'Anonymous';
+                        if (!s.userName) {
+                            s.userName = currentUserName || 'Anonymous';
+                        }
+                        console.log('Score:', s.testName, '- Username:', s.userName);
                     });
                     
                     // Organize scores by category
@@ -173,6 +207,9 @@
                     leaderboardData.posttest = scores.filter(s => s.category === 'posttest' || s.category === 'post-test').sort((a, b) => b.score - a.score);
                     
                     console.log('Loaded ' + scores.length + ' scores from localStorage');
+                    console.log('Grammar scores:', leaderboardData.grammar.length);
+                    console.log('Reading scores:', leaderboardData.reading.length);
+                    console.log('Vocabulary scores:', leaderboardData.vocabulary.length);
                 }
             } catch (e) {
                 console.error('Error loading scores from localStorage:', e);
@@ -208,13 +245,19 @@
                     rankIcon = '<svg viewBox="0 0 24 24" width="24" height="24"><path fill="#cd7f32" d="M12 2l2.4 7.4h7.6l-6 4.6 2.3 7-6.3-4.6-6.3 4.6 2.3-7-6-4.6h7.6z"/></svg>';
                 }
 
+                // Prefer per-entry userName. If missing, fall back to global stored name (player currently using the site), then 'Anonymous'
+                const globalName = localStorage.getItem('webapex_userName');
+                const displayName = entry.userName || entry.name || globalName || 'Anonymous';
+                
+                console.log(`Entry #${index + 1}: ${entry.testName} - userName: ${entry.userName}, displayName: ${displayName}`);
+
                 item.innerHTML = `
                     <div class="rank-badge">
                         ${rankIcon}
                         <span class="rank-number">${index + 1}</span>
                     </div>
                     <div class="player-info">
-                        <span class="player-name">${entry.userName || entry.name || 'Anonymous'}</span>
+                        <span class="player-name">${displayName}</span>
                         <span class="player-category">${entry.testName || entry.category}</span>
                     </div>
                     <div class="player-score">${entry.score}${entry.total ? '/' + entry.total : ''}</div>
@@ -239,14 +282,29 @@
 
         // Initialize - wait for Firebase to be ready
         setTimeout(async () => {
-            if (typeof getLeaderboardFromFirestore !== 'undefined') {
+            if (useFirebase && typeof getLeaderboardFromFirestore !== 'undefined') {
+                console.log('Using Firebase Realtime Database');
                 await loadScoresFromFirestore();
             } else {
-                console.log('Firestore not available, using localStorage only');
+                console.log('Using localStorage only (set useFirebase = true to enable Firebase)');
                 loadScoresFromLocalStorage();
             }
             displayLeaderboard(currentCategory);
         }, 500);
+        
+        // Also reload when page becomes visible (in case user navigated back)
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
+                console.log('Page visible, reloading scores...');
+                if (useFirebase && typeof getLeaderboardFromFirestore !== 'undefined') {
+                    loadScoresFromFirestore().then(() => displayLeaderboard(currentCategory));
+                } else {
+                    loadScoresFromLocalStorage();
+                    displayLeaderboard(currentCategory);
+                }
+            }
+        });
+        
         displayLeaderboard('all');
     </script>
 </body>

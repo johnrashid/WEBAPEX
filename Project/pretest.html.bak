@@ -875,22 +875,6 @@
   <script src="audio.js" defer></script>
 
   <script>
-    // Autoplay pou.mp3 when entering this game mode
-    let gameModeAudio = null;
-    try {
-      gameModeAudio = new Audio('pou.mp3');
-      gameModeAudio.loop = true;
-      gameModeAudio.volume = 0.5;
-      gameModeAudio.play().catch(e => console.log('Autoplay blocked:', e));
-    } catch(e) {
-      console.log('Audio setup failed:', e);
-    }
-    
-    // Stop game music when leaving page
-    window.addEventListener('beforeunload', () => {
-      try { if (gameModeAudio) gameModeAudio.pause(); } catch(e) {}
-    });
-    
     // Answer key (not visible to students, used for grading)
     const answerKey = {
       q1: 'C', q2: 'C', q3: 'C', q4: 'A', q5: 'D',

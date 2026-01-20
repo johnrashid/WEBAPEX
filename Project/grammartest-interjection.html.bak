@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Grammar Test - Prepositions</title>
+  <title>Grammar Test - Interjections</title>
   <link rel="stylesheet" href="pretest.css">
   <link rel="stylesheet" href="grammartest.css">
   <link rel="stylesheet" href="design.css">
@@ -20,15 +20,15 @@
   </button>
   <main class="canvas" role="main">
     <section id="intro" class="intro" style="max-width:780px; text-align:center;">
-      <h1 class="title">Preposition Quiz</h1>
+      <h1 class="title">Interjection Quiz</h1>
       <div id="instruction-banner" style="max-width:680px; margin:18px auto; padding:12px 14px; border-radius:4px; background:rgba(0,0,0,0.02); text-align:center; font-weight:700; color:#074; font-size:18px;">
-        Directions: Identify the preposition in each sentence. Select the correct answer before the timer ends.
+        Directions: Choose the correct interjection for each sentence. Select the correct answer before the timer ends.
       </div>
       <button id="start" class="next-btn">Start Quiz</button>
     </section>
     <div id="question-view" class="question" style="max-width:780px; text-align:center; display:none;">
       <div id="instruction-banner-question" style="max-width:980px; margin:8px auto 18px; padding:12px 18px; border-radius:4px; background:rgba(0,0,0,0.02); text-align:center; font-weight:700; color:#074; font-size:18px;">
-        Directions: Identify the preposition in each sentence. Select the correct answer before the timer ends.
+        Directions: Choose the correct interjection for each sentence. Select the correct answer before the timer ends.
       </div>
       <div id="timer" style="position:relative; width:70px; height:70px; margin:0 auto 12px;">
         <svg width="70" height="70" style="transform:rotate(-90deg);">
@@ -66,34 +66,18 @@
   </main>
   <script>
     const questions = [
-      { q: '1. The dog barked ___ the stranger.', choices: ['on','at','in','to'], correct: 1 },
-      { q: '2. Maria put the book ___ the table.', choices: ['at','on','in','to'], correct: 1 },
-      { q: '3. We walked ___ the park yesterday.', choices: ['at','in','through','on'], correct: 2 },
-      { q: '4. He is good ___ playing the guitar.', choices: ['in','at','on','to'], correct: 1 },
-      { q: '5. The cat jumped ___ the wall.', choices: ['in','over','on','at'], correct: 1 },
-      { q: '6. She divided the cake ___ her friends.', choices: ['to','among','between','with'], correct: 1 },
-      { q: '7. I will meet you ___ 5 PM.', choices: ['at','in','on','to'], correct: 0 },
-      { q: '8. We traveled ___ France last summer.', choices: ['at','to','in','on'], correct: 1 },
-      { q: '9. The keys are ___ the drawer.', choices: ['at','to','in','on'], correct: 2 },
-      { q: '10. He walked slowly ___ the road.', choices: ['at','in','along','over'], correct: 2 }
+      { q: '1. ______! That really hurt!', choices: ['A. Oh','B. Ouch','C. Well','D. Aha'], correct: 1 },
+      { q: '2. ______! You came!', choices: ['A. Oh','B. Well','C. Er','D. Yay'], correct: 0 },
+      { q: '3. ______! That\'s amazing!', choices: ['A. Erm','B. Well','C. Wow','D. Oh'], correct: 2 },
+      { q: '4. ______! That\'s disgusting!', choices: ['A. Eww','B. Oh','C. Phew','D. Yum'], correct: 0 },
+      { q: '5. ______! I forgot. Sorry.', choices: ['A. Yeah','B. Oops','C. Phew','D. Er'], correct: 1 },
+      { q: '6. The answer is ______.', choices: ['A. Yeah','B. Umm','C. Ouch','D. Wow'], correct: 1 },
+      { q: '7. ______! I won!', choices: ['A. Yay','B. Aha','C. Er','D. Oh'], correct: 0 },
+      { q: '8. ______! I found it!', choices: ['A. Ouch','B. Aha','C. Er','D. Wow'], correct: 1 },
+      { q: '9. ______! That looks delicious!', choices: ['A. Yum','B. Eww','C. Yipee','D. Oh'], correct: 0 },
+      { q: '10. ______ I thought the test was next week.', choices: ['A. Aha','B. Eww','C. Oh','D. Erm'], correct: 2 }
     ];
     let index=0, score=0; let intenseAudio = null; let timeLeft = 60; let timerInterval = null;
-    
-    // Autoplay pou.mp3 when entering this game mode
-    let gameModeAudio = null;
-    try {
-      gameModeAudio = new Audio('pou.mp3');
-      gameModeAudio.loop = true;
-      gameModeAudio.volume = 0.5;
-      gameModeAudio.play().catch(e => console.log('Autoplay blocked:', e));
-    } catch(e) {
-      console.log('Audio setup failed:', e);
-    }
-    
-    // Stop game music when leaving page
-    window.addEventListener('beforeunload', () => {
-      try { if (gameModeAudio) gameModeAudio.pause(); } catch(e) {}
-    });
     const intro=document.getElementById('intro');
     const startBtn=document.getElementById('start');
     const qView=document.getElementById('question-view');
@@ -126,7 +110,7 @@
           const percentage = Math.round((score / questions.length) * 100);
           const scoreData = {
             category: 'partsOfSpeech',
-            testName: 'Preposition Quiz',
+            testName: 'Interjection Quiz',
             score: score,
             total: questions.length,
             percentage: percentage,

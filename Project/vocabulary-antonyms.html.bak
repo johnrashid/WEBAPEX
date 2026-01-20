@@ -3,11 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Subject-Verb Agreement Quiz</title>
+  <title>Antonyms Test</title>
   <link rel="stylesheet" href="vocabularytest.css">
   <link rel="stylesheet" href="pretest.css">
   <link rel="stylesheet" href="design.css">
-  
   <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
@@ -15,22 +14,21 @@
 </head>
 <body>
   <button type="button" class="back-btn" onclick="history.back()" aria-label="Go back">
-    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11H7.83l5.58-5.59L12 4 4 12l8 8 1.41-1.41L7.83 13H20v-2z" fill="#fff"/></svg>
+    ◀
   </button>
-
   <main class="canvas" role="main">
-    <h1 class="title">Subject-Verb Agreement</h1>
+    <h1 class="title">Antonyms</h1>
 
     <section id="intro" class="intro">
       <div id="instruction-banner" style="max-width:680px; margin:18px auto; padding:12px 14px; border-radius:4px; background:rgba(0,0,0,0.02); text-align:center; font-weight:700; color:#074; font-size:18px;">
-        Directions: Fill in the missing word by choosing the correct option. Select the correct answer before the timer ends.
+        Directions: Read each sentence carefully. Choose the word (A, B, C, or D) that best matches the prompt. Select the correct answer before the timer ends.
       </div>
       <button id="startBtn" class="next-btn">Start Quiz</button>
     </section>
 
     <section id="questionView" class="question" style="display:none;">
       <div id="instruction-banner-question" style="max-width:980px; margin:8px auto 18px; padding:12px 18px; border-radius:4px; background:rgba(0,0,0,0.02); text-align:center; font-weight:700; color:#074; font-size:18px;">
-        Directions: Fill in the missing word by choosing the correct option. Select the correct answer before the timer ends.
+        Directions: Read each sentence carefully. Choose the word (A, B, C, or D) that best matches the prompt. Select the correct answer before the timer ends.
       </div>
       <div id="timer" style="position:relative; width:70px; height:70px; margin:0 auto 12px;">
         <svg width="70" height="70" style="transform:rotate(-90deg);">
@@ -54,75 +52,45 @@
     <section id="completion" class="intro" style="display:none;">
       <h2 class="title">Quiz Completed</h2>
       <p id="scoreText" class="subtitle" style="font-size:20px;"></p>
-      <div id="answerKey" style="margin-top:12px; text-align:left; max-width:720px; margin-left:auto; margin-right:auto;">
-        <h3 style="text-align:center;">Answer Key</h3>
-        <ol id="keyList"></ol>
-      </div>
+      <!-- answer key removed per site settings (do not reveal answer key here) -->
       
       <!-- References Section -->
       <div style="margin-top: 30px; padding: 20px; background: rgba(255,255,255,0.9); border-radius: 12px; text-align: left; max-width:720px; margin-left:auto; margin-right:auto; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
         <h3 style="font-size: 18px; font-weight: 700; color: #402688; margin-bottom: 12px; text-align: center;">References</h3>
         <div style="font-size: 14px; line-height: 1.8; color: #333;">
-          <p style="margin: 8px 0;">Murphy, R. (2019). <em>English grammar in use</em> (5th ed.). Cambridge University Press.</p>
           <p style="margin: 8px 0;">
-            <a href="https://www.dochub.com/fillable-form/24112-subject-verb-agreement-worksheets-with-answers-7th-grade-pdf" target="_blank" style="color: #402688; text-decoration: underline;">https://www.dochub.com/fillable-form/24112-subject-verb-agreement-worksheets-with-answers-7th-grade-pdf</a>
+            <a href="https://www.k5learning.com/worksheets/vocabulary/5th-grade-antonyms-1.jpg" target="_blank" style="color: #402688; text-decoration: underline;">https://www.k5learning.com/worksheets/vocabulary/5th-grade-antonyms-1.jpg</a>
           </p>
         </div>
       </div>
     </section>
   </main>
 
-  <script>
+    <script>
     const questions = [
-      {q:'The cat (runs / run) across the yard.', choices:['runs','run'], correct:0},
-      {q:'The students (studies / study) for the exam.', choices:['studies','study'], correct:1},
-      {q:'My sister (likes / like) chocolate.', choices:['likes','like'], correct:0},
-      {q:'The flowers (blooms / bloom) in the summer.', choices:['blooms','bloom'], correct:1},
-      {q:'This book (is / are) very interesting.', choices:['is','are'], correct:0},
-      {q:'These apples (looks / look) fresh.', choices:['looks','look'], correct:1},
-      {q:'The car (needs / need) new tires.', choices:['needs','need'], correct:0},
-      {q:'The babies (cries / cry) loudly.', choices:['cries','cry'], correct:1},
-      {q:'The athlete (trains / train) every day.', choices:['trains','train'], correct:0},
-      {q:'The chairs (was / were) placed neatly.', choices:['was','were'], correct:1},
-      {q:'Everyone (was / were) excited for the trip.', choices:['was','were'], correct:0},
-      {q:'Each student (has / have) a folder.', choices:['has','have'], correct:0},
-      {q:'Neither answer (seems / seem) correct.', choices:['seems','seem'], correct:0},
-      {q:'Anybody (is / are) welcome to join.', choices:['is','are'], correct:0},
-      {q:'Somebody (was / were) knocking on the door.', choices:['was','were'], correct:0},
-      {q:'Either option (works / work) for me.', choices:['works','work'], correct:0},
-      {q:'Nobody (wants / want) to fail the test.', choices:['wants','want'], correct:0},
-      {q:'Each of the bags (was / were) checked.', choices:['was','were'], correct:0},
-      {q:'Anyone (is / are) allowed to participate.', choices:['is','are'], correct:0},
-      {q:'Neither of them (needs / need) help.', choices:['needs','need'], correct:0},
-      {q:'The color of the fish and birds (serves / serve) as a protection.', choices:['serves','serve'], correct:0},
-      {q:'One of those students (was / were) late again.', choices:['was','were'], correct:0},
-      {q:'The teacher, as well as the students, (was / were) praised.', choices:['was','were'], correct:0},
-      {q:"A happy smile or a friendly hello (doesn't / don't) hurt anyone.", choices:["doesn't","don't"], correct:0},
-      {q:'Neither one of our neighbors (has / have) any children.', choices:['has','have'], correct:0},
-      {q:'The student, together with his teachers, (was / were) in the room.', choices:['was','were'], correct:0},
-      {q:'The coach and his assistant (teaches / teach) us patiently.', choices:['teaches','teach'], correct:1},
-      {q:'The coach or his assistant (teaches / teach) us patiently.', choices:['teaches','teach'], correct:0},
-      {q:'Either Jane or Joe (was / were) at the games.', choices:['was','were'], correct:0},
-      {q:'Either Jane or her sisters (was / were) at the games.', choices:['was','were'], correct:1}
+      {q:'1. She stayed very CALM during the loud storm.', choices:['Quiet','Excited','Soft','Slow'], correct:1},
+      {q:'2. We learned about the PAST in history class.', choices:['Earlier','Long ago','Future','Ancient'], correct:2},
+      {q:'3. He worked hard to pay off his DEBT.', choices:['Money','Payment','Wealth','Price'], correct:2},
+      {q:'4. The soldiers refused to SURRENDER during the battle.', choices:['Resist','Allow','Bow','Accept'], correct:0},
+      {q:'5. She stood in the MIDDLE of the hallway.', choices:['Side','Center','Edge','Half'], correct:2},
+      {q:'6. The EXTERNAL walls of the building were painted blue.', choices:['Outside','Outward','Internal','Outer'], correct:2},
+      {q:'7. He is so CLUMSY that he often drops his books.', choices:['Messy','Hard','Graceful','Slow'], correct:2},
+      {q:'8. Their two paintings looked completely DIFFERENT.', choices:['Exact','Similar','Close','Equal'], correct:1},
+      {q:'9. The storm might DESTROY the old shed.', choices:['Break','Push','Create','Scatter'], correct:2},
+      {q:'10. She accepted the award with great HUMILITY.', choices:['Shyness','Pride','Respect','Calmness'], correct:1},
+      {q:'11. I lost my NOTEBOOK somewhere in the classroom.', choices:['Missing','Gone','Found','Taken'], correct:2},
+      {q:'12. Please FILL the cup with water.', choices:['Pack','Empty','Store','Build'], correct:1},
+      {q:'13. Students must COMPLY with school rules.', choices:['Allow','Help','Disobey','Copy'], correct:2},
+      {q:'14. He was INATTENTIVE during the lesson.', choices:['Busy','Quick','Focused','Open'], correct:2},
+      {q:'15. Today we practiced SUBTRACTION problems in math.', choices:['Multiply','Divide','Addition','Answer'], correct:2},
+      {q:'16. The plan was FLAWED and needed changes.', choices:['Wrong','Perfect','Small','Improved'], correct:1},
+      {q:'17. This new machine is very EFFICIENT.', choices:['Wasteful','Helpful','Fast','Useful'], correct:0},
+      {q:'18. Please COME here when you are ready.', choices:['Arrive','Move','Go','Start'], correct:2},
+      {q:'19. The SUBJECT of the sentence is “dog.”', choices:['Object','Topic','Title','Verb'], correct:0},
+      {q:'20. After being sick, he felt FEEBLE.', choices:['Light','Hard','Strong','Tall'], correct:2}
     ];
 
     let index = 0, score = 0; let intenseAudio = null; let timeLeft = 60; let timerInterval = null;
-    
-    // Autoplay pou.mp3 when entering this game mode
-    let gameModeAudio = null;
-    try {
-      gameModeAudio = new Audio('pou.mp3');
-      gameModeAudio.loop = true;
-      gameModeAudio.volume = 0.5;
-      gameModeAudio.play().catch(e => console.log('Autoplay blocked:', e));
-    } catch(e) {
-      console.log('Audio setup failed:', e);
-    }
-    
-    // Stop game music when leaving page
-    window.addEventListener('beforeunload', () => {
-      try { if (gameModeAudio) gameModeAudio.pause(); } catch(e) {}
-    });
     const titleEl = document.querySelector('.title');
     const intro = document.getElementById('intro');
     const startBtn = document.getElementById('startBtn');
@@ -191,14 +159,31 @@
         scoreText.textContent = 'You got ' + score + ' / ' + questions.length;
         
         // Save score to localStorage
-        const percentage = (score / questions.length) * 100;
-        saveScore({
-          category: 'grammar',
-          testName: 'Subject-Verb Agreement Quiz',
-          score: score,
-          total: questions.length,
-          percentage: percentage
-        });
+        try {
+          const percentage = Math.round((score / questions.length) * 100);
+          const scoreData = {
+            category: 'vocabulary',
+            testName: 'Antonyms Quiz',
+            score: score,
+            total: questions.length,
+            percentage: percentage,
+            date: new Date().toISOString()
+          };
+          
+          // Use unified save function (saves to both localStorage and Firebase with username)
+          if (typeof saveScore !== 'undefined') {
+            saveScore(scoreData).catch(e => console.error('Error saving score:', e));
+          } else {
+            // Fallback to localStorage only
+            try {
+              const existingScores = JSON.parse(localStorage.getItem('webapex_scores') || '[]');
+              existingScores.push(scoreData);
+              localStorage.setItem('webapex_scores', JSON.stringify(existingScores));
+            } catch(e) { console.error('Error saving to localStorage:', e); }
+          }
+        } catch (e) {
+          console.error('Error saving score:', e);
+        }
         
         try{
           const total = questions.length || 0;
@@ -209,9 +194,15 @@
             else if (pct >= 50) window.playPraiseKey('good job');
           }
         }catch(e){}
-        // hide the answer key (do not show or populate it)
-        const answerKeyDiv = document.getElementById('answerKey');
-        if (answerKeyDiv) answerKeyDiv.style.display = 'none';
+        if (keyList) {
+          keyList.innerHTML = '';
+          questions.forEach((qq,i)=>{
+            const li = document.createElement('li');
+            const letter = String.fromCharCode(65+qq.correct);
+            li.textContent = (i+1) + '. ' + qq.q.replace(/^\d+\.\s*/, '') + ' — ' + letter + '. ' + qq.choices[qq.correct];
+            keyList.appendChild(li);
+          });
+        }
       }
     });
   </script>

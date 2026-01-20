@@ -91,6 +91,22 @@
     let intenseAudio = null;
     let timeLeft = 60;
     let timerInterval = null;
+    
+    // Autoplay pou.mp3 when entering this game mode
+    let gameModeAudio = null;
+    try {
+      gameModeAudio = new Audio('pou.mp3');
+      gameModeAudio.loop = true;
+      gameModeAudio.volume = 0.5;
+      gameModeAudio.play().catch(e => console.log('Autoplay blocked:', e));
+    } catch(e) {
+      console.log('Audio setup failed:', e);
+    }
+    
+    // Stop game music when leaving page
+    window.addEventListener('beforeunload', () => {
+      try { if (gameModeAudio) gameModeAudio.pause(); } catch(e) {}
+    });
 
     const intro = document.getElementById('intro');
     const startBtn = document.getElementById('start');
@@ -146,7 +162,7 @@
       choicesEl.innerHTML = '';
       feedback.textContent = '';
       nextBtn.style.display = 'none';
-      try { intenseAudio = new Audio('intense.mp3'); intenseAudio.loop = true; intenseAudio.play(); } catch(e){}
+      try { intenseAudio = new Audio('pou.mp3'); intenseAudio.loop = true; intenseAudio.play(); } catch(e){}
       startTimer();
 
       item.choices.forEach((label,i)=>{
@@ -205,7 +221,7 @@
           try {
             const percentage = Math.round((score / questions.length) * 100);
             const scoreData = {
-              category: 'grammar',
+              category: 'partsOfSpeech',
               testName: 'Noun Quiz',
               score: score,
               total: questions.length,

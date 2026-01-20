@@ -30,6 +30,10 @@
     .progress-wrap.full .progress-fill{background:#28a745}
   </style>
   <link rel="stylesheet" href="design.css">
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <script src="firebase-config.js"></script>
 </head>
 <body>
 
@@ -455,16 +459,26 @@
           try {
             const totalQuestions = entries.length;
             const percentage = Math.round((score / totalQuestions) * 100);
-            const existingScores = JSON.parse(localStorage.getItem('webapex_scores') || '[]');
-            existingScores.push({
+            const scoreData = {
               category: 'glossary',
-              testName: 'Texts Glossary',
+              testName: 'Glossary Quiz',
               score: score,
               total: totalQuestions,
               percentage: percentage,
               date: new Date().toISOString()
-            });
-            localStorage.setItem('webapex_scores', JSON.stringify(existingScores));
+            };
+            
+            // Use unified save function (saves to both localStorage and Firebase with username)
+            if (typeof saveScore !== 'undefined') {
+              saveScore(scoreData).catch(e => console.error('Error saving score:', e));
+            } else {
+              // Fallback to localStorage only
+            try {
+              const existingScores = JSON.parse(localStorage.getItem('webapex_scores') || '[]');
+              existingScores.push(scoreData);
+              localStorage.setItem('webapex_scores', JSON.stringify(existingScores));
+            } catch(e) { console.error('Error saving to localStorage:', e); }
+          }
           } catch (e) {
             console.error('Error saving score:', e);
           }
@@ -497,16 +511,26 @@
           try {
             const totalQuestions = entries.length;
             const percentage = Math.round((score / totalQuestions) * 100);
-            const existingScores = JSON.parse(localStorage.getItem('webapex_scores') || '[]');
-            existingScores.push({
+            const scoreData = {
               category: 'glossary',
-              testName: 'Texts Glossary',
+              testName: 'Glossary Quiz',
               score: score,
               total: totalQuestions,
               percentage: percentage,
               date: new Date().toISOString()
-            });
-            localStorage.setItem('webapex_scores', JSON.stringify(existingScores));
+            };
+            
+            // Use unified save function (saves to both localStorage and Firebase with username)
+            if (typeof saveScore !== 'undefined') {
+              saveScore(scoreData).catch(e => console.error('Error saving score:', e));
+            } else {
+              // Fallback to localStorage only
+              try {
+                const existingScores = JSON.parse(localStorage.getItem('webapex_scores') || '[]');
+                existingScores.push(scoreData);
+              localStorage.setItem('webapex_scores', JSON.stringify(existingScores));
+            } catch(e) { console.error('Error saving to localStorage:', e); }
+          }
           } catch (e) {
             console.error('Error saving score:', e);
           }

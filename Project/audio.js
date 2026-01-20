@@ -168,6 +168,13 @@
       tryUnmutedAutoplay().then((ok) => { if (!ok) showEnableSoundPrompt(); });
     }
   };
+  
+  // Show a prompt to enable sound when autoplay is blocked
+  const showEnableSoundPrompt = () => {
+    console.info('audio.js: autoplay blocked - user interaction required to enable sound');
+    // Mark that user gesture is needed
+    sessionStorage.setItem('webapex-audio-user-gesture', 'false');
+  };
 
   // Restore position and attempt autoplay only on allowed pages.
   if (audioAllowed) restorePosition();

@@ -1,9 +1,23 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
+  <met    <section id="completion" class="intro" style="max-width:780px; text-align:center; display:none;">
+      <h2 class="title">Quiz Completed</h2>
+      <p id="score" class="subtitle" style="font-size:22px;"></p>
+      
+      <!-- References Section -->
+      <div style="margin-top: 30px; padding: 20px; background: rgba(255,255,255,0.9); border-radius: 12px; text-align: left; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+        <h3 style="font-size: 18px; font-weight: 700; color: #402688; margin-bottom: 12px; text-align: center;">References</h3>
+        <div style="font-size: 14px; line-height: 1.8; color: #333;">
+          <p style="margin: 8px 0;">Murphy, R. (2019). <em>English grammar in use</em> (5th ed.). Cambridge University Press.</p>
+          <p style="margin: 8px 0;">
+            <a href="https://www.dochub.com/fillable-form/24112-subject-verb-agreement-worksheets-with-answers-7th-grade-pdf" target="_blank" style="color: #402688; text-decoration: underline;">https://www.dochub.com/fillable-form/24112-subject-verb-agreement-worksheets-with-answers-7th-grade-pdf</a>
+          </p>
+        </div>
+      </div>
+    </section>arset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Grammar Test - Prepositions</title>
+  <title>Grammar Test - Conjunctions</title>
   <link rel="stylesheet" href="pretest.css">
   <link rel="stylesheet" href="grammartest.css">
   <link rel="stylesheet" href="design.css">
@@ -20,15 +34,15 @@
   </button>
   <main class="canvas" role="main">
     <section id="intro" class="intro" style="max-width:780px; text-align:center;">
-      <h1 class="title">Preposition Quiz</h1>
+      <h1 class="title">Conjunction Quiz</h1>
       <div id="instruction-banner" style="max-width:680px; margin:18px auto; padding:12px 14px; border-radius:4px; background:rgba(0,0,0,0.02); text-align:center; font-weight:700; color:#074; font-size:18px;">
-        Directions: Identify the preposition in each sentence. Select the correct answer before the timer ends.
+        Directions: Identify the conjunction in each sentence and its type. Select the correct answer before the timer ends.
       </div>
       <button id="start" class="next-btn">Start Quiz</button>
     </section>
     <div id="question-view" class="question" style="max-width:780px; text-align:center; display:none;">
       <div id="instruction-banner-question" style="max-width:980px; margin:8px auto 18px; padding:12px 18px; border-radius:4px; background:rgba(0,0,0,0.02); text-align:center; font-weight:700; color:#074; font-size:18px;">
-        Directions: Identify the preposition in each sentence. Select the correct answer before the timer ends.
+        Directions: Identify the conjunction in each sentence and its type. Select the correct answer before the timer ends.
       </div>
       <div id="timer" style="position:relative; width:70px; height:70px; margin:0 auto 12px;">
         <svg width="70" height="70" style="transform:rotate(-90deg);">
@@ -50,50 +64,23 @@
     </div>
     <section id="completion" class="intro" style="max-width:780px; text-align:center; display:none;">
       <h2 class="title">Quiz Completed</h2>
-      <p id="score" class="subtitle" style="font-size:22px;"></p>
-      
-      <!-- References Section -->
-      <div style="margin-top: 30px; padding: 20px; background: rgba(255,255,255,0.9); border-radius: 12px; text-align: left; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
-        <h3 style="font-size: 18px; font-weight: 700; color: #402688; margin-bottom: 12px; text-align: center;">References</h3>
-        <div style="font-size: 14px; line-height: 1.8; color: #333;">
-          <p style="margin: 8px 0;">Murphy, R. (2019). <em>English grammar in use</em> (5th ed.). Cambridge University Press.</p>
-          <p style="margin: 8px 0;">
-            <a href="https://www.dochub.com/fillable-form/24112-subject-verb-agreement-worksheets-with-answers-7th-grade-pdf" target="_blank" style="color: #402688; text-decoration: underline;">https://www.dochub.com/fillable-form/24112-subject-verb-agreement-worksheets-with-answers-7th-grade-pdf</a>
-          </p>
-        </div>
-      </div>
+        <p id="score" class="subtitle" style="font-size:22px;"></p>
     </section>
   </main>
   <script>
     const questions = [
-      { q: '1. The dog barked ___ the stranger.', choices: ['on','at','in','to'], correct: 1 },
-      { q: '2. Maria put the book ___ the table.', choices: ['at','on','in','to'], correct: 1 },
-      { q: '3. We walked ___ the park yesterday.', choices: ['at','in','through','on'], correct: 2 },
-      { q: '4. He is good ___ playing the guitar.', choices: ['in','at','on','to'], correct: 1 },
-      { q: '5. The cat jumped ___ the wall.', choices: ['in','over','on','at'], correct: 1 },
-      { q: '6. She divided the cake ___ her friends.', choices: ['to','among','between','with'], correct: 1 },
-      { q: '7. I will meet you ___ 5 PM.', choices: ['at','in','on','to'], correct: 0 },
-      { q: '8. We traveled ___ France last summer.', choices: ['at','to','in','on'], correct: 1 },
-      { q: '9. The keys are ___ the drawer.', choices: ['at','to','in','on'], correct: 2 },
-      { q: '10. He walked slowly ___ the road.', choices: ['at','in','along','over'], correct: 2 }
+      { q: '1. I visit the Grand Canyon _________ I go to Arizona.', choices: ['once','whenever','wherever','when'], correct: 1 },
+      { q: '2. This is the place _________ we stayed last time we visited.', choices: ['when','where','how','wherever'], correct: 1 },
+      { q: '3. _________ you win first place, you will receive a prize.', choices: ['wherever','if','unless','when'], correct: 1 },
+      { q: '4. You won\'t pass the test _________ you study.', choices: ['when','if','unless','though'], correct: 2 },
+      { q: '5. I could not get a seat, _________ I came early.', choices: ['as','though','when','if'], correct: 1 },
+      { q: '6. We are leaving Wednesday _________ or not it rains.', choices: ['if','whether','though','unless'], correct: 1 },
+      { q: '7. Pay attention to your work _________ you will not make mistakes.', choices: ['unless','so that','or','though'], correct: 1 },
+      { q: '8. The musicians delivered a rousing performance _________ they had rehearsed often.', choices: ['though','as','once','if'], correct: 1 },
+      { q: '9. She\'s honest _________ everyone trusts her.', choices: ['if','so','when','though'], correct: 1 },
+      { q: '10. Write this down _________ you forget.', choices: ['or','when','lest','if'], correct: 2 }
     ];
     let index=0, score=0; let intenseAudio = null; let timeLeft = 60; let timerInterval = null;
-    
-    // Autoplay pou.mp3 when entering this game mode
-    let gameModeAudio = null;
-    try {
-      gameModeAudio = new Audio('pou.mp3');
-      gameModeAudio.loop = true;
-      gameModeAudio.volume = 0.5;
-      gameModeAudio.play().catch(e => console.log('Autoplay blocked:', e));
-    } catch(e) {
-      console.log('Audio setup failed:', e);
-    }
-    
-    // Stop game music when leaving page
-    window.addEventListener('beforeunload', () => {
-      try { if (gameModeAudio) gameModeAudio.pause(); } catch(e) {}
-    });
     const intro=document.getElementById('intro');
     const startBtn=document.getElementById('start');
     const qView=document.getElementById('question-view');
@@ -126,7 +113,7 @@
           const percentage = Math.round((score / questions.length) * 100);
           const scoreData = {
             category: 'partsOfSpeech',
-            testName: 'Preposition Quiz',
+            testName: 'Conjunction Quiz',
             score: score,
             total: questions.length,
             percentage: percentage,

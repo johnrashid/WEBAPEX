@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Check SVA Storage</title>
+</head>
+<body>
+  <h1>SVA Score Storage Check</h1>
+  <pre id="output"></pre>
+  
+  <script>
+    const output = document.getElementById('output');
+    const scores = JSON.parse(localStorage.getItem('webapex_scores') || '[]');
+    
+    output.textContent = 'All Scores:\n' + JSON.stringify(scores, null, 2);
+    
+    console.log('Total scores:', scores.length);
+    console.log('Grammar scores:', scores.filter(s => s.category === 'grammar'));
+    console.log('All scores:', scores);
+  </script>
+</body>
+</html>

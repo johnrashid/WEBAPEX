@@ -7,6 +7,10 @@
   <link rel="stylesheet" href="vocabularytest.css">
   <link rel="stylesheet" href="pretest.css">
   <link rel="stylesheet" href="design.css">
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <script src="firebase-config.js"></script>
 </head>
 <body>
   <button type="button" class="back-btn" onclick="history.back()" aria-label="Go back">
@@ -88,6 +92,22 @@
     ];
 
     let index = 0, score = 0; let intenseAudio = null; let timeLeft = 60; let timerInterval = null;
+    
+    // Autoplay pou.mp3 when entering this game mode
+    let gameModeAudio = null;
+    try {
+      gameModeAudio = new Audio('pou.mp3');
+      gameModeAudio.loop = true;
+      gameModeAudio.volume = 0.5;
+      gameModeAudio.play().catch(e => console.log('Autoplay blocked:', e));
+    } catch(e) {
+      console.log('Audio setup failed:', e);
+    }
+    
+    // Stop game music when leaving page
+    window.addEventListener('beforeunload', () => {
+      try { if (gameModeAudio) gameModeAudio.pause(); } catch(e) {}
+    });
     const titleEl = document.querySelector('.title');
     const intro = document.getElementById('intro');
     const startBtn = document.getElementById('startBtn');
@@ -113,7 +133,7 @@
       choicesEl.innerHTML = '';
       feedback.textContent = '';
       nextBtn.style.display = 'none';
-      try { intenseAudio = new Audio('intense.mp3'); intenseAudio.loop = true; intenseAudio.play(); } catch(e){}
+      try { intenseAudio = new Audio('pou.mp3'); intenseAudio.loop = true; intenseAudio.play(); } catch(e){}
       startTimer();
       it.choices.forEach((c,i)=>{
         const b = document.createElement('button');
@@ -158,16 +178,26 @@
         // Save score to localStorage
         try {
           const percentage = Math.round((score / questions.length) * 100);
-          const existingScores = JSON.parse(localStorage.getItem('webapex_scores') || '[]');
-          existingScores.push({
+          const scoreData = {
             category: 'vocabulary',
             testName: 'Missing Word Quiz',
             score: score,
             total: questions.length,
             percentage: percentage,
             date: new Date().toISOString()
-          });
-          localStorage.setItem('webapex_scores', JSON.stringify(existingScores));
+          };
+          
+          // Use unified save function (saves to both localStorage and Firebase with username)
+          if (typeof saveScore !== 'undefined') {
+            saveScore(scoreData).catch(e => console.error('Error saving score:', e));
+          } else {
+            // Fallback to localStorage only
+            try {
+              const existingScores = JSON.parse(localStorage.getItem('webapex_scores') || '[]');
+              existingScores.push(scoreData);
+              localStorage.setItem('webapex_scores', JSON.stringify(existingScores));
+            } catch(e) { console.error('Error saving to localStorage:', e); }
+          }
         } catch (e) {
           console.error('Error saving score:', e);
         }

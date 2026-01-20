@@ -1,9 +1,9 @@
-<!doctype html>
+ <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Grammar Test - Prepositions</title>
+  <title>Grammar Test - Adjectives</title>
   <link rel="stylesheet" href="pretest.css">
   <link rel="stylesheet" href="grammartest.css">
   <link rel="stylesheet" href="design.css">
@@ -20,15 +20,15 @@
   </button>
   <main class="canvas" role="main">
     <section id="intro" class="intro" style="max-width:780px; text-align:center;">
-      <h1 class="title">Preposition Quiz</h1>
+      <h1 class="title">Adjective Quiz</h1>
       <div id="instruction-banner" style="max-width:680px; margin:18px auto; padding:12px 14px; border-radius:4px; background:rgba(0,0,0,0.02); text-align:center; font-weight:700; color:#074; font-size:18px;">
-        Directions: Identify the preposition in each sentence. Select the correct answer before the timer ends.
+        Directions: Choose the word that matches the prompt in each sentence. Select the correct answer before the timer ends.
       </div>
       <button id="start" class="next-btn">Start Quiz</button>
     </section>
     <div id="question-view" class="question" style="max-width:780px; text-align:center; display:none;">
       <div id="instruction-banner-question" style="max-width:980px; margin:8px auto 18px; padding:12px 18px; border-radius:4px; background:rgba(0,0,0,0.02); text-align:center; font-weight:700; color:#074; font-size:18px;">
-        Directions: Identify the preposition in each sentence. Select the correct answer before the timer ends.
+        Directions: Choose the word that matches the prompt in each sentence. Select the correct answer before the timer ends.
       </div>
       <div id="timer" style="position:relative; width:70px; height:70px; margin:0 auto 12px;">
         <svg width="70" height="70" style="transform:rotate(-90deg);">
@@ -66,67 +66,51 @@
   </main>
   <script>
     const questions = [
-      { q: '1. The dog barked ___ the stranger.', choices: ['on','at','in','to'], correct: 1 },
-      { q: '2. Maria put the book ___ the table.', choices: ['at','on','in','to'], correct: 1 },
-      { q: '3. We walked ___ the park yesterday.', choices: ['at','in','through','on'], correct: 2 },
-      { q: '4. He is good ___ playing the guitar.', choices: ['in','at','on','to'], correct: 1 },
-      { q: '5. The cat jumped ___ the wall.', choices: ['in','over','on','at'], correct: 1 },
-      { q: '6. She divided the cake ___ her friends.', choices: ['to','among','between','with'], correct: 1 },
-      { q: '7. I will meet you ___ 5 PM.', choices: ['at','in','on','to'], correct: 0 },
-      { q: '8. We traveled ___ France last summer.', choices: ['at','to','in','on'], correct: 1 },
-      { q: '9. The keys are ___ the drawer.', choices: ['at','to','in','on'], correct: 2 },
-      { q: '10. He walked slowly ___ the road.', choices: ['at','in','along','over'], correct: 2 }
+      { q: '1. The model wore a _____ dress to the event.', choices: ['A. model','B. event','C. gorgeous','D. wore'], correct: 2 },
+      { q: '2. My little brother gets _____ when he cannot play video games.', choices: ['A. brother','B. play','C. angry','D. gets'], correct: 2 },
+      { q: '3. The firefighter was the _____ person I met that day.', choices: ['A. met','B. person','C. bravest','D. day'], correct: 2 },
+      { q: '4. That is the _____ path.', choices: ['A. that','B. is','C. path','D. shortest'], correct: 3 },
+      { q: '5. We need an _____ container for the camping trip.', choices: ['A. trip','B. need','C. camping','D. unbreakable'], correct: 3 },
+      { q: '6. He bought a _____ pair of boots for winter.', choices: ['A. boots','B. bought','C. winter','D. new'], correct: 3 },
+      { q: '7. The concert last night was absolutely _____ .', choices: ['A. concert','B. was','C. night','D. fabulous'], correct: 3 },
+      { q: '8. She baked some _____ cookies for the party.', choices: ['A. cookies','B. party','C. baked','D. delicious'], correct: 3 },
+      { q: '9. The _____ child got a timeout for drawing on the walls.', choices: ['A. walls','B. timeout','C. child','D. naughty'], correct: 3 },
+      { q: '10. We had to wait for a _____ time in line.', choices: ['A. line','B. wait','C. time','D. long'], correct: 3 }
     ];
-    let index=0, score=0; let intenseAudio = null; let timeLeft = 60; let timerInterval = null;
-    
-    // Autoplay pou.mp3 when entering this game mode
-    let gameModeAudio = null;
-    try {
-      gameModeAudio = new Audio('pou.mp3');
-      gameModeAudio.loop = true;
-      gameModeAudio.volume = 0.5;
-      gameModeAudio.play().catch(e => console.log('Autoplay blocked:', e));
-    } catch(e) {
-      console.log('Audio setup failed:', e);
-    }
-    
-    // Stop game music when leaving page
-    window.addEventListener('beforeunload', () => {
-      try { if (gameModeAudio) gameModeAudio.pause(); } catch(e) {}
-    });
-    const intro=document.getElementById('intro');
-    const startBtn=document.getElementById('start');
-    const qView=document.getElementById('question-view');
-    const qText=document.getElementById('q-text');
-    const choicesEl=document.getElementById('choices');
-    const feedback=document.getElementById('feedback');
-    const nextBtn=document.getElementById('next-btn');
-    const timerEl=document.getElementById('timer');
+    let index = 0; let score = 0; let intenseAudio = null; let timeLeft = 60; let timerInterval = null;
+    const intro = document.getElementById('intro');
+    const startBtn = document.getElementById('start');
+    const qView = document.getElementById('question-view');
+    const qText = document.getElementById('q-text');
+    const choicesEl = document.getElementById('choices');
+    const feedback = document.getElementById('feedback');
+    const nextBtn = document.getElementById('next-btn');
+    const timerEl = document.getElementById('timer');
     const timerText = document.getElementById('timer-text');
     const timerCircle = document.getElementById('timer-circle');
     const totalTime = 60;
     const circumference = 2 * Math.PI * 30;
-    const completion=document.getElementById('completion');
-    const scoreEl=document.getElementById('score');
+    const completion = document.getElementById('completion');
+    const scoreEl = document.getElementById('score');
     function startTimer(){ timeLeft = 60; timerText.textContent = '1:00'; timerCircle.style.strokeDashoffset = '0'; if (timerInterval) clearInterval(timerInterval); timerInterval = setInterval(() => { timeLeft--; const mins = Math.floor(timeLeft / 60); const secs = timeLeft % 60; timerText.textContent = mins + ':' + (secs < 10 ? '0' : '') + secs; const progress = (totalTime - timeLeft) / totalTime; timerCircle.style.strokeDashoffset = circumference * progress; if (timeLeft <= 0) { clearInterval(timerInterval); handleTimeout(); } }, 1000); }
     function handleTimeout(){ try { if (intenseAudio) { intenseAudio.pause(); intenseAudio.currentTime = 0; } } catch(e){} try { const buzzer = new Audio('wrong.mp3'); buzzer.play(); } catch(e){} const item = questions[index]; const all = choicesEl.querySelectorAll('button'); all.forEach(b => b.disabled = true); const buttons = Array.from(all); const correctBtn = buttons[item.correct]; if (correctBtn) correctBtn.classList.add('correct'); feedback.textContent = 'Time\'s up! The correct answer is ' + item.choices[item.correct] + '.'; feedback.style.color = '#c62828'; nextBtn.style.display = 'inline-block'; }
     function render(){ const item = questions[index]; qText.textContent = item.q; choicesEl.innerHTML = ''; feedback.textContent = ''; nextBtn.style.display = 'none'; try { intenseAudio = new Audio('pou.mp3'); intenseAudio.loop = true; intenseAudio.play(); } catch(e){} startTimer(); item.choices.forEach((label,i)=>{ const btn = document.createElement('button'); btn.className = 'level-btn choice-btn'; btn.textContent = label; btn.addEventListener('click', ()=>{ if (timerInterval) clearInterval(timerInterval); try { if (intenseAudio) { intenseAudio.pause(); intenseAudio.currentTime = 0; } } catch(e){} const all = choicesEl.querySelectorAll('button'); all.forEach(b=>b.disabled = true); const correctIndex = item.correct; const isCorrect = i === correctIndex; if (isCorrect) { btn.classList.add('correct'); feedback.textContent = 'Correct!'; feedback.style.color = '#0a8a0a'; score++; if (window && window.playPraiseKey) try{ window.playPraiseKey('correct'); }catch(e){} } else { btn.classList.add('wrong'); const buttons = Array.from(choicesEl.querySelectorAll('button')); const correctBtn = buttons[correctIndex]; if (correctBtn) correctBtn.classList.add('correct'); feedback.textContent = 'Incorrect. The correct answer is ' + item.choices[item.correct] + '.'; feedback.style.color = '#c62828'; try { const wrongAudio = new Audio('wrong.mp3'); wrongAudio.play(); } catch(e){} } nextBtn.textContent = index < questions.length - 1 ? 'Next' : 'Finish'; nextBtn.style.display = 'inline-block'; }); choicesEl.appendChild(btn); }); }
     startBtn.addEventListener('click', ()=>{ intro.style.display='none'; qView.style.display='block'; render(); });
     nextBtn.addEventListener('click', ()=>{ 
       if (timerInterval) clearInterval(timerInterval); 
-      if(index<questions.length-1){ 
+      if(index < questions.length-1){ 
         index++; render(); 
       } else { 
         qView.style.display='none'; 
         completion.style.display='block'; 
-        scoreEl.textContent='You got '+score+' / '+questions.length;
+        scoreEl.textContent = 'You got ' + score + ' / ' + questions.length;
         
         // Save score to localStorage
         try {
           const percentage = Math.round((score / questions.length) * 100);
           const scoreData = {
             category: 'partsOfSpeech',
-            testName: 'Preposition Quiz',
+            testName: 'Adjective Quiz',
             score: score,
             total: questions.length,
             percentage: percentage,
@@ -147,14 +131,9 @@
         } catch (e) {
           console.error('Error saving score:', e);
         }
-        
-        try{ const total = questions.length || 0; const pct = total ? (score/total)*100 : 0; if (window && window.playPraiseKey){ if (pct>=90) window.playPraiseKey('excellent'); else if (pct>=75) window.playPraiseKey('amazing'); else if (pct>=50) window.playPraiseKey('good job'); } }catch(e){} 
       } 
     });
   </script>
   <script src="audio.js" defer></script>
-</body>
-</html>
-  </script>
 </body>
 </html>

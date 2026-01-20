@@ -10,15 +10,22 @@ const firebaseConfig = {
   databaseURL: "https://webapex-ff5d0-default-rtdb.firebaseio.com"
 };
 
+// Toggle this to enable/disable Firebase sync
+const USE_FIREBASE = false; // Set to true when you create the Firebase Realtime Database
+
 // Initialize Firebase
 let app, database;
 
-try {
-  app = firebase.initializeApp(firebaseConfig);
-  database = firebase.database();
-  console.log('Firebase Realtime Database initialized successfully');
-} catch (error) {
-  console.error('Error initializing Firebase:', error);
+if (USE_FIREBASE) {
+  try {
+    app = firebase.initializeApp(firebaseConfig);
+    database = firebase.database();
+    console.log('Firebase Realtime Database initialized successfully');
+  } catch (error) {
+    console.error('Error initializing Firebase:', error);
+  }
+} else {
+  console.log('Firebase sync disabled - using localStorage only');
 }
 
 // Helper function to save score to Realtime Database
@@ -93,8 +100,19 @@ async function getLeaderboardFromFirebase(category = 'all', limit = 100) {
 async function saveScore(scoreData) {
   // Save to localStorage first (always works, even offline)
   try {
+    // Ensure the score object contains the current userName/userId when saved locally
+    const userId = localStorage.getItem('webapex_userId') || ('user_' + Math.random().toString(36).substr(2, 9) + Date.now());
+    const userName = localStorage.getItem('webapex_userName') || scoreData.userName || 'Anonymous';
+    localStorage.setItem('webapex_userId', userId);
+
+    const scoreToSave = Object.assign({}, scoreData, {
+      userId: userId,
+      userName: userName,
+      date: scoreData.date || new Date().toISOString()
+    });
+
     const existingScores = JSON.parse(localStorage.getItem('webapex_scores') || '[]');
-    existingScores.push(scoreData);
+    existingScores.push(scoreToSave);
     localStorage.setItem('webapex_scores', JSON.stringify(existingScores));
     console.log('Score saved to localStorage');
   } catch (e) {
@@ -102,10 +120,12 @@ async function saveScore(scoreData) {
   }
   
   // Then try to save to Firebase (may fail if offline or not configured)
-  try {
-    await saveScoreToFirebase(scoreData);
-  } catch (e) {
-    console.warn('Could not save to Firebase, but localStorage save succeeded');
+  if (USE_FIREBASE) {
+    try {
+      await saveScoreToFirebase(scoreData);
+    } catch (e) {
+      console.warn('Could not save to Firebase, but localStorage save succeeded');
+    }
   }
 }
 
@@ -128,4 +148,29 @@ if (typeof window !== 'undefined') {
   window.saveScore = saveScore;
   window.saveScoreToFirebase = saveScoreToFirebase;
   window.getLeaderboardFromFirebase = getLeaderboardFromFirebase;
+  
+  // Intercept localStorage.setItem to automatically add username to scores
+  const originalSetItem = localStorage.setItem;
+  localStorage.setItem = function(key, value) {
+    if (key === 'webapex_scores') {
+      try {
+        const scores = JSON.parse(value);
+        const userId = localStorage.getItem('webapex_userId') || ('user_' + Math.random().toString(36).substr(2, 9) + Date.now());
+        const userName = originalSetItem.call(localStorage, 'webapex_userId', userId) || localStorage.getItem('webapex_userName') || 'Anonymous';
+        
+        // Add userName and userId to any scores that don't have them
+        scores.forEach(s => {
+          if (!s.userName) s.userName = userName;
+          if (!s.userId) s.userId = userId;
+        });
+        
+        value = JSON.stringify(scores);
+      } catch(e) {
+        console.warn('Could not process scores:', e);
+      }
+    }
+    return originalSetItem.call(localStorage, key, value);
+  };
+  
+  console.log('localStorage interceptor installed - all scores will include username');
 }
